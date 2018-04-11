@@ -22,8 +22,13 @@ You may install these in Ubuntu systems by running:
 
 `sudo apt-get install libglib2.0 libglib2.0-dev libtiff5 libtiff5-dev libopenlibm-dev`
     
+These can also be satisfied in Arch Linux.
+
+### Notes
+
 You may find details on how the automake/conf files are configured by opening them and reading the comments.
-I must say that although packages are installed using one name (such as libtiff5) the name that configure.ac can find may be another one (such as libtiff-4).
+
+Surprisingly, although packages are installed using one name (such as libtiff5) the name that configure.ac can find may be another one (such as libtiff-4).
 
 ## Build and Install
 
