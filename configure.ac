@@ -1,4 +1,7 @@
-# tutorial sobre como usar autotools: http://www.idryman.org/blog/2016/03/10/autoconf-tutorial-1/
+# Information on how to use autotools
+# http://www.idryman.org/blog/2016/03/10/autoconf-tutorial-1/
+# http://smalltalk.gnu.org/blog/bonzinip/all-you-should-really-know-about-autoconf-and-automake
+# http://blog.fourthbit.com/2013/06/18/creating-an-open-source-program-in-c-with-autotools-part-1-of-2
 
 # Must init the autoconf setup
 # The first parameter is project name
