@@ -1,6 +1,8 @@
 # cellID-linux
 This is meant to aid compilation of cellID v1.4 in GNU/linux systems
 
+I became tired of fighting with unincluded dependencies, and so tried autotools by following [this](https://robots.thoughtbot.com/the-magic-behind-configure-make-make-install) tutorial and using other web resources. It was useful to understand the code, and further resources can be found in the comments within the configure.ac and Makefile.am files, explaining each line.
+
 ## Credits
 The cellID developers ([link to publication](http://dx.doi.org/10.1002/0471142727.mb1418s100))
 
