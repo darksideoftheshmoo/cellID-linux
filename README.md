@@ -12,17 +12,24 @@ The original source can be found at sourceforge ([link](https://sourceforge.net/
 Disclaimer: it is possible that not all of the installed packages are strictly required. I have not yet checked, but surely the "-dev" ones are essential.
 
 I have made use of autotools, and have installed the following packages:
-* automake
-* autoconf
-* libtool
+* automake: 1:1.15-4ubuntu1
+* autoconf: 2.69-9
+* libtool: 2.4.6-0.1
+
+You may install these in Ubuntu systems by running:
+
+`sudo apt-get install automake autoconf libtool`
 
 The configure.ac and Makefile.am files have been set to require libtiff5-dev, libopenlibm-dev, and libglib2.0-dev.
+* libglib2.0-dev: 2.48.2-0ubuntu1
+* libtiff5-dev: 4.0.6-1ubuntu0.4
+* libopenlibm-dev: 0.5.0+dfsg-2
 
 You may install these in Ubuntu systems by running:
 
 `sudo apt-get install libglib2.0 libglib2.0-dev libtiff5 libtiff5-dev libopenlibm-dev`
-    
-These can also be satisfied in Arch Linux.
+
+These dependencies can also be satisfied in Arch Linux (sorry for not providing instructions).
 
 ### Notes
 
