@@ -29,7 +29,8 @@ You may install these in Ubuntu systems by running:
 
 `sudo apt-get install libglib2.0 libglib2.0-dev libtiff5 libtiff5-dev libopenlibm-dev`
 
-These dependencies can also be satisfied in Arch Linux (sorry for not providing instructions).
+These dependencies can also be satisfied in Arch Linux, sorry for not providing detailed instructions.
+I got openlibm from AUR, the rest are provided by standard repos.
 
 ### Notes
 
