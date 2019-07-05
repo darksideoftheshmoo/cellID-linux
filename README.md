@@ -35,6 +35,10 @@ These dependencies can also be satisfied in Arch Linux, sorry for not providing 
 
 `aurman -S openlibm`
 
+OR
+
+`yay -S openlibm`
+
 ### Notes
 
 You may find details on how the automake/conf files are configured by opening them and reading the comments.
