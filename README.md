@@ -4,12 +4,13 @@ This is meant to aid compilation of cellID v1.4 in GNU/linux systems
 I became tired of fighting with unincluded dependencies, and so tried autotools by following [this](https://robots.thoughtbot.com/the-magic-behind-configure-make-make-install) tutorial and using other web resources. It was useful to understand the code, and further resources can be found in the comments within the configure.ac and Makefile.am files, explaining each line.
 
 ## Credits
-The cellID developers ([link to publication](http://dx.doi.org/10.1002/0471142727.mb1418s100))
+The cellID developers ([1](https://www.nature.com/articles/nmeth1008))([2](http://dx.doi.org/10.1002/0471142727.mb1418s100)).
 
-The original source can be found at sourceforge ([link](https://sourceforge.net/projects/cell-id/))
+The original source can be found at sourceforge ([link](https://sourceforge.net/projects/cell-id/)) and in the original publication ([link](https://www.nature.com/articles/nmeth1008#supplementary-information)).
 
 ## Dependencies
-Disclaimer: it is possible that not all of the installed packages are strictly required. I have not yet checked, but surely the "-dev" ones are essential.
+### Ubuntu
+Disclaimer: it is possible that not all of the installed packages are strictly required. I have not yet checked, but surely the "-dev" ones are essential in Ubuntu.
 
 I have made use of autotools, and have installed the following packages:
 * automake: 1:1.15-4ubuntu1
@@ -29,21 +30,18 @@ You may install these in Ubuntu systems by running:
 
 `sudo apt-get install libglib2.0 libglib2.0-dev libtiff5 libtiff5-dev libopenlibm-dev`
 
+### Arch
 These dependencies can also be satisfied in Arch Linux, sorry for not providing detailed instructions. I got openlibm from AUR, the rest are provided by standard repos.
 
 `sudo pacman -S automake autoconf libtool glib2 libtiff`
 
-`aurman -S openlibm`
-
-OR
-
-`yay -S openlibm`
+`aurman -S openlibm` OR `yay -S openlibm`
 
 ### Notes
 
 You may find details on how the automake/conf files are configured by opening them and reading the comments.
 
-Surprisingly, although packages are installed using one name (such as libtiff5) the name that configure.ac can find may be another one (such as libtiff-4).
+Surprisingly for me, packages may be installed using one name (such as libtiff5) but configure.ac can find them using another one (such as libtiff-4).
 
 ## Build and Install
 
@@ -60,4 +58,4 @@ Cheers!
 
 ## Usage
 ### Parameters
-Example parameters are in the parameters_example.txt file.
+Example parameters are in the `parameters_example.txt` file, and a full description is available in `parameters_description.txt` (copied from Gordon et. al. 2007).
