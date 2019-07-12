@@ -57,3 +57,7 @@ To build and install, please cd into the directory where the files are and run:
 Please refer to the cellID documentation to learn how to use this program.
 
 Cheers!
+
+## Usage
+### Parameters
+Example parameters are in the parameters_example.txt file.
