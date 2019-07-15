@@ -59,3 +59,7 @@ Cheers!
 ## Usage
 ### Parameters
 Example parameters are in the `parameters_example.txt` file, and a full description is available in `parameters_description.txt` (copied from Gordon et. al. 2007).
+
+
+## Output
+For convenience, I have copied the `out_all` columns' description to `output_descriptions.csv`.

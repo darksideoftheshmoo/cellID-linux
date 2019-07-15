@@ -1,0 +1,57 @@
+column 1	cellID 	is the cell ID number
+column 2	t.frame	is the time frame of the cell (0 through n-1 where n=number of points in the time course). Not every cell is necessarily found in every time point.
+column 3	 time 	is the time of that time frame in seconds. The time unit is an absolute number of seconds from some time in the distance past, but the time elapsed between time frames is more meaningful.
+column 4	 xpos 	and 5 are the x- and y- position, respectively, of the centroid of the cell,
+column 5	 ypos 	and 4 are the x- and y- position, respectively, of the centroid of the cell,
+column 6	 f.tot  	is the sum of the fluorescence image for all the pixels found in that cell
+column 7	 a.tot  	is the area of the cell in pixels
+column 8	num.pix	is the number of pixels associated with the cell (column 7 and 8 are identical but were not originally identical as column 7 in an earlier version of the code tried to correct for the pixelated cell boundaries)
+column 9	fft.stat 	"is ""FFT_stat"" This statistic is derived from the one dimensional fast-fourier-transform of the function radius vs angle, where radius is the distance from the cell centroid to the boundary at a given angle. FFT_stat is 1 minus the ratio of the magnitude squared of the 0th order component to the sum of the magnitude squared of all other components. For a perfect circle FFT_stat is 0, and we interpret this statistic as a measure of circularity."
+column 10	 perim  	is the circumference of the cell in pixel units,
+column 11	 maj.axis 	and 12 are the length of the major and minor axes, respectively,  in pixel units
+column 12	 min.axis 	and 11 are the length of the major and minor axes, respectively,  in pixel units
+column 13	 f.nucl 	and 14 are the total fluorescence and area of any found nucleus (these columns are only meaningful if there was a nuclear tagged image)
+column 14	 a.nucl 	and 13 are the total fluorescence and area of any found nucleus (these columns are only meaningful if there was a nuclear tagged image)
+column 15	 flag 	"is ""flag"" This indicates the ""image type."" Thus if there are for example YFP and CFP images, all YFP images would be flag 0 and all CFP would be flag 1, assuming that the YFP image was taken earliest in time."
+column 16	 rot.vol 	is the volume of rotation of the cell around its major axis
+column 17	 con.vol 	"is the volume of the cell as determined by the ""conical volume"" method"
+column 18	 a.vacuole 	19 are the vacuole area and fluorescence, respectively (these are calculated by looking for darker regions of fluorescence within the cell and should be ignored if that information would not be meaningful for a given experiment)
+column 19	 f.vacuole 	18 are the vacuole area and fluorescence, respectively (these are calculated by looking for darker regions of fluorescence within the cell and should be ignored if that information would not be meaningful for a given experiment)
+column 20	 f.bg   	is the fluorescence background level. This quantity is the mode of the distribution of all fluorescence pixels that are not associated with any cell.
+column 21	 f.tot.p1 	
+column 22	 a.tot.p1 	
+column 23	 f.tot.m1 	
+column 24	 a.tot.m1 	
+column 25	 f.tot.m2 	
+column 26	a.tot.m2 	
+column 27	 f.tot.m3 	
+column 28	 a.tot.m3 	
+column 29	xpos.nucl	
+column 30	ypos.nucl	
+column 31	 f.nucl1 	
+column 32	 f.nucl.tag1 	
+column 33	 a.nucl1 	
+column 34	 f.nucl2 	
+column 35	 f.nucl.tag2 	
+column 36	 a.nucl2 	
+column 37	 f.nucl3 	
+column 38	 f.nucl.tag3 	
+column 39	 a.nucl3 	
+column 40	 f.nucl4 	
+column 41	 f.nucl.tag4 	
+column 42	 a.nucl4 	
+column 43	 f.nucl5 	
+column 44	 f.nucl.tag5 	
+column 45	 a.nucl5 	
+column 46	 f.nucl6 	
+column 47	 f.nucl.tag6 	
+column 48	 a.nucl6 	
+column 49	 f.local.bg 	
+column 50	 a.local.bg 	
+column 51	 a.local 	
+column 52	 f.local2.bg 	
+column 53	a.local2.bg 	
+column 54	 a.local2 	
+column 55	 a.surf 	
+column 56	 con.vol 	
+column 57	 sphere.vol 	
