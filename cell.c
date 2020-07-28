@@ -110,7 +110,7 @@ int main(int argc, char *argv[]){
   //the _same_ pictures.  Ie, a 1-1 correspondence, the first picture in
   //the first list corresponds to the first pictures in the second list.
 
-  //We're going to search the phase contract picture for the cells and
+  //We're going to search the phase contrast picture for the cells and
   //their boundaries and then calculate how much fluorescence is in each
   //one with the second picture.
 
