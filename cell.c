@@ -62,6 +62,13 @@ End-copyright-notice-for-Libtiff
 
 
 */
+
+// rcel22 imports
+#include <unistd.h>
+#include <getopt.h>
+#include <libgen.h>           // for basename()
+
+// original imports
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -78,7 +85,6 @@ End-copyright-notice-for-Libtiff
 
 //V1.2a
 #include "file_type.h"
-#include <glib.h>
 
 //V1.2a TEST
 #include "oif.h"
@@ -97,6 +103,10 @@ float *flat_cors=NULL;
 //against the known cells or just to use the previous values.
 int new_phase=0;
 
+// rcell2 getopt declarations
+extern char *optarg;
+extern int optind, opterr, optopt;
+int opt;
 
 int main(int argc, char *argv[]){
 
@@ -265,8 +275,6 @@ int main(int argc, char *argv[]){
 
 
   //Command line parsing variables
-  GOptionContext *ctx;
-  GOptionGroup *grpCellFind, *grpMisc, *grpImageType;
  
   char *equal_sign = NULL;
   int help_flag = 0;
@@ -285,14 +293,64 @@ int main(int argc, char *argv[]){
   char *str_align_fl = NULL;
 
 	//V1.4a
-	gchar *file_basename = NULL; //for getting correct channel identification
-															 //from filenames with paths
+	char *file_basename = NULL; // rcell2: used to be gchar, unsure if this is ok
+															// for getting correct channel identification from filenames with paths
  
   char str_third_img_label[500];
   char *pnt_third_img_label = NULL;
 	char str_image_type[500];
 	char *pnt_image_type = NULL;
 
+  // rcell2 chunk: getopts option parser
+  opterr = 0;  // https://stackoverflow.com/a/24331449/11524079
+  optind = 1;  // https://stackoverflow.com/a/25937743/11524079
+
+  while((opt = getopt(argc, argv, "p:b:f:o:")) != -1) {
+    printf("Parsing getopt options\n");
+    switch(opt) {
+    case 'p':
+       printf("parameters: ");
+       printf("%s\n", optarg);
+      param_file=optarg;
+      break;
+
+    case 'b':
+       printf("brightfield: ");
+       printf("%s\n", optarg);
+      bright_list_file=optarg;
+      break;
+
+    case 'f':
+       printf("fluorescence: ");
+       printf("%s\n", optarg);
+      fluor_list_file=optarg;
+      break;
+
+    case 'o':
+       printf("output_prefix: ");
+       printf("%s\n", optarg);
+      output_basename=optarg;
+      break;
+
+    case ':':
+       printf("option needs a value\n");
+      break;
+
+    case '?':
+       printf("unknown option: ");
+       printf("%c\n", optopt);
+      break;
+    }
+  }
+
+  // Get all of the non-option arguments and print them
+  //https://azrael.digipen.edu/~mmead/www/Courses/CS180/getopt.html
+  if (optind < argc) {
+    printf("Non-option args: ");
+    while (optind < argc)
+      printf("%s ", argv[optind++]);
+      printf("\n");
+  }
  
   //Checking for parameters file option in command line manually
   for(i=1;i<argc;i++){
@@ -531,119 +589,6 @@ int main(int argc, char *argv[]){
   }else if (help_flag==0) {   //End of check that parameters.txt was open ok
     printf("%s not found. Using default parameters. \n",param_file);
   }
-
-  //Reading command line options with GOptions library
-  GOptionEntry optFileNames[]={
-    {"bright",'b',0,G_OPTION_ARG_STRING, &bright_list_file,
-      "Text file list of brightfield tif images",NULL},
-    {"fluor",'f',0,G_OPTION_ARG_STRING, &fluor_list_file,
-      "Text file of fluorescent tif images",NULL},
-    {"third",'3',0,G_OPTION_ARG_STRING, &third_list_file,
-      "List of third images to be used",NULL},
-    {"dark",'d',0,G_OPTION_ARG_STRING, &dark_list_file,
-      "List of dark images to be used","dark.txt"},
-    {"flat",'t',0,G_OPTION_ARG_STRING, &flat_list_file,
-      "List of flat images to be used","flat.txt"}, 
-    {"param",'p',0,G_OPTION_ARG_STRING, &param_file,
-      "Parameters file ", "parameters.txt"},
-    {"output",'o',0,G_OPTION_ARG_STRING, &output_basename,
-      "Basename of output files (including dirs)", NULL},
-
-    {NULL}
-  };
- 
-  GOptionEntry optCellFind[]={
-    {"brf",0,0,G_OPTION_ARG_DOUBLE, &background_reject_factor,
-      "background_reject_factor segmentation parameter",NULL},
-    {"max-ppc",0,0,G_OPTION_ARG_INT, &max_pixels_per_cell,
-      "max_pixels_per_cell segmentation parameter",NULL},      
-    {"min-ppc",0,0,G_OPTION_ARG_INT, &min_pixels_per_cell,
-      "min_pixels_per_cell segmentation parameter",NULL},        
-    {"max-som",0,0,G_OPTION_ARG_DOUBLE, &max_split_d_over_minor,
-      "max_split_over_minor cell splitting parameter",NULL},
-    {"max-dow",0,0,G_OPTION_ARG_DOUBLE, &max_d_over_s_cut,
-      "max_dist_over_waist cell splitting parameter",NULL},
-    {"max-som-t0",0,0,G_OPTION_ARG_DOUBLE, &max_split_d_over_minor_t0,
-      "max_split_over_minor_t0 cell splitting parameter",NULL},
-    {"max-dow-t0",0,0,G_OPTION_ARG_DOUBLE, &max_d_over_s_cut_t0,
-      "max_dist_over_waist_t0 cell splitting parameter",NULL},
-    {"track",0,0,G_OPTION_ARG_DOUBLE, &I_over_U_for_match,
-      "tracking_comparison parameter",NULL},
-    {"align-fl",0,0,G_OPTION_ARG_STRING, &str_align_fl,
-      "align_fl_to_first/bf option (first, bf)",NULL},
-    {"nucl1",0,0,G_OPTION_ARG_INT, &(nucleus_radii[0]),
-      "nucleus_radius_1 parameter ",NULL},
-    {"nucl2",0,0,G_OPTION_ARG_INT, &(nucleus_radii[1]),
-      "nucleus_radius_2 parameter ",NULL},
-    {"nucl3",0,0,G_OPTION_ARG_INT, &(nucleus_radii[2]),
-      "nucleus_radius_3 parameter ",NULL},
-    {"nucl4",0,0,G_OPTION_ARG_INT, &(nucleus_radii[3]),
-      "nucleus_radius_4 parameter ",NULL},
-    {"nucl5",0,0,G_OPTION_ARG_INT, &(nucleus_radii[4]),
-      "nucleus_radius_5 parameter ",NULL},
-    {"nucl6",0,0,G_OPTION_ARG_INT, &(nucleus_radii[5]),
-      "nucleus_radius_6 parameter ",NULL},
-    //{"nuc-ch",0,0,G_OPTION_ARG_STRING, &nucleus_channel_pnt,
-    //  "channel used to find nucleus, first three letters of image name",NULL},
-    {NULL}
-  };
-  
-  GOptionEntry optMisc[]={
-    {"force-nuc",0,0,G_OPTION_ARG_NONE, &force_nucleus_in_center,
-      "force_nucleus_in_center option",NULL},
-    {"list-mapping",0,0,G_OPTION_ARG_NONE, &bf_fl_mapping,
-      "bf_fl_mapping list",NULL},
-    {"bf-as-fl",0,0,G_OPTION_ARG_NONE, &treat_brightfield_as_fluorescence,
-      "treat_brightfield_as_fluorescence option",NULL},
-    {"align-ind",0,0,G_OPTION_ARG_NONE, &align_individual_cells,
-      "align_individual_cells option",NULL},
-    {"align-ind-boundary",0,0,G_OPTION_ARG_NONE, &align_individual_cells_boundary,
-      "align_individual_cells_boundary option",NULL},
-    {"output-ind",0,0,G_OPTION_ARG_NONE, &output_individual_cells,
-      "output_individual_cells option",NULL},
-    {"append_output",0,0,G_OPTION_ARG_INT, &overall_id_offset,
-      "append_output option, argument is the id-offset (>=0)",NULL},  
-    {"output_paw",0,0,G_OPTION_ARG_NONE, &paw_output,
-      "Make output for PAW.",NULL}, 
-    //{"recomb",0,0,G_OPTION_ARG_NONE, &do_recombination,
-    //  "do_recombination option",NULL},
-    {NULL}
-  };
- 
-  GOptionEntry optImageType[]={
-    {"fret-bf",0,0,G_OPTION_ARG_STRING, &fret_bf,
-      "fret_bf options for split images (top, bottom or both)",NULL},
-    {"fret-nuclear",0,0,G_OPTION_ARG_STRING, &fret_nuclear,
-      "fret_nuclear options for split images (top, bottom )",NULL},  
-    {"image-type",0,0,G_OPTION_ARG_STRING, &pnt_image_type,
-      "image_type options (bright, decon, hex, confocal)","bright"},
-    {"3-img-label",0,0,G_OPTION_ARG_STRING, &pnt_third_img_label,
-      "third_image label option (nuclear, vacuole)","none"},
-    {NULL}
-  };
-  ctx = g_option_context_new("- Cell ID options");
-  
-  grpCellFind = g_option_group_new("cell", "Cell Segmenting", 
-    "Parameters used to find cells", NULL, NULL);
-  grpMisc = g_option_group_new("misc", "Miscelaneus options", 
-    "Miscelaneus options", NULL, NULL);
-  grpImageType = g_option_group_new("image-type", "Image Type options", 
-    "Specifications for the input images", NULL, NULL);
-  
-  
-  g_option_group_add_entries(grpCellFind, optCellFind);
-  g_option_group_add_entries(grpImageType, optImageType);
-  g_option_group_add_entries(grpMisc, optMisc);
-  
-  
-  g_option_context_add_main_entries(ctx, optFileNames, "Input filenames options");
-  g_option_context_add_group(ctx, grpCellFind);
-  g_option_context_add_group(ctx, grpImageType);
-  g_option_context_add_group(ctx, grpMisc);
-  
-  g_option_context_parse(ctx, &argc, &argv, NULL);
-  g_option_context_free(ctx);
-
 
 	//V1.4.5
 	printf("Using nucleus radii %i %i %i %i %i %i px.\n",nucleus_radii[0],nucleus_radii[1]
@@ -1124,6 +1069,11 @@ int main(int argc, char *argv[]){
     }
   }
 
+  void free(void *ptr); // rcell2: declaration for replacing g_free
+  // https://developer.gnome.org/glib/stable/glib-Memory-Allocation.html#g-free
+  // https://github.com/GNOME/glib/blob/master/glib/gmem.c
+  // https://developer.gnome.org/glib/stable/glib-Basic-Types.html#gpointer
+  // https://stackoverflow.com/a/20297598/11524079
 
   //Do a comparison of names to see if we should give the different
   //fluorescence files different flags.
@@ -1132,14 +1082,14 @@ int main(int argc, char *argv[]){
   flag[0]=0;
   for(i=1;i<n_fluor;i++){
 		//V1.4a file names can have paths
- 		file_basename= g_path_get_basename(fluor_files[i]);
+ 		file_basename= basename(fluor_files[i]);
 		c0=(file_basename)[0];
     c1=(file_basename)[1];
     c2=(file_basename)[2];
-  	g_free(file_basename);  
+  	// free(file_basename);  // rcell2: g_free replacement, not necessary https://stackoverflow.com/a/20297598/11524079
 		flag[i]=flag[i-1]+1; //Default to new flag
     for(j=0;j<i;j++){//Look for a match among previous files
-			file_basename= g_path_get_basename(fluor_files[j]);	
+			file_basename= basename(fluor_files[j]);
     	if (
 	     (((file_basename)[0])==c0)&&
 	     (((file_basename)[1])==c1)&&
@@ -1148,7 +1098,7 @@ int main(int argc, char *argv[]){
 	       flag[i]=flag[j]; //Found a match
 	       break;
       }
-    	g_free(file_basename);
+    	// free(file_basename);  // rcell2: g_free replacement, not necessary https://stackoverflow.com/a/20297598/11524079
 		}
   }
   //Print out message if we have different flags set.
