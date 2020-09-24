@@ -129,8 +129,9 @@ int main(int argc, char *argv[]){
   //V1.2a When reading oif (Olympus Image File) the first arguments is the
   //name of the file ("myfile.oif") and the second argument is the output
 
-  // Wellcome message
-  printf("\n*** Cell_ID Version 1.4.6 *** \n\n");
+  // Welcome message
+  printf("\n\n*** Cell_ID Version 1.4.6 ***");
+  printf("** 2019 redistribution, glib_removal branch. **\n\n");
 
   FILE *fp_in;
   FILE *fp;
