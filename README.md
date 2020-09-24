@@ -69,6 +69,9 @@ Cheers!
 
 If you get a "multiple definitions" error, this occurs with newer gcc versions.
 
+Checkout the other branch: `multiple_definitions_fix`
+
+That one compiles fine on GCC `10.2.0`.
 
 ## Usage
 
