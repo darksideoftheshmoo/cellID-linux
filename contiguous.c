@@ -78,11 +78,11 @@ int *list_start=NULL;
 int *npoints_in_list=NULL;
 int xmax_save=-999;
 int ymax_save=-999;
-int xmax,ymax;
-int xmax_ymax;
-
-float cut_low;
-float cut_high;
+static int xmax;       // made static // because of multiple definitions error, see: https://stackoverflow.com/a/7190020/11524079
+static int ymax;       // made static // "In C, omitting static from a declaration means implicit extern linkage." 
+static int xmax_ymax;  // made static
+static float cut_low;  // made static
+static float cut_high; // made static
 int label_value;
 
 int list_cur;

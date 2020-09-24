@@ -90,9 +90,22 @@ End-copyright-notice-for-Libtiff
 #define ccd_floor 128.0
 #define ccd_floorp1 129.0
 
-int xmax,ymax;
-int xmax_ymax;
+int xmax,ymax;    // Note: made static on contiguous.c
+int xmax_ymax;    // Note: these were made static on contiguous.c
 
+// declare locally thsese "extern" variables from header files, because the compiler failed
+int nucleus_radii[6];              // from parameters.h - will this help with: cellMagick.so: undefined symbol: nucleus_radii ??
+double max_d_over_s_cut;           // from parameters.h
+int max_pixels_per_cell;           // from parameters.h
+int min_pixels_per_cell;           // from parameters.h
+double max_split_d_over_minor;     // from parameters.h
+double background_reject_factor;   // from parameters.h
+double I_over_U_for_match;         // from parameters.h
+int recalculate_internal;          // from image_type.h
+int overall_id_offset;             // from image_type.h
+int third_image_type;              // from image_type.h
+int image_type;                    // from image_type.h - it seems to help and be harmless: https://stackoverflow.com/questions/36040861/multiple-definitions-of-a-global-variable
+// end declare locally
 
 
 //Global Arrays

@@ -65,6 +65,11 @@ Please refer to the cellID documentation to learn how to use this program.
 
 Cheers!
 
+### Troubleshooting
+
+If you get a "multiple definitions" error, this occurs with newer gcc versions.
+
+
 ## Usage
 
 ### Parameters
