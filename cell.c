@@ -120,7 +120,8 @@ int main(int argc, char *argv[]){
   //name of the file ("myfile.oif") and the second argument is the output
 
   // Wellcome message
-  printf("\n*** Cell_ID Version 1.4.6 *** \n\n");
+  printf("\n\n*** Cell_ID Version 1.4.6 ***");
+  printf("** 2019 redistribution, multiple_definitions_fix branch. **\n\n");
 
   FILE *fp_in;
   FILE *fp;
