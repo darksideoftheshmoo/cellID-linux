@@ -813,7 +813,7 @@ int main(int argc, char *argv[]){
   n_third=0;
   if (third_list_file!=NULL){//if there is a third image
     if( (fp_in=fopen(third_list_file,"r"))==NULL ){
-	    printf("Couldnt open file %s.\n",third_list_file);
+	    printf("Couldnt open third_list_file %s.\n",third_list_file);
 	    return 0;
     }
     //Read in names of the third-files to be read in
@@ -855,7 +855,7 @@ int main(int argc, char *argv[]){
 
   //loading brightfield file names into array phase_files
   if( (fp_in=fopen(bright_list_file,"r"))==NULL ){
-    printf("Couldnt open file %s.\n",bright_list_file);
+    printf("Couldnt open bright_list_file %s.\n",bright_list_file);
     return 0;
   }
   i=0;
@@ -869,7 +869,7 @@ int main(int argc, char *argv[]){
 
   //loading fluorescence file names into array fluor_files
   if( (fp_in=fopen(fluor_list_file,"r"))==NULL ){
-    printf("Couldnt open file %s.\n",fluor_list_file);
+    printf("Couldnt open fluor_list_file %s.\n",fluor_list_file);
     return 0;
   }
   i=0;
