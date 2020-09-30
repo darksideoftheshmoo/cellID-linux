@@ -1,2 +1,4 @@
 /*.o
 /time_of_t0.txt
+/.deps/*.Po
+/autom4te.cache/*
