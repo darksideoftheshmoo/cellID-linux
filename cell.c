@@ -1424,7 +1424,7 @@ int main(int argc, char *argv[]){
 	       	//Make output with re-combined data
           load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax); //just in case
 	       	memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
-	       	add_cell_number_to_the_data(i-1);
+	       	//add_cell_number_to_the_data(i-1);
 	       	add_boundary_points_to_data(NULL);
 
         	//Write out the files
@@ -1712,7 +1712,7 @@ int main(int argc, char *argv[]){
       load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax); //just in case
 
       memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
-      add_cell_number_to_the_data(i);
+      //add_cell_number_to_the_data(i);
       add_boundary_points_to_data(NULL);
 
       if (output_individual_cells==1){
@@ -1761,7 +1761,7 @@ int main(int argc, char *argv[]){
     load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax); //just in case
 
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
-    add_cell_number_to_the_data(i-1);
+    //add_cell_number_to_the_data(i-1);
     add_boundary_points_to_data(NULL);
     //Write out the files
     strcpy(line,"COMBINE_");
