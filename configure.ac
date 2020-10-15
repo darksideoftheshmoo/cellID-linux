@@ -25,7 +25,7 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 # https://stackoverflow.com/questions/1732822/portably-include-glib-headers-in-autoconf-automake
 # parece que libtiff5 se llama "libtiff-4" según pkg-config, tira error poniendo otra cosa
 # https://stackoverflow.com/questions/3932742/static-library-auto-discovery-and-linking
-PKG_CHECK_MODULES([glib], [glib-2.0 >= 2.24.1])
+# PKG_CHECK_MODULES([glib], [glib-2.0 >= 2.24.1])
 PKG_CHECK_MODULES([libtiff], [libtiff-4])
 PKG_CHECK_MODULES([libm], [openlibm])
 
