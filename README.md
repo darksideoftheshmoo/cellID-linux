@@ -6,7 +6,13 @@ There is also _VCellID_, a friendlier and more automated graphical user interfac
 
 I became tired of fighting with unincluded dependencies, and so tried autotools by following [this](https://robots.thoughtbot.com/the-magic-behind-configure-make-make-install) tutorial and using other web resources. It was useful to understand the code, and further resources can be found in the comments within the configure.ac and Makefile.am files, explaining each line.
 
-**Branch note**: this branch has removed the glib dependency, **it has not been thoroughly tested**.
+# Branch notes
+
+This branch has removed the glib dependency, **it has not been thoroughly tested**.
+
+This branch outputs BF tiff files with blank background and cell boundary pixel intensities corresponding to CellID. **It has not been thoroughly tested**.
+
+The cell boundary pixel *should* correspond to the cellid according this formula: `pixel_intensity = 65535 - CellID`. However, time courses do not play nice with this; the formula holds only for the first t.frame. After the first t.frame, this does not work any longer.
 
 ## Credits
 
