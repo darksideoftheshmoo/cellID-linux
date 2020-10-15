@@ -2,3 +2,13 @@
 /time_of_t0.txt
 /.deps/*.Po
 /autom4te.cache/*
+/Makefile
+/Makefile.in
+/aclocal.m4
+/build-aux/compile
+/build-aux/depcomp
+/build-aux/install-sh
+/build-aux/missing
+/config.log
+/config.status
+/configure
