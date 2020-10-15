@@ -269,6 +269,7 @@ int output_data_to_tif_file(char *file,
 
   int u;
 
+  bit_size=16;  // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
   bitspersample=(uint16)bit_size;
 
   tif=TIFFOpen(file,"w");
@@ -311,8 +312,12 @@ int output_data_to_tif_file(char *file,
       if(output_data[u]<array_min)array_min=output_data[u];
     }
   }
+
+  array_max=65535.0;  // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
+  array_min=0.0;  // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
+
   if (array_max>array_min){
-    scale=1.0/(array_max-array_min);
+    scale=array_max-array_min; // mask_mod, originally: scale=1.0/(array_max-array_min);
   }else{
     scale=0.0;
   }
@@ -320,7 +325,7 @@ int output_data_to_tif_file(char *file,
   //Value of one degree of grayness:
   onetmp=1.0;
   if (bitspersample==8){
-    onetmp=1.0/(scale*xmax8);
+    onetmp=scale/xmax8;  // mask_mod, originally: onetmp=1.0/(scale*xmax8);
   }
 
   for(j=0;j<ymax_data;j++){
@@ -330,45 +335,33 @@ int output_data_to_tif_file(char *file,
       //Convert data to 8 bit or 16 bit
       tmp=output_data[u];
       if(invert==1){ //Flip values back from array_max-c[][]
-	if(tmp>0.0)tmp=array_max-tmp;
+  if(tmp>0.0)tmp=array_max-tmp;
       }
       if (labels!=NULL){
-	//type determines what set of labels to write out
-	k=labels[u];
-	if (type==0){
-	  if(k==found_border){
-	    tmp=array_max;
-	  }else if(k==found_border_a){
-	    tmp=array_max-onetmp;
-	  }else if(k==found_border_b){
-	    tmp=array_max-(2.0*onetmp);
-	  }else if(k==found_border_c){
-	    tmp=array_max-(3.0*onetmp);
-	  }else if(k==found_border_d){
-	    tmp=array_max-(4.0*onetmp);
-	  }else if(k==found_border_e){
-	    tmp=array_max-(5.0*onetmp);
-	  }else if(k==found_border_f){
-	    tmp=array_max-(6.0*onetmp);
-	  }else if(k==found_border_g){
-	    tmp=array_max-(7.0*onetmp);
-	  }else if(k==cell_label){
-	    tmp=array_max-(15.0*onetmp);
-	  }else if(k==delete_pixel){
-	    tmp=array_min;
-	  }
-	}else if (type==1){
-	  if(labels[u]==found_border){
-	    tmp=array_max;
-	    //tmp=8300.0;
-	  }
-	}else if (type==2){
-	  if(labels[u]==found_border){
-	    tmp=array_max;
-	  }else if (labels[u]==cell_nucleus){
-	    tmp=array_max-5.0;
-	  }
-	}
+  //type determines what set of labels to write out
+  k=labels[u];
+  if (type==0){                              // The default type for BF and flat_cors.
+    if(k>=20){                               // As modified in segment.c, values of "k=labels[u]" >= 20 should be cell boundaries (a different "int" per cell starting at 20).
+      tmp=array_max-(labels[u]-20)*onetmp;   // In that case, set the intensity value of the boundary pixel to something related to the cellid
+                                             // Note that since in segment.c "d[(b*xmax+a)]=i+1+19" starts at 20, then labels[u]==19 can mean something else.
+    }else if(k==cell_label){          // tif_routines.h says: #define cell_label 6, the default for cell labels if present.
+        tmp=array_max-(15.0*onetmp);
+    }else if(k==delete_pixel){        // #define delete_pixel 15
+      tmp=array_min;
+    } else {
+      tmp=array_min;
+    }
+  }else if (type==1){                 // The default type for FL is 1.
+    if(labels[u]==found_border){
+      tmp=array_max;
+    }
+  }else if (type==2){                 // Default type for third_image
+    if(labels[u]==found_border){
+      tmp=array_max;
+    }else if (labels[u]==cell_nucleus){
+      tmp=array_max-5.0;
+    }
+  }
       }
       if(bitspersample==8){
 	*(p_char+i)=(unsigned char) ((tmp-array_min)*scale*xmax8);
