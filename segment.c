@@ -6154,10 +6154,10 @@ void add_boundary_points_to_data(struct point *p_in){
           //New point
           a=a2;
           b=b2;
-	        d[(b*xmax+a)]=i+1+19; // mask_mod, originally: d[(b*xmax+a)]=border;
-	                              // mask_mod: boundary points have values related to which type of boundary they are
-	                              // mask_mod: lower integers are already in use, see tif_routines.h for reference
-	                              // mask_mod: integers greater than 15 should be unused. Just in case, we add 20.
+	        d[(b*xmax+a)]=(2*i)+20; // mask_mod, originally: d[(b*xmax+a)]=border;
+	                                // mask_mod: boundary points have values related to which type of boundary they are
+	                                // mask_mod: lower integers are already in use, see tif_routines.h for reference
+	                                // mask_mod: integers greater than 15 should be unused. Just in case, we add 20.
 	      }
       }
     }    
