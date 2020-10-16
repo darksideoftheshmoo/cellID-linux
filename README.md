@@ -10,11 +10,9 @@ I became tired of fighting with unincluded dependencies, and so tried autotools 
 
 This branch has removed the glib dependency, **it has not been thoroughly tested**.
 
-This branch outputs BF tiff files with blank background and cell boundary and cell label pixel intensities corresponding to CellID. **It has not been thoroughly tested**.
+This branch outputs BF tiff files with blank background and cell boundary pixel intensities corresponding to CellID. **It has not been thoroughly tested**.
 
-The cell boundary pixel *should* be an odd number, and correspond to the cellid according this formula: `CellID = (65535 - pixel_intensity)/2`. However, time courses do not play nice with this; the formula holds only for the first t.frame. After the first t.frame, this does not work any longer.
-
-The cell label pixel *should* be an even number, and correspond to the cellid according this formula: `CellID = (65535 - pixel_intensity - 1)/2`. This does seem to play nice with time courses.
+The cell boundary pixel *should* correspond to the cellid according this formula: `CellID = 65535 - pixel_intensity`. However, time courses do not play nice with this; the formula holds only for the first t.frame. After the first t.frame, this does not work any longer.
 
 ## Credits
 
