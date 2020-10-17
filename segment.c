@@ -1694,10 +1694,10 @@ void calculate_global_stats_from_interior_and_boundary(){
 
 /*************************************************************/
 int recombination_check(int i_t0,
-			int n_cuts,
-			int *cut_type,
-			int *cut_flag,
-			float *cuts){
+			                  int n_cuts,
+			                  int *cut_type,
+			                  int *cut_flag,
+			                  float *cuts){
   //This routine runs over all the cells found in cs[] in the latest
   //position. It uses the cuts to look for good cells that have no
   //nucleus and tries to recombine them with good cells that have a
@@ -1840,7 +1840,7 @@ int recombination_check(int i_t0,
   
   printf("RECOMBINATION INFO: {ID,(0=bad,1=good, no nuc, 2=good, nuc)}\n");
   for(j=0;j<n_known;j++){
-    printf("{%i,%i} ",cs[j]->index,cell_marker[j]);
+    printf("{%i,%i} ", cs[j]->index, cell_marker[j]);
   }
   printf("\n");
 
@@ -1960,7 +1960,7 @@ int recombination_check(int i_t0,
 
     if (max_overlap>overlap_cut){
       printf("Looking to combine %i with %i (%e)\n",
-	     b0->index,cs[k_remove]->index,max_overlap);
+	           b0->index, cs[k_remove]->index, max_overlap);
       icombine=combine_cells_in_cs_array(j,k_remove,i_t0);
       if (icombine==0){ //We totally deleted cell j
 	cs[j]=cs[n_known-1];
@@ -4628,6 +4628,7 @@ void update_list_of_found_cells(int i_t, int secs, int flag){
     total_fluorescence[i_t]+=fluorescence[i];
     area=cell_area[i];
     total_area[i_t]+=area;
+
     //Create a new "blob" pointer to put this cell data in.  Below we'll
     //decide where in the cs[] array of linked lists to put it.
     bnew=(struct blob *)malloc(sizeof(struct blob));
@@ -4685,8 +4686,8 @@ void update_list_of_found_cells(int i_t, int secs, int flag){
     bnew->area_nucleus4=area_nucleus[i][3];
     bnew->area_nucleus5=area_nucleus[i][4];
     bnew->area_nucleus6=area_nucleus[i][5];
-//    bnew->area_nucleus7=area_nucleus[i][6];
-//    bnew->area_nucleus8=area_nucleus[i][7];
+    //    bnew->area_nucleus7=area_nucleus[i][6];
+    //    bnew->area_nucleus8=area_nucleus[i][7];
 
 		//V1.4 TODO
     bnew->fl_nucleus1=fl_nucleus[i][0];
@@ -4695,16 +4696,16 @@ void update_list_of_found_cells(int i_t, int secs, int flag){
     bnew->fl_nucleus4=fl_nucleus[i][3];
     bnew->fl_nucleus5=fl_nucleus[i][4];
     bnew->fl_nucleus6=fl_nucleus[i][5];
-//    bnew->fl_nucleus7=fl_nucleus[i][6];
-//    bnew->fl_nucleus8=fl_nucleus[i][7];
+    //    bnew->fl_nucleus7=fl_nucleus[i][6];
+    //    bnew->fl_nucleus8=fl_nucleus[i][7];
     bnew->fl_nucleus_from_search1=fl_nucleus_from_search[i][0];
     bnew->fl_nucleus_from_search2=fl_nucleus_from_search[i][1];
     bnew->fl_nucleus_from_search3=fl_nucleus_from_search[i][2];
     bnew->fl_nucleus_from_search4=fl_nucleus_from_search[i][3];
     bnew->fl_nucleus_from_search5=fl_nucleus_from_search[i][4];
     bnew->fl_nucleus_from_search6=fl_nucleus_from_search[i][5];
-//    bnew->fl_nucleus_from_search7=fl_nucleus_from_search[i][6];
-//    bnew->fl_nucleus_from_search8=fl_nucleus_from_search[i][7];
+    //    bnew->fl_nucleus_from_search7=fl_nucleus_from_search[i][6];
+    //    bnew->fl_nucleus_from_search8=fl_nucleus_from_search[i][7];
  
     bnew->pos_sig_mean_x=pos_sig_mean_x[i];
     bnew->pos_sig_mean_y=pos_sig_mean_y[i];
@@ -4735,94 +4736,88 @@ void update_list_of_found_cells(int i_t, int secs, int flag){
     //Find cell in known list that is closest.
     id_fret=9999;
     if(new_phase==1){ //This is a new list of cells
-
       iloc=i;
-
       if ((have_fret_image==1)&&(i>=n_before_fret_copy)){
-	//For the FRET image type, only do the comparison for the
-	//id<fret_offset cells. Since the n_found cells that i is looping
-	//over all have the id+fret_offset cells in the upper half of the
-	//list, we can assume that if i>=n_before_fret_copy, then we can use
-	//the overlap from the cell=i-n_before_fret_copy cell. This cell is
-	//labelled by i-n_before_fret_copy, and we can assume it's already
-	//been calculated.
-	//We have the id number that the cell (i-n_before_fret_copy) was
-	//identified with through location_in_cs_array[]. We'll just use
-	//that below, so do nothing here. (Note that this assumes that
-	//we run over the non-fret_offset cells _first_ in the loop
-	//i=1,n_found above.)
-	j=location_in_cs_array[i-n_before_fret_copy];
-	if (j<0){
-	  free(bnew);
-	  continue; //This cell was skipped
-	}
-	id_fret=cs[j]->index;
-	id_fret+=fret_offset; //For the >fret_offset cells
-	//Now find the cs[] element that has this id number.
-	j_max=-1;
-	I_over_U_max=-1.0; //To signal below for new cell
-	for(j=(n_known-1);j>=0;j--){
-	  if((cs[j]->index)==id_fret){
-	    j_max=j; //Where we should put this cell
-	    I_over_U_max=999.0; //Will always pass cut below for match
-	    break;
-	  }
-	}
-
+	      //For the FRET image type, only do the comparison for the
+	      //id<fret_offset cells. Since the n_found cells that i is looping
+	      //over all have the id+fret_offset cells in the upper half of the
+	      //list, we can assume that if i>=n_before_fret_copy, then we can use
+	      //the overlap from the cell=i-n_before_fret_copy cell. This cell is
+	      //labelled by i-n_before_fret_copy, and we can assume it's already
+	      //been calculated.
+	      //We have the id number that the cell (i-n_before_fret_copy) was
+	      //identified with through location_in_cs_array[]. We'll just use
+	      //that below, so do nothing here. (Note that this assumes that
+	      //we run over the non-fret_offset cells _first_ in the loop
+	      //i=1,n_found above.)
+	      j=location_in_cs_array[i-n_before_fret_copy];
+	      if (j<0){
+	        free(bnew);
+	        continue; //This cell was skipped
+	      }
+	      id_fret=cs[j]->index;
+	      id_fret+=fret_offset; //For the >fret_offset cells
+	      //Now find the cs[] element that has this id number.
+	      j_max=-1;
+	      I_over_U_max=-1.0; //To signal below for new cell
+	      for(j=(n_known-1);j>=0;j--){
+	        if((cs[j]->index)==id_fret){
+	          j_max=j; //Where we should put this cell
+	          I_over_U_max=999.0; //Will always pass cut below for match
+	          break;
+	        }
+	      }
       }else{
-
-	I_over_U_max=-1.0;
-	//Prepare for calculation over intersection with all known points below
-	update_overlap_value(); //Do each cell separately
-	fill_overlap_array_with_point_list(interior[i]);
-	n_p=n_points[i];
-
-	/*
-	  area=area_of_cell(boundary[i]);
-	  circ=circumference_of_cell(boundary[i]);
-	  if(area!=0.0){
-	  c_over_a1=circ*circ/area;
-	  }else{
-	  c_over_a1=1.0e30;
-	  }
-	*/
-	
-	j_max=-1;
-	tmp_j=(fret_offset+overall_id_offset);
-	for(j=0;j<loop_total;j++){
-	  //Look at previous time point.  Last time point is cs[j], however
-	  //it's possible that we just added a point, so go to previous
-	  //time.
-	  if ((cs[j]->index)>=tmp_j){
-	    continue; //No need to compare to id's above fret_offset
-	  }
-	  if (cs[j]->x<0) continue; //A flag for removing cells
-	  for(b=cs[j];(b!=NULL)&&(b->i_time==i_t);b=b->prev);
-	  if(b==NULL){ //Should never happen
-	    printf("Chose a list that had no previous elements!!!\n");
-	    printf("!!!!!!!!!! (%i, %i) !!!!!!!!!\n",i_t,j);
-	    break;
-	  }
-	  isection=overlap(b->interior,offset_i,offset_j);
-	  uon=((b->n)+n_p) - isection; //union of points
-	  I_over_U=((float)isection)/((float)uon);
-	  if(I_over_U>I_over_U_max){
-	    I_over_U_max=I_over_U;
-	    j_max=j;
-	  }
-	}
-	if ((j_max<0)&&(loop_total>0)){
-	  printf("Failed to find any points to compare to!\n");
-	  I_over_U_max=-1.0;
-	}
+	      I_over_U_max=-1.0;
+	      //Prepare for calculation over intersection with all known points below
+	      update_overlap_value(); //Do each cell separately
+	      fill_overlap_array_with_point_list(interior[i]);
+	      n_p=n_points[i];
+	      /*
+	        area=area_of_cell(boundary[i]);
+	        circ=circumference_of_cell(boundary[i]);
+	        if(area!=0.0){
+	        c_over_a1=circ*circ/area;
+	        }else{
+	        c_over_a1=1.0e30;
+	        }
+	      */
+	      j_max=-1;
+	      tmp_j=(fret_offset+overall_id_offset);
+	      for(j=0;j<loop_total;j++){
+	        //Look at previous time point.  Last time point is cs[j], however
+	        //it's possible that we just added a point, so go to previous
+	        //time.
+	        if ((cs[j]->index)>=tmp_j){
+	          continue; //No need to compare to id's above fret_offset
+	        }
+	        if (cs[j]->x<0) continue; //A flag for removing cells
+	        for(b=cs[j];(b!=NULL)&&(b->i_time==i_t);b=b->prev);
+	        if(b==NULL){ //Should never happen
+	          printf("Chose a list that had no previous elements!!!\n");
+	          printf("!!!!!!!!!! (%i, %i) !!!!!!!!!\n",i_t,j);
+	          break;
+	        }
+	        isection=overlap(b->interior,offset_i,offset_j);
+	        uon=((b->n)+n_p) - isection; //union of points
+	        I_over_U=((float)isection)/((float)uon);
+	        if(I_over_U>I_over_U_max){
+	          I_over_U_max=I_over_U;
+	          j_max=j;
+	        }
+	      }
+	      if ((j_max<0)&&(loop_total>0)){
+	        printf("Failed to find any points to compare to!\n");
+	        I_over_U_max=-1.0;
+	      }
       } //if we have a fret-image and we're in the id+fret_offset range
       
     }else{ //if we don't have a new list of cells
       j_max=location_in_cs_array[i];
       if (j_max<0){
-	free(bnew);
-	continue; //Continue with next cell since we
-	//decided to skip this cell when we looked at it before.
+	      free(bnew);
+	      continue; //Continue with next cell since we
+	      //decided to skip this cell when we looked at it before.
       }
     }
 
@@ -4837,24 +4832,24 @@ void update_list_of_found_cells(int i_t, int secs, int flag){
       b=cs[j_max]; //Add new cell just after this one in linked list
       //Check if we've already added a cell at this time point
       if(b->i_time==i_t){ //Already matched a cell here
-	add_new_cell=1; //For check below
-	//Should we use the current cell or the one we added before?
-	if(I_over_U_max>(b->i_over_u)){ //Match current, make previous
-	  //cell a new one (otherwise make current a new cell, which will
-	  //happen automatically since add_new_cell is now set to 1)
-	  bsave=b; //Cell we're replacing
-	  (b->prev)->next=bnew;
-	  bnew->prev=(b->prev); //b now removed from list
-	  bnew->index=(b->prev)->index;
-	  cs[j_max]=bnew; //cs[] always points to latest time point
-	  //Find index that we're replacing
-	  for(iloc=0;iloc<i;iloc++){
-	    if (location_in_cs_array[iloc]==j_max) break;
-	  }
-	  //iloc is location_in_cs_array[] for cell we're moving.
-	  location_in_cs_array[i]=j_max; //Save this location for cell i
-	  bnew=bsave; //add_new_cell=1 so will add this one to the list
-	}
+	      add_new_cell=1; //For check below
+	      //Should we use the current cell or the one we added before?
+	      if(I_over_U_max>(b->i_over_u)){ //Match current, make previous
+	        //cell a new one (otherwise make current a new cell, which will
+	        //happen automatically since add_new_cell is now set to 1)
+	        bsave=b; //Cell we're replacing
+	        (b->prev)->next=bnew;
+	        bnew->prev=(b->prev); //b now removed from list
+	        bnew->index=(b->prev)->index;
+	        cs[j_max]=bnew; //cs[] always points to latest time point
+	        //Find index that we're replacing
+	        for(iloc=0;iloc<i;iloc++){
+	          if (location_in_cs_array[iloc]==j_max) break;
+	        }
+	        //iloc is location_in_cs_array[] for cell we're moving.
+	        location_in_cs_array[i]=j_max; //Save this location for cell i
+	        bnew=bsave; //add_new_cell=1 so will add this one to the list
+	      }
       }
     }
     if (add_new_cell==0){ //Might have been changed above
@@ -4864,38 +4859,34 @@ void update_list_of_found_cells(int i_t, int secs, int flag){
       cs[j_max]=bnew; //cs[] always points to latest time point
       location_in_cs_array[i]=j_max; //Save this location
     }else{
-
       if (n_known<max_cells){
-	
-	  //Add a new cell to the list
-	location_in_cs_array[iloc]=n_known; //Save this location
-	cs[n_known]=bnew;
-	bnew->prev=NULL; 
-	//bnew->index=n_known+overall_id_offset;
-	if ((have_fret_image==1)&&(i>=n_before_fret_copy)){
-	  bnew->index=id_fret;
-	}else{
-	  if ((next_index<fret_offset)||(have_fret_image!=1)||
-	      (i>=n_before_fret_copy)){
-	    bnew->index=next_index+overall_id_offset;
-	    next_index++; //Will be different from n_known for fret guys
-	  }else{ //Skip this cell
-	    printf("************** Too many known cells*****: %i.\n",n_known);
-	    location_in_cs_array[iloc]=-999;
-	    free(bnew);
-	    continue;
-	  }
-	}
-	n_known++;	
+	      //Add a new cell to the list
+	      location_in_cs_array[iloc]=n_known; //Save this location
+	      cs[n_known]=bnew;
+	      bnew->prev=NULL; 
+	      //bnew->index=n_known+overall_id_offset;
+	      if ((have_fret_image==1)&&(i>=n_before_fret_copy)){
+	        bnew->index=id_fret;
+	      }else{
+	        if ((next_index<fret_offset)||(have_fret_image!=1)||
+	            (i>=n_before_fret_copy)){
+	          bnew->index=next_index+overall_id_offset;
+	          next_index++; //Will be different from n_known for fret guys
+	        }else{ //Skip this cell
+	          printf("************** Too many known cells*****: %i.\n",n_known);
+	          location_in_cs_array[iloc]=-999;
+	          free(bnew);
+	          continue;
+	        }
+	      }
+	      n_known++;	
       }else{ //Skip this cell
-	printf("************** Too many known cells*****: %i.\n",n_known);
-	location_in_cs_array[iloc]=-999;
-	free(bnew);
-	continue;
+	      printf("************** Too many known cells*****: %i.\n",n_known);
+	      location_in_cs_array[iloc]=-999;
+	      free(bnew);
+	      continue;
       }
-      
     }
-    
   } //End loop over found cells
 
   printf("Currently found total of %i separate cells.\n",n_known);
@@ -4960,7 +4951,7 @@ void add_cell_number_to_the_data(int i_t){
 
   count=0;
   for(i=0;i<n_known;i++){
-    b=cs[i]; //cs[] points to most recently added cell
+    b=cs[i]; // the last element in the cs[] cell list points to most recently added cell
     if(b->i_time==i_t){
       //Write number i at position (b->x,b->y)
       //     printf("Adding number %i at (%e,%e).\n",b->index,b->x,b->y);
@@ -4969,9 +4960,9 @@ void add_cell_number_to_the_data(int i_t){
       if((count%alternate)==0){
 	       if (((b->x)>=0.0)&&((b->y)>=0.0)){
 	         add_numbers_to_data(b->index,
-			       ((int)((b->x))),
-			       ((int)((b->y))),
-			       d,xmax,ymax);
+			                         ((int)((b->x))),
+			                         ((int)((b->y))),
+			                         d,xmax,ymax);
 	       }
       }
       count++;
@@ -6198,7 +6189,9 @@ void add_boundary_points_to_data2(struct point *p_in, int i_t){
   //for(i=0;i<xmax_ymax;i++)d[i]=0;
   count=0;
   for(i=0;i<n_known;i++){ //for(i=0;i<n_found;i++){ //Loop over all cells
-    b=cs[i]; //cs[] points to most recently added cell
+    b=cs[i]; // cs is defined above as "struct blob *cs[max_cells];"
+             // therefore cs is a list of "blob" objects, each representing a cell's data
+             // defined below as cs[n_known]=bnew;
     if(b->i_time==i_t){
       border = b->index
 
@@ -6208,8 +6201,10 @@ void add_boundary_points_to_data2(struct point *p_in, int i_t){
 
       //p_in==NULL when function is called, meaning that no objects have yet been
       //treated. Therefore, put p_start=boundary[i] to point to get first cell
-      if (p_in==NULL)p_start=boundary[i];
-
+      //if (p_in==NULL)p_start=boundary[i];  // mask_mod: replace p_start=boundary[i]; by p_start=b->boundary;
+      if (p_in==NULL)p_start=b->boundary;    // mask_mod: b is cs[i] which in turn is one "blob", so we'll use its boundary element
+                                             // mask_mod: TODO we could use the "interior" element to fill the cells
+      
       //Loop over all boundary points until reaching the end (full circuit)
       for(p1=p_start;p1!=NULL;p1=p1->next){
         p2=p1->next;
@@ -7994,7 +7989,7 @@ struct point *copy_cell_for_split_regions(
 // type==3          d             //Global Arrays int *d=NULL;
 // type==4          fret_labels
 void load_global_arrays(int type, float *v1, int *v2,int xmax_in, int ymax_in){
-
+  // load_global_arrays() just copies the pointer
   xmax=xmax_in;
   ymax=ymax_in;
   xmax_ymax=xmax*ymax;

@@ -806,40 +806,39 @@ int main(int argc, char *argv[]){
 
   if (treat_brightfield_as_fluorescence==1){
         
-        //if mapping list we have to duplicate the phase file list
-        if(bf_fl_mapping==bf_fl_mapping_list){
-            
-            //adding first bf as fl
-            phase_files[n_phase]=(char *)malloc(max_strlen*sizeof(char));
-           strcpy(phase_files[n_phase],phase_files[0]);
-        fluor_files[n_fluor]=(char *)malloc(max_strlen*sizeof(char));
-        strcpy(fluor_files[n_fluor],phase_files[0]);
-            
-            n_bf_as_fl=1;            
+    //if mapping list we have to duplicate the phase file list
+    if(bf_fl_mapping==bf_fl_mapping_list){
+      //adding first bf as fl
+      phase_files[n_phase]=(char *)malloc(max_strlen*sizeof(char));
+      strcpy(phase_files[n_phase],phase_files[0]);
+      fluor_files[n_fluor]=(char *)malloc(max_strlen*sizeof(char));
+      strcpy(fluor_files[n_fluor],phase_files[0]);
+          
+      n_bf_as_fl=1;            
 
-            //adding new bf as fl 
-            for(i=1;i<n_phase;i++){
-                for(j=0;j<i;j++){
-                    if(strstr(phase_files[i],phase_files[j])==NULL){//new bf
-                        phase_files[n_phase+n_bf_as_fl]=(char *)malloc(max_strlen*sizeof(char));
-                  strcpy(phase_files[n_phase+n_bf_as_fl],phase_files[i]);
-                    fluor_files[n_fluor+n_bf_as_fl]=(char *)malloc(max_strlen*sizeof(char));
-                    strcpy(fluor_files[n_fluor+n_bf_as_fl],phase_files[i]);
-                        n_bf_as_fl++;
-                    }
-                }
-            }
-            n_phase+=n_bf_as_fl;
-            n_fluor+=n_bf_as_fl;
-        }else{
-        //Copy brightfield image names into fluor list
-        for(i=0;i<n_phase;i++){
-          fluor_files[n_fluor]=(char *)malloc(max_strlen*sizeof(char));
-          strcpy(fluor_files[n_fluor],phase_files[i]);
-          flag_bf[n_fluor]=1; //mark that is a brightfield
-          n_fluor++;
-        }
-        }
+      //adding new bf as fl 
+      for(i=1;i<n_phase;i++){
+          for(j=0;j<i;j++){
+              if(strstr(phase_files[i],phase_files[j])==NULL){//new bf
+                  phase_files[n_phase+n_bf_as_fl]=(char *)malloc(max_strlen*sizeof(char));
+            strcpy(phase_files[n_phase+n_bf_as_fl],phase_files[i]);
+              fluor_files[n_fluor+n_bf_as_fl]=(char *)malloc(max_strlen*sizeof(char));
+              strcpy(fluor_files[n_fluor+n_bf_as_fl],phase_files[i]);
+                  n_bf_as_fl++;
+              }
+          }
+      }
+      n_phase+=n_bf_as_fl;
+      n_fluor+=n_bf_as_fl;
+    }else{
+      //Copy brightfield image names into fluor list
+      for(i=0;i<n_phase;i++){
+        fluor_files[n_fluor]=(char *)malloc(max_strlen*sizeof(char));
+        strcpy(fluor_files[n_fluor],phase_files[i]);
+        flag_bf[n_fluor]=1; //mark that is a brightfield
+        n_fluor++;
+      }
+    }
   }
 
   //dark files
@@ -907,15 +906,6 @@ int main(int argc, char *argv[]){
       ph_d[i]=dtmp;
       printf("Stage position: %e  %e\n",xstage,ystage);fflush(stdout);
     }
-    //  exit(0);
-    /*
-    //As a test, only use first BF
-    for(i=1;i<n_phase;i++){
-      ph_d[i]=0.0;
-      ph_t[i]=0.0;
-    }
-    //end-test
-    */
 
    //V1.2a TODO modify, beware of the fl_d, fl_dmin, fl_t arrays
     fl_dmin=(int)(0x1ffffff);
@@ -998,8 +988,8 @@ int main(int argc, char *argv[]){
             //could happen if the user has, say, symbolic links to
             //the same file to create holder-spaces at time points where
             //certain colors weren't obtained--to simplify the offline
-          //data structure, etc. For this case, consider the first
-          //letter of the name to sort by
+            //data structure, etc. For this case, consider the first
+            //letter of the name to sort by
             if ((*fluor_files[i])>(*fluor_files[j])){ //swap
               d_cur=fl_d[i];
               t_cur=fl_t[i];
@@ -1373,7 +1363,7 @@ int main(int argc, char *argv[]){
 
     new_phase=0;//Whether have a new file or are using the previous
     if((first==0)||(strcmp(phase_files[j_min],phase_files[j_cur])!=0)){ //new file
-        //Set the split-cell cuts differently for first image if so
+      //Set the split-cell cuts differently for first image if so
       //requested
       if (first==0){
         if (max_d_over_s_cut_t0>-10.0){
