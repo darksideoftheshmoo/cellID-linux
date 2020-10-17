@@ -6180,12 +6180,10 @@ void add_boundary_points_to_data2(struct point *p_in, int i_t){
   border=found_border; //found_border=5 defined in tif_routines.h
   p_start=p_in;
   //for(i=0;i<xmax_ymax;i++)d[i]=0;
-  //int count;
-  //count=0;
   for(i=0;i<n_known;i++){ //for(i=0;i<n_found;i++){ //Loop over all cells
     cellblob=cs[i]; // cs is defined above as "struct blob *cs[max_cells];"
-             // therefore cs is a list of "blob" objects, each representing a cell's data
-             // defined below as cs[n_known]=bnew;
+                    // therefore cs is a list of "blob" objects, each representing a cell's data
+                    // defined below as cs[n_known]=bnew;
     if(cellblob->i_time==i_t){
       border = cellblob->index;
 
@@ -6246,7 +6244,6 @@ void add_boundary_points_to_data2(struct point *p_in, int i_t){
           }
         }
       }
-      //count++;
     }
   }
 
