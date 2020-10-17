@@ -6135,8 +6135,8 @@ void add_boundary_points_to_data(struct point *p_in){
   //for(i=0;i<xmax_ymax;i++)d[i]=0;
   for(i=0;i<n_found;i++){
     //calculate_volume_cone_old(interior[i]);
-    if (p_in==NULL)p_start=boundary[i];
-    for(p1=p_start;p1!=NULL;p1=p1->next){
+    if (p_in==NULL)p_start=boundary[i];           // "boundary" definido arriba (l:196) como: struct point *boundary[max_cells];
+    for(p1=p_start;p1!=NULL;p1=p1->next){         // ese struct point contiene la lista de coordenadas x-y de la boundary 
       p2=p1->next;
       if(p2==NULL) p2=p_start; //So make full circuit
       mx=(float)( (p2->i)-(p1->i) );
