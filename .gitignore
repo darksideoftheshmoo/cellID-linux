@@ -12,3 +12,5 @@
 /config.log
 /config.status
 /configure
+/.deps/segment.Tpo
+/.Rhistory

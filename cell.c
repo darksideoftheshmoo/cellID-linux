@@ -1395,9 +1395,11 @@ int main(int argc, char *argv[]){
                                                               // bf_fl_labels is declared above as "int *bf_fl_labels=NULL;" and not used in other files
           
           memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));     // llenar bf_fl_labels con ceros, esto quizas haga que "d" tenga ceros también
+          
           //add_cell_number_to_the_data(i-1);
-          //add_boundary_points_to_data2(NULL, i-1);
-          add_boundary_points_to_data(NULL);
+          
+          add_boundary_points_to_data2(NULL, i-1);
+          //add_boundary_points_to_data(NULL);
           
           //Write out the files
           strcpy(line,"COMBINE_");
@@ -1655,9 +1657,11 @@ int main(int argc, char *argv[]){
                                                           // con type==3, bf_fl_labels se _asocia_ con el array "d"
 
       memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
+      
       //add_cell_number_to_the_data(i);
-      //add_boundary_points_to_data2(NULL, i);
-      add_boundary_points_to_data(NULL);
+      
+      add_boundary_points_to_data2(NULL, i);
+      //add_boundary_points_to_data(NULL);
 
       if (output_individual_cells==1){
         //Write out the files
@@ -1704,9 +1708,12 @@ int main(int argc, char *argv[]){
     load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax);  //just in case
                                                         // con type==3, bf_fl_labels se _asocia_ con el array "d"
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
+    
     //add_cell_number_to_the_data(i-1);
-    //add_boundary_points_to_data2(NULL, i-1);
-    add_boundary_points_to_data(NULL);
+    
+    add_boundary_points_to_data2(NULL, i-1);
+    //add_boundary_points_to_data(NULL);
+
     //Write out the files
     strcpy(line,"COMBINE_");
     strcat(line,phase_files[j_cur]);

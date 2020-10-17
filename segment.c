@@ -3773,86 +3773,79 @@ int output_individual_cells_to_file(int i_t,
       //fflush(stdout);
       
       if (((b->x)>=0.0)&&((b->y)>=0.0)){
-	i0=((int)(b->x))-xmax_out/2;
-	j0=((int)(b->y))-ymax_out/2;
-
-	//Zero out this box first (ie, mark all pixels as "deleted")
-	for(ix=0;ix<xmax_out;ix++){
-	  for(iy=0;iy<ymax_out;iy++){
-	    u=(iy*xmax_out+ix);
-	    output_labels[u]=delete_pixel;
-	    output_data[u]=0.0;
-	  }
-	}
-	
-	//Add in our cell and its boundary
-	for(p=b->interior;p!=NULL;p=p->next){
-	  ix=(p->i)-i0;
-	  iy=(p->j)-j0;
-	  if ((ix>=0)&&(ix<xmax_out)&&(iy>=0)&&(iy<ymax_out)){
-	    u=(iy*xmax_out+ix);
-	    output_labels[u]=0; //transparent
-	  }
-	}
-	for(p=b->boundary;p!=NULL;p=p->next){
-	  ix=(p->i)-i0;
-	  iy=(p->j)-j0;
-	  if ((ix>=0)&&(ix<xmax_out)&&(iy>=0)&&(iy<ymax_out)){
-	    u=(iy*xmax_out+ix);
-	    output_labels[u]=found_border;
-	  }
-	}
-	
-	//Now copy over to our box
-	//Zero out this box first (ie, mark all pixels as "deleted")
-	for(ix=0;ix<xmax_out;ix++){
-	  for(iy=0;iy<ymax_out;iy++){
-	    //Now zero out d[] array in this region (see we can
-	    //use add_boundary_pixels()....
-	    u=(iy*xmax_out+ix);
-	    iuse=ix+i0;
-	    juse=iy+j0;
-	    output_data[u]=0.0;
-	    if ((iuse>=0)&&(iuse<xmax_data)&&(juse>=0)&&(juse<ymax_data)){
-	      uuse=(juse*xmax_data+iuse);
-	      output_data[u]=input_data[uuse];
-	    }    
-	  }
-	}
-
-	//Put number in middle of bottom
-	add_numbers_to_data(b->index,
-			    (xmax_out/2),(ymax_out-10),
-			    output_labels,
-			    xmax_out,ymax_out);
-	
-	strcpy(file,basefile);
-	strcat(file,"_");
-	digits_to_string(cellnum,bit_size,10);
-	strcat(file,cellnum);
-	strcat(file,"b_id_");
-	digits_to_string(cellnum,b->index,9999);
-	strcat(file,cellnum);
-	strcat(file,".tif");
-	if(output_data_to_tif_file(file,
-				   output_data,
-				   xmax_out,ymax_out,
-				   output_labels,
-				   type,
-				   bit_size,
-				   invert)==0){
-	  printf("Couldn't output cell %i to %s.\n",b->index,file);
-	}
-	
+	      i0=((int)(b->x))-xmax_out/2;
+	      j0=((int)(b->y))-ymax_out/2;
+	      //Zero out this box first (ie, mark all pixels as "deleted")
+	      for(ix=0;ix<xmax_out;ix++){
+	        for(iy=0;iy<ymax_out;iy++){
+	          u=(iy*xmax_out+ix);
+	          output_labels[u]=delete_pixel;
+	          output_data[u]=0.0;
+	        }
+	      }
+	      //Add in our cell and its boundary
+	      for(p=b->interior;p!=NULL;p=p->next){
+	        ix=(p->i)-i0;
+	        iy=(p->j)-j0;
+	        if ((ix>=0)&&(ix<xmax_out)&&(iy>=0)&&(iy<ymax_out)){
+	          u=(iy*xmax_out+ix);
+	          output_labels[u]=0; //transparent
+	        }
+	      }
+	      for(p=b->boundary;p!=NULL;p=p->next){
+	        ix=(p->i)-i0;
+	        iy=(p->j)-j0;
+	        if ((ix>=0)&&(ix<xmax_out)&&(iy>=0)&&(iy<ymax_out)){
+	          u=(iy*xmax_out+ix);
+	          output_labels[u]=found_border;
+	        }
+	      }
+	      //Now copy over to our box
+	      //Zero out this box first (ie, mark all pixels as "deleted")
+	      for(ix=0;ix<xmax_out;ix++){
+	        for(iy=0;iy<ymax_out;iy++){
+	          //Now zero out d[] array in this region (see we can
+	          //use add_boundary_pixels()....
+	          u=(iy*xmax_out+ix);
+	          iuse=ix+i0;
+	          juse=iy+j0;
+	          output_data[u]=0.0;
+	          if ((iuse>=0)&&(iuse<xmax_data)&&(juse>=0)&&(juse<ymax_data)){
+	            uuse=(juse*xmax_data+iuse);
+	            output_data[u]=input_data[uuse];
+	          }    
+	        }
+	      }
+	      //Put number in middle of bottom
+	      add_numbers_to_data(b->index,
+	      		    (xmax_out/2),(ymax_out-10),
+	      		    output_labels,
+	      		    xmax_out,ymax_out);
+	      
+	      strcpy(file,basefile);
+	      strcat(file,"_");
+	      digits_to_string(cellnum,bit_size,10);
+	      strcat(file,cellnum);
+	      strcat(file,"b_id_");
+	      digits_to_string(cellnum,b->index,9999);
+	      strcat(file,cellnum);
+	      strcat(file,".tif");
+	      if(output_data_to_tif_file(file,
+	      			                     output_data,
+	      			                     xmax_out,ymax_out,
+	      			                     output_labels,
+	      			                     type,
+	      			                     bit_size,
+	      			                     invert)==0){
+	        printf("Couldn't output cell %i to %s.\n",b->index,file);
+	      }
       }
     }
-
   }
   
   free(file);
   free(output_data);
   free(output_labels);
-
 
   return 1;
 }
@@ -6168,7 +6161,7 @@ void add_boundary_points_to_data(struct point *p_in){
 /****************************************************/
 void add_boundary_points_to_data2(struct point *p_in, int i_t){
 
-  struct blob *b; // my addition
+  struct blob *cellblob; // mask_mod: my addition (Andy)
 
   struct point *p1;
   struct point *p2;
@@ -6187,13 +6180,14 @@ void add_boundary_points_to_data2(struct point *p_in, int i_t){
   border=found_border; //found_border=5 defined in tif_routines.h
   p_start=p_in;
   //for(i=0;i<xmax_ymax;i++)d[i]=0;
-  count=0;
+  //int count;
+  //count=0;
   for(i=0;i<n_known;i++){ //for(i=0;i<n_found;i++){ //Loop over all cells
-    b=cs[i]; // cs is defined above as "struct blob *cs[max_cells];"
+    cellblob=cs[i]; // cs is defined above as "struct blob *cs[max_cells];"
              // therefore cs is a list of "blob" objects, each representing a cell's data
              // defined below as cs[n_known]=bnew;
-    if(b->i_time==i_t){
-      border = b->index
+    if(cellblob->i_time==i_t){
+      border = cellblob->index;
 
       //Write number i at position (b->x,b->y)
       //     printf("Adding number %i at (%e,%e).\n",b->index,b->x,b->y);
@@ -6201,10 +6195,10 @@ void add_boundary_points_to_data2(struct point *p_in, int i_t){
 
       //p_in==NULL when function is called, meaning that no objects have yet been
       //treated. Therefore, put p_start=boundary[i] to point to get first cell
-      //if (p_in==NULL)p_start=boundary[i];  // mask_mod: replace p_start=boundary[i]; by p_start=b->boundary;
-      if (p_in==NULL)p_start=b->boundary;    // mask_mod: b is cs[i] which in turn is one "blob", so we'll use its boundary element
-                                             // mask_mod: TODO we could use the "interior" element to fill the cells
-      
+      //if (p_in==NULL)p_start=boundary[i];         // mask_mod: replace p_start=boundary[i]; by p_start=cellblob->boundary;
+      if (p_in==NULL)p_start=cellblob->boundary;    // mask_mod: cellblob is cs[i] which in turn is one "blob", so we'll use its boundary element
+                                                    // mask_mod: TODO we could use the "interior" element to fill the cells
+
       //Loop over all boundary points until reaching the end (full circuit)
       for(p1=p_start;p1!=NULL;p1=p1->next){
         p2=p1->next;
@@ -6245,11 +6239,14 @@ void add_boundary_points_to_data2(struct point *p_in, int i_t){
             b=b2;
             //Add to image array (b*xmax since it's a 1-dim array)
             //border is defined elsewhere to border=5
-            d[(b*xmax+a)]=border;
+            d[(b*xmax+a)]=i+1+19; // mask_mod, originally: d[(b*xmax+a)]=border;
+                                  // mask_mod: boundary points have values related to which type of boundary they are
+                                  // mask_mod: lower integers are already in use, see tif_routines.h for reference
+                                  // mask_mod: integers greater than 15 should be unused. Just in case, we add 20.
           }
         }
       }
-      count++;
+      //count++;
     }
   }
 

@@ -81,10 +81,10 @@ End-copyright-notice-for-Libtiff
 //dark==NULL means no correction, otherwise points to an image to
 //subtract from the data.
 float *get_data_from_tif_file(char *file,
-			      int invert,
-			      float *dark,
-			      int *xmax_address,
-			      int *ymax_address){
+            int invert,
+            float *dark,
+            int *xmax_address,
+            int *ymax_address){
 
   TIFF *tif;
 
@@ -110,7 +110,7 @@ float *get_data_from_tif_file(char *file,
   //call below wants a pointer to an array, and I want to make sure
   //that it doesn't attempt to write to datatime_array[1] also.
   char *datetime_array[]={"abcdefghijklmnopqrstuvwxyz.",
-			  "abcdefghijklmnopqrstuvwxyz."};
+        "abcdefghijklmnopqrstuvwxyz."};
   char *datetime;
   int i;
   int xmax,ymax;
@@ -134,7 +134,7 @@ float *get_data_from_tif_file(char *file,
 
     //    printf("Photometric is %i.\n",photometric);
     //printf("Image Width and length in pixels = %i, %i\n",
-    //	   image_width,image_length);
+    //     image_width,image_length);
 
     xmax=image_width;
     ymax=image_length;
@@ -169,9 +169,9 @@ float *get_data_from_tif_file(char *file,
       tmp_p=data_16;
 
       for(row=0;row<image_length;row++){
-	TIFFReadScanline(tif,buf,row,1);
-	memcpy(tmp_p,buf,scanline_size);
-	tmp_p+=xmax;
+  TIFFReadScanline(tif,buf,row,1);
+  memcpy(tmp_p,buf,scanline_size);
+  tmp_p+=xmax;
       }
 
     }else{
@@ -179,9 +179,9 @@ float *get_data_from_tif_file(char *file,
       tmp_p8=data_8;
       
       for(row=0;row<image_length;row++){
-	TIFFReadScanline(tif,buf,row,1);
-	memcpy(tmp_p8,buf,scanline_size);
-	tmp_p8+=xmax;
+  TIFFReadScanline(tif,buf,row,1);
+  memcpy(tmp_p8,buf,scanline_size);
+  tmp_p8+=xmax;
       }
 
     }
@@ -228,13 +228,13 @@ float *get_data_from_tif_file(char *file,
 
 /******************************************************/
 int output_data_to_tif_file(char *file,
-			    float *output_data,
-			    int xmax_data,
-			    int ymax_data,
-			    int *labels,
-			    int type,
-			    int bit_size,
-			    int invert){
+                            float *output_data,
+                            int xmax_data,
+                            int ymax_data,
+                            int *labels,
+                            int type,
+                            int bit_size,
+                            int invert){
 
 
   //Output array output_data to a file.
@@ -335,44 +335,45 @@ int output_data_to_tif_file(char *file,
       //Convert data to 8 bit or 16 bit
       tmp=output_data[u];
       if(invert==1){ //Flip values back from array_max-c[][]
-  if(tmp>0.0)tmp=array_max-tmp;
+        if(tmp>0.0)tmp=array_max-tmp;
       }
       if (labels!=NULL){
-  //type determines what set of labels to write out
-  k=labels[u];
-  if (type==0){                              // The default value for BF type and flat_cors is 0.
-    if(k>=20){                               // As modified in segment.c, values of "k=labels[u]" >= 20 should be cell boundaries (a different "int" per cell starting at 20).
-      tmp=array_max-(labels[u]-20)*onetmp;   // In that case, set the intensity value of the boundary pixel to something related to the cellid
-                                             // Note that since in segment.c "d[(b*xmax+a)]=i+1+19" starts at 20, then labels[u]==19 can mean something else.
+        //type determines what set of labels to write out
+        k=labels[u];
+        if (type==0){                              // The default value for BF type and flat_cors is 0.
+          if(k>=20){                               // As modified in segment.c, values of "k=labels[u]" >= 20 should be cell boundaries (a different "int" per cell starting at 20).
+            tmp=array_max-(labels[u]-20)*onetmp;   // In that case, set the intensity value of the boundary pixel to something related to the cellid
+                                                   // Note that since in segment.c "d[(b*xmax+a)]=i+1+19" starts at 20, then labels[u]==19 can mean something else.
 
-    }else if(k==cell_label){                 // tif_routines.h says: #define cell_label 6, the default for cell labels if present.
-        tmp=array_max-(15.0*onetmp);
-    }else if(k==delete_pixel){               // tif_routines.h says: #define delete_pixel 15
-      tmp=array_min;
-    } else {
-      tmp=array_min;
-    }
+          }else if(k==cell_label){                 // tif_routines.h says: #define cell_label 6, the default for cell labels if present.
+              tmp=array_max-(15.0*onetmp);
+          }else if(k==delete_pixel){               // tif_routines.h says: #define delete_pixel 15
+            tmp=array_min;
+          } else {
+            tmp=array_min;
+          }
 
-  }else if (type==1){                        // The default value for FL type is 1
-    if(labels[u]==found_border){
-      tmp=array_max;
-    }
+        }else if (type==1){                        // The default value for FL type is 1
+          if(labels[u]==found_border){
+            tmp=array_max;
+          }
 
-  }else if (type==2){                        // The default value for third_image type is 2
-    if(labels[u]==found_border){
-      tmp=array_max;
-    }else if (labels[u]==cell_nucleus){
-      tmp=array_max-5.0;
-    }
-  }
+        }else if (type==2){                        // The default value for third_image type is 2
+          if(labels[u]==found_border){
+            tmp=array_max;
+          }else if (labels[u]==cell_nucleus){
+            tmp=array_max-5.0;
+          }
+        }
       }
+
       if(bitspersample==8){
-	*(p_char+i)=(unsigned char) ((tmp-array_min)*scale*xmax8);
+        *(p_char+i)=(unsigned char) ((tmp-array_min)*scale*xmax8);
       }else{
-	if (tmp<0.0) tmp=0.0;
-	if(tmp>xmax16)tmp=xmax16;
-	*(p_short+i)=(unsigned short) tmp;
-	//Original is assumed to be 16-bit data, so just replace it here.
+        if (tmp<0.0) tmp=0.0;
+        if(tmp>xmax16)tmp=xmax16;
+        *(p_short+i)=(unsigned short) tmp;
+        //Original is assumed to be 16-bit data, so just replace it here.
       }
     }
     TIFFWriteScanline(tif,data_buf,j,1);    
