@@ -260,18 +260,18 @@ int main(int argc, char *argv[]){
   min_pixels_per_cell=75;
   background_reject_factor=3.0;
   I_over_U_for_match=0.2;
-	nucleus_radii[0]=2; //V1.4.5 radii size initialization
-	nucleus_radii[1]=3;
-	nucleus_radii[2]=4;
-	nucleus_radii[3]=5;
-	nucleus_radii[4]=6;
-	nucleus_radii[5]=7;
+    nucleus_radii[0]=2; //V1.4.5 radii size initialization
+    nucleus_radii[1]=3;
+    nucleus_radii[2]=4;
+    nucleus_radii[3]=5;
+    nucleus_radii[4]=6;
+    nucleus_radii[5]=7;
   
 
-	file_type=list_file; //V1.2a
+    file_type=list_file; //V1.2a
   bf_fl_mapping=bf_fl_mapping_time;//V1.2a
   int paw_output=0; //V1.3a
-	int n_bf_as_fl=0; //V1.4.2
+    int n_bf_as_fl=0; //V1.4.2
 
 
 
@@ -293,14 +293,14 @@ int main(int argc, char *argv[]){
   char *fret_nuclear = NULL;
   char *str_align_fl = NULL;
 
-	//V1.4a
-	char *file_basename = NULL; // rcell2: used to be gchar, unsure if this is ok
-															// for getting correct channel identification from filenames with paths
+    //V1.4a
+    char *file_basename = NULL; // rcell2: used to be gchar, unsure if this is ok
+                                                            // for getting correct channel identification from filenames with paths
  
   char str_third_img_label[500];
   char *pnt_third_img_label = NULL;
-	char str_image_type[500];
-	char *pnt_image_type = NULL;
+    char str_image_type[500];
+    char *pnt_image_type = NULL;
 
   // rcell2 chunk: getopts option parser
   opterr = 0;  // https://stackoverflow.com/a/24331449/11524079
@@ -355,7 +355,7 @@ int main(int argc, char *argv[]){
  
   //Checking for parameters file option in command line manually
   for(i=1;i<argc;i++){
-	if(strstr(argv[i],"-?")!=NULL||strstr(argv[i],"--help")!=NULL||argc==1){
+    if(strstr(argv[i],"-?")!=NULL||strstr(argv[i],"--help")!=NULL||argc==1){
       help_flag = 1;
       break;
     }
@@ -379,53 +379,53 @@ int main(int argc, char *argv[]){
     //fscanf() only reads to next white space, not end of line
     while((fgets(line,450,fp))!=NULL){ //next line (while not EOF)
       if (line[0]!='#'){ //if not a comment
-	      if ((strstr(line,"max_split_over_minor"))!=NULL){
+          if ((strstr(line,"max_split_over_minor"))!=NULL){
           if ((strstr(line,"_t0"))!=NULL){
-	          sscanf(line,"%s %le",line2,&double_tmp);
-	          max_split_d_over_minor_t0=double_tmp;
-       	  }else{
-	          sscanf(line,"%s %le",line2,&double_tmp);
-	          max_split_d_over_minor=double_tmp;
-	        }
-	      }else if((strstr(line,"max_dist_over_waist"))!=NULL){
-	        if ((strstr(line,"_t0"))!=NULL){
-	          sscanf(line,"%s %le",line2,&double_tmp);
-	          max_d_over_s_cut_t0=double_tmp;
-	        }else{
-	           sscanf(line,"%s %le",line2,&double_tmp);
-	           max_d_over_s_cut=double_tmp;
-	        }
-	      }else if((strstr(line,"background_reject_factor"))!=NULL){
-	         sscanf(line,"%s %le",line2,&double_tmp);
-	         background_reject_factor=double_tmp;
-	      }else if((strstr(line,"tracking_comparison"))!=NULL){
-	         sscanf(line,"%s %le",line2,&double_tmp);
-	         I_over_U_for_match=double_tmp;
-	      }else if((strstr(line,"paw_output"))!=NULL){
+              sscanf(line,"%s %le",line2,&double_tmp);
+              max_split_d_over_minor_t0=double_tmp;
+             }else{
+              sscanf(line,"%s %le",line2,&double_tmp);
+              max_split_d_over_minor=double_tmp;
+            }
+          }else if((strstr(line,"max_dist_over_waist"))!=NULL){
+            if ((strstr(line,"_t0"))!=NULL){
+              sscanf(line,"%s %le",line2,&double_tmp);
+              max_d_over_s_cut_t0=double_tmp;
+            }else{
+               sscanf(line,"%s %le",line2,&double_tmp);
+               max_d_over_s_cut=double_tmp;
+            }
+          }else if((strstr(line,"background_reject_factor"))!=NULL){
+             sscanf(line,"%s %le",line2,&double_tmp);
+             background_reject_factor=double_tmp;
+          }else if((strstr(line,"tracking_comparison"))!=NULL){
+             sscanf(line,"%s %le",line2,&double_tmp);
+             I_over_U_for_match=double_tmp;
+          }else if((strstr(line,"paw_output"))!=NULL){
              paw_output=1;
-	      }else if((strstr(line,"max_pixels_per_cell"))!=NULL){
-	         sscanf(line,"%s %i",line2,&itmp);
-	         max_pixels_per_cell=itmp;
-	      }else if((strstr(line,"min_pixels_per_cell"))!=NULL){
-	         sscanf(line,"%s %i",line2,&itmp);
-	         min_pixels_per_cell=itmp;
-	      }else if((strstr(line,"force_nucleus_in_center"))!=NULL){
-	         force_nucleus_in_center=1;
-	      }else if((strstr(line,"output_individual_cells"))!=NULL){
-	         output_individual_cells=1;
-	         //system("mkdir -p cells");
+          }else if((strstr(line,"max_pixels_per_cell"))!=NULL){
+             sscanf(line,"%s %i",line2,&itmp);
+             max_pixels_per_cell=itmp;
+          }else if((strstr(line,"min_pixels_per_cell"))!=NULL){
+             sscanf(line,"%s %i",line2,&itmp);
+             min_pixels_per_cell=itmp;
+          }else if((strstr(line,"force_nucleus_in_center"))!=NULL){
+             force_nucleus_in_center=1;
+          }else if((strstr(line,"output_individual_cells"))!=NULL){
+             output_individual_cells=1;
+             //system("mkdir -p cells");
 
-	      //image types:
-	      }else if(strstr(line,"image_type")!=NULL){
-	         sscanf(line,"%s %s",line2,str_image_type);
-	         
+          //image types:
+          }else if(strstr(line,"image_type")!=NULL){
+             sscanf(line,"%s %s",line2,str_image_type);
+             
         //V1.2a file type reading from parameters
-	      /*
+          /*
         }else if(strstr(line,"file_type")!=NULL){
           sscanf(line,"%s %s",line2,line3);
           if(strstr(line3,"oif")!=NULL){
             file_type=oif_file;
-	          printf("Olympus Image File (.oif) requiered as first argument.\n");
+              printf("Olympus Image File (.oif) requiered as first argument.\n");
           }else if(strstr(line3,"oem")!=NULL){
             file_type=oem_file;
             printf("Open Emviorment of Microscopy File (.oem) requiered as argument.\n");
@@ -435,7 +435,7 @@ int main(int argc, char *argv[]){
             if (strstr(line3,"bf_fl_list")==NULL){
               printf("Not valid file_type in parameter.txt, using default.\n");
             }
-	          printf("Bright field and fluorescence file lists required as arguments.\n");
+              printf("Bright field and fluorescence file lists required as arguments.\n");
             //printf("arguments.\n");
           }
         */
@@ -455,135 +455,135 @@ int main(int argc, char *argv[]){
             printf("Using time mapping by default.\n");
             bf_fl_mapping=bf_fl_mapping_time; 
           }
-				//V1.4
-				//}else if(strstr(line,"nucleus_channel")!=NULL){
-				//	sscanf(line,"%s %s",line2,nucleus_channel); 	
-	      }else if(strstr(line,"fret")!=NULL){
-	        sscanf(line,"%s %s",line2,line3);
+                //V1.4
+                //}else if(strstr(line,"nucleus_channel")!=NULL){
+                //    sscanf(line,"%s %s",line2,nucleus_channel);     
+          }else if(strstr(line,"fret")!=NULL){
+            sscanf(line,"%s %s",line2,line3);
 
-	        if (fret_image!=1){ //if we haven't been here before
-	          fret_image=1; //To indicate that we have a fret split image
-	          //printf("Searching a split FRET image.\n");
-	        }
-	        //Further check the fret line:
-	        if (strstr(line3,"bf_top_only")!=NULL){
-	          //Now check if the split-brightfield has an image on top only or
-	          //bottom only, or bottom and top (note that each of the argument
-	          //strings has "fret" in them, so they'll pass the above if
-	          //statement).
-	          image_type=fret_bf_top_only;
-	          //printf("Cells on top part of BF image only.\n");
-	        }else if((strstr(line3,"bf_bottom_only"))!=NULL){
-	          image_type=fret_bf_bottom_only;
-	          //printf("Cells on bottom part of BF image only.\n");
-	        }else if((strstr(line3,"bf_bottom_and_top"))!=NULL){
-	          image_type=fret_bf_bottom_and_top;
-	          //printf("Cells on bottom and top part of BF image.\n");
-	        }
+            if (fret_image!=1){ //if we haven't been here before
+              fret_image=1; //To indicate that we have a fret split image
+              //printf("Searching a split FRET image.\n");
+            }
+            //Further check the fret line:
+            if (strstr(line3,"bf_top_only")!=NULL){
+              //Now check if the split-brightfield has an image on top only or
+              //bottom only, or bottom and top (note that each of the argument
+              //strings has "fret" in them, so they'll pass the above if
+              //statement).
+              image_type=fret_bf_top_only;
+              //printf("Cells on top part of BF image only.\n");
+            }else if((strstr(line3,"bf_bottom_only"))!=NULL){
+              image_type=fret_bf_bottom_only;
+              //printf("Cells on bottom part of BF image only.\n");
+            }else if((strstr(line3,"bf_bottom_and_top"))!=NULL){
+              image_type=fret_bf_bottom_and_top;
+              //printf("Cells on bottom and top part of BF image.\n");
+            }
 
-	        //Check if should use top or bottom of image that's used
-	        //for nuclear label. (If this isn't set, then it defaults
-	        //to bottom of image if there is a third image set and to
-	        //the top of the image otherwise--this is done below all this).
-	        if(strstr(line3,"nuclear_top")!=NULL){
-	          nuclear_fret_lower=1;
-	        }else if(strstr(line3,"nuclear_bottom")!=NULL){
-	          nuclear_fret_lower=0;
-	        }
+            //Check if should use top or bottom of image that's used
+            //for nuclear label. (If this isn't set, then it defaults
+            //to bottom of image if there is a third image set and to
+            //the top of the image otherwise--this is done below all this).
+            if(strstr(line3,"nuclear_top")!=NULL){
+              nuclear_fret_lower=1;
+            }else if(strstr(line3,"nuclear_bottom")!=NULL){
+              nuclear_fret_lower=0;
+            }
 
-	      }else if(strstr(line,"align_fl_to_first")!=NULL){
-	        //Check whether we want to use the first fluorescence image to
-	        //align all the others
-	        //printf("Will align all FL files to first FL file.\n");
-	        align_fl=1;
-	      }else if(strstr(line,"align_fl_to_bf")!=NULL){
-	        //or whether to align fl images to bf
-	        //printf("Will align first FL files to brightfield.\n");
-	        align_fl=2;
-	        //Check for third list of images. The use of the
-	        //images depends on the image_type.
-	      }else if(strstr(line,"treat_brightfield_as_fluorescence_also")!=NULL){
-	        treat_brightfield_as_fluorescence=1;
-	        //printf("Adding BF image as additional fluorescence image.\n");
-	      }else if (strstr(line,"third_image")!=NULL){
-	        sscanf(line,"%s %s",line2,str_third_img_label);
+          }else if(strstr(line,"align_fl_to_first")!=NULL){
+            //Check whether we want to use the first fluorescence image to
+            //align all the others
+            //printf("Will align all FL files to first FL file.\n");
+            align_fl=1;
+          }else if(strstr(line,"align_fl_to_bf")!=NULL){
+            //or whether to align fl images to bf
+            //printf("Will align first FL files to brightfield.\n");
+            align_fl=2;
+            //Check for third list of images. The use of the
+            //images depends on the image_type.
+          }else if(strstr(line,"treat_brightfield_as_fluorescence_also")!=NULL){
+            treat_brightfield_as_fluorescence=1;
+            //printf("Adding BF image as additional fluorescence image.\n");
+          }else if (strstr(line,"third_image")!=NULL){
+            sscanf(line,"%s %s",line2,str_third_img_label);
           
 
-	      }else if(strstr(line,"align_individual_cells")!=NULL){
-	        align_individual_cells=1;
-	        //see if "boundary" is part of name
-	        if(strstr(line,"align_individual_cells_boundary")!=NULL){
-	          align_individual_cells_boundary=1;
-	          //printf("Will wiggle each cell around to re-align with BF");
-	          //printf(" using boundary.\n");
-	        }//else{
-	          //printf("Will wiggle each cell around to re-align with BF.\n");
-	        //}
-	      }else if(strstr(line,"do_recombination")!=NULL){
-	        do_recombination=1;
-	      }else if(strstr(line,"recombination_fl_per_a_nucleus")!=NULL){
-	        sscanf(line,"%s %i %e",line2,&itmp,&tmp);
-	        recombination_cuts_type[n_recomb_cuts]=0;
-	        recombination_cuts[n_recomb_cuts]=tmp;
-	        recombination_cuts_flag[n_recomb_cuts]=itmp;
-	        printf("Will try to recombine cells with nucleus fluorescence\n");
-	        printf("intensity below %e for fl images with flag=%i.\n",
-		        recombination_cuts[n_recomb_cuts],
-		        recombination_cuts_flag[n_recomb_cuts]);
+          }else if(strstr(line,"align_individual_cells")!=NULL){
+            align_individual_cells=1;
+            //see if "boundary" is part of name
+            if(strstr(line,"align_individual_cells_boundary")!=NULL){
+              align_individual_cells_boundary=1;
+              //printf("Will wiggle each cell around to re-align with BF");
+              //printf(" using boundary.\n");
+            }//else{
+              //printf("Will wiggle each cell around to re-align with BF.\n");
+            //}
+          }else if(strstr(line,"do_recombination")!=NULL){
+            do_recombination=1;
+          }else if(strstr(line,"recombination_fl_per_a_nucleus")!=NULL){
+            sscanf(line,"%s %i %e",line2,&itmp,&tmp);
+            recombination_cuts_type[n_recomb_cuts]=0;
+            recombination_cuts[n_recomb_cuts]=tmp;
+            recombination_cuts_flag[n_recomb_cuts]=itmp;
+            printf("Will try to recombine cells with nucleus fluorescence\n");
+            printf("intensity below %e for fl images with flag=%i.\n",
+                recombination_cuts[n_recomb_cuts],
+                recombination_cuts_flag[n_recomb_cuts]);
 
           n_recomb_cuts++;
-	        if (n_recomb_cuts>=n_recomb_cuts_max){
-	          printf("Too many recombination cuts, dropping %s.\n",line);
-	          n_recomb_cuts--;
-	        }
-	      }else if(strstr(line,"recombination_is_a_cell_fl_per_a")!=NULL){
-	        sscanf(line,"%s %i %e",line2,&itmp,&tmp);
-	        recombination_cuts_type[n_recomb_cuts]=1;
-	        recombination_cuts[n_recomb_cuts]=tmp;
-	        recombination_cuts_flag[n_recomb_cuts]=itmp;
-	        printf("For recomb only, considering cells with total FL\n");
-	        printf("intensity above ");
-	        printf("%e for fluorescence images with flag=%i.\n",
-		         recombination_cuts[n_recomb_cuts],
-		         recombination_cuts_flag[n_recomb_cuts]);
+            if (n_recomb_cuts>=n_recomb_cuts_max){
+              printf("Too many recombination cuts, dropping %s.\n",line);
+              n_recomb_cuts--;
+            }
+          }else if(strstr(line,"recombination_is_a_cell_fl_per_a")!=NULL){
+            sscanf(line,"%s %i %e",line2,&itmp,&tmp);
+            recombination_cuts_type[n_recomb_cuts]=1;
+            recombination_cuts[n_recomb_cuts]=tmp;
+            recombination_cuts_flag[n_recomb_cuts]=itmp;
+            printf("For recomb only, considering cells with total FL\n");
+            printf("intensity above ");
+            printf("%e for fluorescence images with flag=%i.\n",
+                 recombination_cuts[n_recomb_cuts],
+                 recombination_cuts_flag[n_recomb_cuts]);
 
           n_recomb_cuts++;
-	        if (n_recomb_cuts>=n_recomb_cuts_max){
-	          printf("Too many recombination cuts, dropping %s.\n",line);
-	          n_recomb_cuts--;
-	        }
-	      }else if(strstr(line,"recombination_all_new_cells")!=NULL){
-	        recombination_cuts_type[n_recomb_cuts]=2;
-	        recombination_cuts[n_recomb_cuts]=0.0;
-	        recombination_cuts_flag[n_recomb_cuts]=0;
-	        printf("All cells produced after i_t 0 will be recombined.\n");
-	        n_recomb_cuts++;
-	        if (n_recomb_cuts>=n_recomb_cuts_max){
-	          printf("Too many recombination cuts, dropping %s.\n",line);
-	          n_recomb_cuts--;
-	        }
-	      }else if(strstr(line,"append_output")!=NULL){
-	        sscanf(line,"%s %i",line2,&itmp);
-	        overall_id_offset=itmp;
-	      }else if(strstr(line,"nucleus_radius_1")!=NULL){
-	         sscanf(line,"%s %i",line2,&itmp);
-					 nucleus_radii[0]=itmp;
-	      }else if(strstr(line,"nucleus_radius_2")!=NULL){
-	         sscanf(line,"%s %i",line2,&itmp);
-					 nucleus_radii[1]=itmp;
-	      }else if(strstr(line,"nucleus_radius_3")!=NULL){
-	         sscanf(line,"%s %i",line2,&itmp);
-					 nucleus_radii[2]=itmp;
-	      }else if(strstr(line,"nucleus_radius_4")!=NULL){
-	         sscanf(line,"%s %i",line2,&itmp);
-					 nucleus_radii[3]=itmp;
-	      }else if(strstr(line,"nucleus_radius_5")!=NULL){
-	         sscanf(line,"%s %i",line2,&itmp);
-					 nucleus_radii[4]=itmp;
-	      }else if(strstr(line,"nucleus_radius_6")!=NULL){
-	         sscanf(line,"%s %i",line2,&itmp);
-					 nucleus_radii[5]=itmp;
-	      }
+            if (n_recomb_cuts>=n_recomb_cuts_max){
+              printf("Too many recombination cuts, dropping %s.\n",line);
+              n_recomb_cuts--;
+            }
+          }else if(strstr(line,"recombination_all_new_cells")!=NULL){
+            recombination_cuts_type[n_recomb_cuts]=2;
+            recombination_cuts[n_recomb_cuts]=0.0;
+            recombination_cuts_flag[n_recomb_cuts]=0;
+            printf("All cells produced after i_t 0 will be recombined.\n");
+            n_recomb_cuts++;
+            if (n_recomb_cuts>=n_recomb_cuts_max){
+              printf("Too many recombination cuts, dropping %s.\n",line);
+              n_recomb_cuts--;
+            }
+          }else if(strstr(line,"append_output")!=NULL){
+            sscanf(line,"%s %i",line2,&itmp);
+            overall_id_offset=itmp;
+          }else if(strstr(line,"nucleus_radius_1")!=NULL){
+             sscanf(line,"%s %i",line2,&itmp);
+                     nucleus_radii[0]=itmp;
+          }else if(strstr(line,"nucleus_radius_2")!=NULL){
+             sscanf(line,"%s %i",line2,&itmp);
+                     nucleus_radii[1]=itmp;
+          }else if(strstr(line,"nucleus_radius_3")!=NULL){
+             sscanf(line,"%s %i",line2,&itmp);
+                     nucleus_radii[2]=itmp;
+          }else if(strstr(line,"nucleus_radius_4")!=NULL){
+             sscanf(line,"%s %i",line2,&itmp);
+                     nucleus_radii[3]=itmp;
+          }else if(strstr(line,"nucleus_radius_5")!=NULL){
+             sscanf(line,"%s %i",line2,&itmp);
+                     nucleus_radii[4]=itmp;
+          }else if(strstr(line,"nucleus_radius_6")!=NULL){
+             sscanf(line,"%s %i",line2,&itmp);
+                     nucleus_radii[5]=itmp;
+          }
       } //End of check that first character wasn't a "#"
     } //End of while loop over parameters.txt
     fclose(fp);
@@ -591,13 +591,13 @@ int main(int argc, char *argv[]){
     printf("%s not found. Using default parameters. \n",param_file);
   }
 
-	//V1.4.5
-	printf("Using nucleus radii %i %i %i %i %i %i px.\n",nucleus_radii[0],nucleus_radii[1]
-				,nucleus_radii[2],nucleus_radii[3],nucleus_radii[4],nucleus_radii[5]);  
+    //V1.4.5
+    printf("Using nucleus radii %i %i %i %i %i %i px.\n",nucleus_radii[0],nucleus_radii[1]
+                ,nucleus_radii[2],nucleus_radii[3],nucleus_radii[4],nucleus_radii[5]);  
 
-	if(pnt_third_img_label==NULL) pnt_third_img_label=&str_third_img_label[0];
-	if(pnt_image_type==NULL) pnt_image_type=&str_image_type[0];
-	
+    if(pnt_third_img_label==NULL) pnt_third_img_label=&str_third_img_label[0];
+    if(pnt_image_type==NULL) pnt_image_type=&str_image_type[0];
+    
   
   if(help_flag==1){
     printf("For help type 'cell --help'\n");
@@ -606,7 +606,7 @@ int main(int argc, char *argv[]){
   }
   
   if(output_individual_cells==1){
-	  system("mkdir -p cells");
+      system("mkdir -p cells");
   }
 
   //Reading fret parameters form command line and steping on parameters.txt
@@ -614,25 +614,25 @@ int main(int argc, char *argv[]){
   if(fret_bf != NULL){
     fret_image=1;
     if (strstr(fret_bf,"top")!=NULL){
-	    //Now check if the split-brightfield has an image on top only or
-	    //bottom only, or bottom and top 
+        //Now check if the split-brightfield has an image on top only or
+        //bottom only, or bottom and top 
       image_type=fret_bf_top_only;
       //printf("Cells on top part of BF image only.\n");
     }else if((strstr(fret_bf,"bottom"))!=NULL){
-	    image_type=fret_bf_bottom_only;
-	    //printf("Cells on bottom part of BF image only.\n");
-	  }else if((strstr(fret_bf,"both"))!=NULL){
-	    image_type=fret_bf_bottom_and_top;
-	    //printf("Cells on bottom and top part of BF image.\n");
-	  }
+        image_type=fret_bf_bottom_only;
+        //printf("Cells on bottom part of BF image only.\n");
+      }else if((strstr(fret_bf,"both"))!=NULL){
+        image_type=fret_bf_bottom_and_top;
+        //printf("Cells on bottom and top part of BF image.\n");
+      }
   }
-	if(fret_nuclear!=NULL){ 
-	  fret_image=1;
-	  if(strstr(fret_nuclear,"top")!=NULL){
-	    nuclear_fret_lower=1;
-	  }else if(strstr(fret_nuclear,"bottom")!=NULL){
-	    nuclear_fret_lower=0;
-	  }
+    if(fret_nuclear!=NULL){ 
+      fret_image=1;
+      if(strstr(fret_nuclear,"top")!=NULL){
+        nuclear_fret_lower=1;
+      }else if(strstr(fret_nuclear,"bottom")!=NULL){
+        nuclear_fret_lower=0;
+      }
   }
   
   //Printing the final fret and image type parameters
@@ -641,16 +641,16 @@ int main(int argc, char *argv[]){
     if(image_type==fret_bf_top_only){
       printf("Cells on top part of BF image only.\n");
     }else if(image_type==fret_bf_bottom_only){
-	    printf("Cells on bottom part of BF image only.\n");
-	  }else if(image_type==fret_bf_bottom_and_top){
-	    printf("Cells on bottom and top part of BF image.\n");
-	  }    
+        printf("Cells on bottom part of BF image only.\n");
+      }else if(image_type==fret_bf_bottom_and_top){
+        printf("Cells on bottom and top part of BF image.\n");
+      }    
     //If nuclear_fret_lower wasn't set, set to defaults  
     if (nuclear_fret_lower==(-1)){
       if (third_image_type==no_third_image){
-	      nuclear_fret_lower=1; //Upper part if third image
+          nuclear_fret_lower=1; //Upper part if third image
       }else{
-	      nuclear_fret_lower=0; //Lower part if no third image
+          nuclear_fret_lower=0; //Lower part if no third image
       }
     }
     if (nuclear_fret_lower==1){
@@ -662,21 +662,21 @@ int main(int argc, char *argv[]){
   } else {
     //image_type is either a fret type, or one of the following 
     if (strstr(pnt_image_type,"bright")!=NULL){
-	    image_type=bright_field;
-	    printf("Searching brightfield image for cells.\n");
-	  }else if(strstr(pnt_image_type,"decon")!=NULL){
-	    image_type=metamorph_deconvolution;
-	    printf("Searching metamorph_deconvolution image for cells.\n");
-	  }else if(strstr(pnt_image_type,"hex")!=NULL){
-	    image_type=hexagonal_grid;
-	    printf("Searching hexagonal_grid image type for cells.\n");
-	  //}else if(strstr(str_image_type,"membrane_tagged_fl")!=NULL){
-	  //  image_type=membrane_tagged_fl;
-	  //  printf("Searching a membrane tagged fluor image for cells.\n");
-	  }else if(strstr(pnt_image_type,"confocal")!=NULL){
-	    image_type=confocal_transmission;
-	    printf("Searching a confocal transmission image for cells.\n");
-	  }
+        image_type=bright_field;
+        printf("Searching brightfield image for cells.\n");
+      }else if(strstr(pnt_image_type,"decon")!=NULL){
+        image_type=metamorph_deconvolution;
+        printf("Searching metamorph_deconvolution image for cells.\n");
+      }else if(strstr(pnt_image_type,"hex")!=NULL){
+        image_type=hexagonal_grid;
+        printf("Searching hexagonal_grid image type for cells.\n");
+      //}else if(strstr(str_image_type,"membrane_tagged_fl")!=NULL){
+      //  image_type=membrane_tagged_fl;
+      //  printf("Searching a membrane tagged fluor image for cells.\n");
+      }else if(strstr(pnt_image_type,"confocal")!=NULL){
+        image_type=confocal_transmission;
+        printf("Searching a confocal transmission image for cells.\n");
+      }
   }
 
   //Stepping parameters.txt values
@@ -700,73 +700,73 @@ int main(int argc, char *argv[]){
   
 
   if(treat_brightfield_as_fluorescence==1){
-	  printf("Adding BF image as additional fluorescence image.\n"); 
+      printf("Adding BF image as additional fluorescence image.\n"); 
   }
 
   //Cheking for third image type, note that the same string has been read in 
   //parametes.txt and steped on with GOptions
   if((strstr(pnt_third_img_label,"nuclear")!=NULL)){
-	  third_image_type=nuclear_label;
-	  printf("Third image will be used to label nucleus.\n");
-	}else if(strstr(pnt_third_img_label,"vacuole")!=NULL){
-	  third_image_type=vacuole_label;
-	  printf("Third image will be used to correct for vacuole.\n");
-	}else{
-	  if(third_list_file!=NULL){
+      third_image_type=nuclear_label;
+      printf("Third image will be used to label nucleus.\n");
+    }else if(strstr(pnt_third_img_label,"vacuole")!=NULL){
+      third_image_type=vacuole_label;
+      printf("Third image will be used to correct for vacuole.\n");
+    }else{
+      if(third_list_file!=NULL){
       printf("Unknown third image type, ignoring third images.");
     }
-	  third_image_type=no_third_image;
-	}
+      third_image_type=no_third_image;
+    }
   
   //printing values
   if(align_individual_cells_boundary==1){
     align_individual_cells=1;
-	  printf("Will wiggle each cell around to re-align with BF");
-	  printf(" using boundary.\n");
-	}else if(align_individual_cells==1){
+      printf("Will wiggle each cell around to re-align with BF");
+      printf(" using boundary.\n");
+    }else if(align_individual_cells==1){
     printf("Will wiggle each cell around to re-align with BF.\n");
   }
 
 
   if (overall_id_offset>=0){
-	          
-	  strcpy(append,"a");
-	  do_append=1;
-	  printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	  printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	  printf("!!!!              !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	  printf("!!!!    WARNING   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	  printf("!!!!              !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	  printf("!!!!                                       !!!!!!\n");
-	  printf("!!!! We're going to OVERWRITE output data. !!!!!!\n");
-	  printf("!!!!                                       !!!!!!\n");
-	  printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	  printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	  printf("All cells will be given ID offset %i.\n",
-		overall_id_offset); 
+              
+      strcpy(append,"a");
+      do_append=1;
+      printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+      printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+      printf("!!!!              !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+      printf("!!!!    WARNING   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+      printf("!!!!              !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+      printf("!!!!                                       !!!!!!\n");
+      printf("!!!! We're going to OVERWRITE output data. !!!!!!\n");
+      printf("!!!!                                       !!!!!!\n");
+      printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+      printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+      printf("All cells will be given ID offset %i.\n",
+        overall_id_offset); 
 
   }else if (overall_id_offset==-1){
     overall_id_offset=0;
   }else{
-	  printf("Append_output was requested with ID offset of %i.\n",overall_id_offset);
-	  printf("Minimum offset is 0.\n");
-	  exit(0);
-	}
+      printf("Append_output was requested with ID offset of %i.\n",overall_id_offset);
+      printf("Minimum offset is 0.\n");
+      exit(0);
+    }
 
 
   //Read in the files
   n_third=0;
   if (third_list_file!=NULL){//if there is a third image
     if( (fp_in=fopen(third_list_file,"r"))==NULL ){
-	    printf("Couldnt open file %s.\n",third_list_file);
-	    return 0;
+        printf("Couldnt open file %s.\n",third_list_file);
+        return 0;
     }
     //Read in names of the third-files to be read in
     i=0;
     while(fscanf(fp_in,"%s",line)==1){
-	    third_files[i]=(char *)malloc(max_strlen*sizeof(char));
-	    strcpy(third_files[i],line);
-	    i++;
+        third_files[i]=(char *)malloc(max_strlen*sizeof(char));
+        strcpy(third_files[i],line);
+        i++;
     }
     fclose(fp_in);
     n_third=i;
@@ -788,11 +788,11 @@ int main(int argc, char *argv[]){
   max_split_d_over_minor_save=max_split_d_over_minor;
   if (max_d_over_s_cut_t0>-10.0){
     printf("   For first image: max_dist_over_waist=%e\n",
-	   max_d_over_s_cut_t0);
+       max_d_over_s_cut_t0);
   }
   if (max_split_d_over_minor_t0>-10.0){
     printf("   For first image: max_dist_over_minor_axis=%e\n",
-	   max_split_d_over_minor_t0);
+       max_split_d_over_minor_t0);
   }
 
   //End checking of arguments
@@ -827,41 +827,41 @@ int main(int argc, char *argv[]){
   n_fluor=i;
 
   if (treat_brightfield_as_fluorescence==1){
-		
-		//if mapping list we have to duplicate the phase file list
-		if(bf_fl_mapping==bf_fl_mapping_list){
-			
-			//adding first bf as fl
-			phase_files[n_phase]=(char *)malloc(max_strlen*sizeof(char));
-   		strcpy(phase_files[n_phase],phase_files[0]);
-  	  fluor_files[n_fluor]=(char *)malloc(max_strlen*sizeof(char));
-    	strcpy(fluor_files[n_fluor],phase_files[0]);
-			
-			n_bf_as_fl=1;			
+        
+        //if mapping list we have to duplicate the phase file list
+        if(bf_fl_mapping==bf_fl_mapping_list){
+            
+            //adding first bf as fl
+            phase_files[n_phase]=(char *)malloc(max_strlen*sizeof(char));
+           strcpy(phase_files[n_phase],phase_files[0]);
+        fluor_files[n_fluor]=(char *)malloc(max_strlen*sizeof(char));
+        strcpy(fluor_files[n_fluor],phase_files[0]);
+            
+            n_bf_as_fl=1;            
 
-			//adding new bf as fl 
-			for(i=1;i<n_phase;i++){
-				for(j=0;j<i;j++){
-					if(strstr(phase_files[i],phase_files[j])==NULL){//new bf
-						phase_files[n_phase+n_bf_as_fl]=(char *)malloc(max_strlen*sizeof(char));
-      			strcpy(phase_files[n_phase+n_bf_as_fl],phase_files[i]);
-			  	  fluor_files[n_fluor+n_bf_as_fl]=(char *)malloc(max_strlen*sizeof(char));
-    				strcpy(fluor_files[n_fluor+n_bf_as_fl],phase_files[i]);
-						n_bf_as_fl++;
-					}
-				}
-			}
-			n_phase+=n_bf_as_fl;
-			n_fluor+=n_bf_as_fl;
-		}else{
-	    //Copy brightfield image names into fluor list
-  	  for(i=0;i<n_phase;i++){
-    	  fluor_files[n_fluor]=(char *)malloc(max_strlen*sizeof(char));
-      	strcpy(fluor_files[n_fluor],phase_files[i]);
-      	flag_bf[n_fluor]=1; //mark that is a brightfield
-      	n_fluor++;
-    	}
-		}
+            //adding new bf as fl 
+            for(i=1;i<n_phase;i++){
+                for(j=0;j<i;j++){
+                    if(strstr(phase_files[i],phase_files[j])==NULL){//new bf
+                        phase_files[n_phase+n_bf_as_fl]=(char *)malloc(max_strlen*sizeof(char));
+                  strcpy(phase_files[n_phase+n_bf_as_fl],phase_files[i]);
+                    fluor_files[n_fluor+n_bf_as_fl]=(char *)malloc(max_strlen*sizeof(char));
+                    strcpy(fluor_files[n_fluor+n_bf_as_fl],phase_files[i]);
+                        n_bf_as_fl++;
+                    }
+                }
+            }
+            n_phase+=n_bf_as_fl;
+            n_fluor+=n_bf_as_fl;
+        }else{
+        //Copy brightfield image names into fluor list
+        for(i=0;i<n_phase;i++){
+          fluor_files[n_fluor]=(char *)malloc(max_strlen*sizeof(char));
+          strcpy(fluor_files[n_fluor],phase_files[i]);
+          flag_bf[n_fluor]=1; //mark that is a brightfield
+          n_fluor++;
+        }
+        }
   }
 
   //dark files
@@ -985,7 +985,7 @@ int main(int argc, char *argv[]){
         t=t/1000; //Convert to seconds
         flat_t[i]=t;
         if (dtmp<flat_dmin){
-      	  flat_dmin=dtmp;
+            flat_dmin=dtmp;
         }
         flat_d[i]=dtmp;
       }
@@ -1000,42 +1000,42 @@ int main(int argc, char *argv[]){
     for (i=0;i<(n_fluor-1);i++){
       for(j=i;j<n_fluor;j++){
         if ((((fl_d[i]-fl_dmin)*seconds_per_day)+(fl_t[i]))>
-	         (((fl_d[j]-fl_dmin)*seconds_per_day)+(fl_t[j]))){
+             (((fl_d[j]-fl_dmin)*seconds_per_day)+(fl_t[j]))){
           //Swap them
-	        d_cur=fl_d[i];
-	        t_cur=fl_t[i];
-	        strcpy(line,fluor_files[i]);
-	        fl_d[i]=fl_d[j];
-	        fl_t[i]=fl_t[j];
-	        strcpy(fluor_files[i],fluor_files[j]);
-	        fl_d[j]=d_cur;
-	        fl_t[j]=t_cur;
-	        strcpy(fluor_files[j],line);
-	        k=flag_bf[i];
-	        flag_bf[i]=flag_bf[j];
-	        flag_bf[j]=k;
+            d_cur=fl_d[i];
+            t_cur=fl_t[i];
+            strcpy(line,fluor_files[i]);
+            fl_d[i]=fl_d[j];
+            fl_t[i]=fl_t[j];
+            strcpy(fluor_files[i],fluor_files[j]);
+            fl_d[j]=d_cur;
+            fl_t[j]=t_cur;
+            strcpy(fluor_files[j],line);
+            k=flag_bf[i];
+            flag_bf[i]=flag_bf[j];
+            flag_bf[j]=k;
         }else if ((((fl_d[i]-fl_dmin)*seconds_per_day)+(fl_t[i]))==
-         	       (((fl_d[j]-fl_dmin)*seconds_per_day)+(fl_t[j]))){
-	        //This is the case that the times are _equal_. This
-	        //could happen if the user has, say, symbolic links to
-	        //the same file to create holder-spaces at time points where
-	        //certain colors weren't obtained--to simplify the offline
+                    (((fl_d[j]-fl_dmin)*seconds_per_day)+(fl_t[j]))){
+            //This is the case that the times are _equal_. This
+            //could happen if the user has, say, symbolic links to
+            //the same file to create holder-spaces at time points where
+            //certain colors weren't obtained--to simplify the offline
           //data structure, etc. For this case, consider the first
           //letter of the name to sort by
-	        if ((*fluor_files[i])>(*fluor_files[j])){ //swap
-	          d_cur=fl_d[i];
-	          t_cur=fl_t[i];
-	          strcpy(line,fluor_files[i]);
-	          fl_d[i]=fl_d[j];
-	          fl_t[i]=fl_t[j];
-	          strcpy(fluor_files[i],fluor_files[j]);
-	          fl_d[j]=d_cur;
-	          fl_t[j]=t_cur;
-	          strcpy(fluor_files[j],line);
-	          k=flag_bf[i];
-   	        flag_bf[i]=flag_bf[j];
-	          flag_bf[j]=k;
-	        }//end swap if
+            if ((*fluor_files[i])>(*fluor_files[j])){ //swap
+              d_cur=fl_d[i];
+              t_cur=fl_t[i];
+              strcpy(line,fluor_files[i]);
+              fl_d[i]=fl_d[j];
+              fl_t[i]=fl_t[j];
+              strcpy(fluor_files[i],fluor_files[j]);
+              fl_d[j]=d_cur;
+              fl_t[j]=t_cur;
+              strcpy(fluor_files[j],line);
+              k=flag_bf[i];
+               flag_bf[i]=flag_bf[j];
+              flag_bf[j]=k;
+            }//end swap if
         }//end equal time if
       }//end j for
     }//end i for
@@ -1082,25 +1082,25 @@ int main(int argc, char *argv[]){
   //value should be.
   flag[0]=0;
   for(i=1;i<n_fluor;i++){
-		//V1.4a file names can have paths
- 		file_basename= basename(fluor_files[i]);
-		c0=(file_basename)[0];
+        //V1.4a file names can have paths
+         file_basename= basename(fluor_files[i]);
+        c0=(file_basename)[0];
     c1=(file_basename)[1];
     c2=(file_basename)[2];
-  	// free(file_basename);  // rcell2: g_free replacement, not necessary https://stackoverflow.com/a/20297598/11524079
-		flag[i]=flag[i-1]+1; //Default to new flag
+      // free(file_basename);  // rcell2: g_free replacement, not necessary https://stackoverflow.com/a/20297598/11524079
+        flag[i]=flag[i-1]+1; //Default to new flag
     for(j=0;j<i;j++){//Look for a match among previous files
-			file_basename= basename(fluor_files[j]);
-    	if (
-	     (((file_basename)[0])==c0)&&
-	     (((file_basename)[1])==c1)&&
-	     (((file_basename)[2])==c2)
-	     ){
-	       flag[i]=flag[j]; //Found a match
-	       break;
+            file_basename= basename(fluor_files[j]);
+        if (
+         (((file_basename)[0])==c0)&&
+         (((file_basename)[1])==c1)&&
+         (((file_basename)[2])==c2)
+         ){
+           flag[i]=flag[j]; //Found a match
+           break;
       }
-    	// free(file_basename);  // rcell2: g_free replacement, not necessary https://stackoverflow.com/a/20297598/11524079
-		}
+        // free(file_basename);  // rcell2: g_free replacement, not necessary https://stackoverflow.com/a/20297598/11524079
+        }
   }
   //Print out message if we have different flags set.
   j=0;
@@ -1113,7 +1113,7 @@ int main(int argc, char *argv[]){
   if (j!=0){
     for(i=0;i<n_fluor;i++){
       printf("File %s is given flag number %i\n",
-	     fluor_files[i],flag[i]);
+         fluor_files[i],flag[i]);
     }
   }
 
@@ -1143,9 +1143,9 @@ int main(int argc, char *argv[]){
     t_exposure=get_exposure(fluor_files[i]);
     for(j=0;j<n_dark;j++){
       if (t_exposure==exposure[j]){
-	      dark=get_data_from_tif_file(dark_files[j],0,NULL,&xmax_new,&ymax_new);
-      	printf("Correcting with dark image %s\n",dark_files[j]);
-	      break;
+          dark=get_data_from_tif_file(dark_files[j],0,NULL,&xmax_new,&ymax_new);
+          printf("Correcting with dark image %s\n",dark_files[j]);
+          break;
       }
     }
 
@@ -1198,10 +1198,10 @@ int main(int argc, char *argv[]){
       s=flat_files[j];
       s2=s;
       while ((*s)!='\0'){
-	      if((*s)=='/'){
-	        s2=(s+1);
-	      }
-	      s++;
+          if((*s)=='/'){
+            s2=(s+1);
+          }
+          s++;
       }
       //s2 now points to first location after last "/" in name.
       //Make sure name is more than three letters.
@@ -1209,69 +1209,69 @@ int main(int argc, char *argv[]){
       if ((*(s2+1))=='\0') continue;
       if ((*(s2+2))=='\0') continue;
       if ((c0==s2[0])&&(c1==s2[1])&&(c2==s2[2])){
-	      dt=abs((d_cur-flat_d[j])*seconds_per_day+(t_cur-flat_t[j]));
-	      //Note we converted time to seconds from milliseconds above
-	      if ((dt_min<0)||(dt<dt_min)){
-	        dt_min=dt;
-	        j_min=j;
-	      }
+          dt=abs((d_cur-flat_d[j])*seconds_per_day+(t_cur-flat_t[j]));
+          //Note we converted time to seconds from milliseconds above
+          if ((dt_min<0)||(dt<dt_min)){
+            dt_min=dt;
+            j_min=j;
+          }
       }
     }
     if (j_min<0){
       printf("Not doing any flattening correction.\n");
     }else{
       printf("Correcting with should-be-flat image %s\n",
-	     flat_files[j_min]);
+         flat_files[j_min]);
       //Calculate new corrections
       if (flat_cur!=j_min){ //We haven't done this correction yet
-	      flat_cur=j_min;
-	      //See if correction was already written to disk
-	      s=flat_files[flat_cur]; //Remove directory information
-	      s2=s;
-	      while ((*s)!='\0'){
-	        if((*s)=='/'){
-	          s2=(s+1);
-	        }
-	        s++;
-	      }
-	      strcpy(line,s2);
-	      strcat(line,".corrections.tif");
-	      free(flat_cors);
-	      if((flat_cors=get_data_from_tif_file(line,0,NULL,
+          flat_cur=j_min;
+          //See if correction was already written to disk
+          s=flat_files[flat_cur]; //Remove directory information
+          s2=s;
+          while ((*s)!='\0'){
+            if((*s)=='/'){
+              s2=(s+1);
+            }
+            s++;
+          }
+          strcpy(line,s2);
+          strcat(line,".corrections.tif");
+          free(flat_cors);
+          if((flat_cors=get_data_from_tif_file(line,0,NULL,
                                     &xmax_new,&ymax_new))==NULL){
-	        //File isn't there, so calculate correction
-	        ftmp=get_data_from_tif_file(flat_files[flat_cur],0,dark,
-				      &xmax_new,&ymax_new);
-	        if (ftmp==NULL){
+            //File isn't there, so calculate correction
+            ftmp=get_data_from_tif_file(flat_files[flat_cur],0,dark,
+                      &xmax_new,&ymax_new);
+            if (ftmp==NULL){
             printf("Couldnt open corrections file: %s\n",flat_files[flat_cur]);
-	          goto skip_flat;
-	        }
-	        if ((xmax_new!=xmax)||(ymax_new!=ymax)){
-	          printf("Cant do corrections with this size image: (%i x %i)\n",
-		           xmax_new,ymax_new);
-	          free(ftmp);
-	          goto skip_flat;
-	        }
+              goto skip_flat;
+            }
+            if ((xmax_new!=xmax)||(ymax_new!=ymax)){
+              printf("Cant do corrections with this size image: (%i x %i)\n",
+                   xmax_new,ymax_new);
+              free(ftmp);
+              goto skip_flat;
+            }
           flat_cors=flatten_image(ftmp,xmax,ymax,return_correction_array,
-				                                                x_and_y, nonlinear);
-	        free(ftmp);
-	        //Write out correction file in current-directory.
-	        //use "line" as defined just above
-	        printf("Writing corrections to output file %s.\n",line);
-	        //Scale corrections by 20000.0 for writing out
-	        for(j=0;j<(xmax*ymax);j++)(flat_cors[j])*=(20000.0);
-	        if(output_data_to_tif_file(line,flat_cors,xmax,ymax,NULL,0,16,0)==0){
-	          printf("Couldn't output data to tif file %s.\n",line);
-	        }
-	      }
-	      //If we just wrote out corrections, then we just scaled them
-	      //by 20000 and similarly if we just read them in then they were
-	      //already scaled by 20000.0.  Unscale them here.
-	      for(j=0;j<(xmax*ymax);j++)(flat_cors[j])/=20000.0;
+                                                                x_and_y, nonlinear);
+            free(ftmp);
+            //Write out correction file in current-directory.
+            //use "line" as defined just above
+            printf("Writing corrections to output file %s.\n",line);
+            //Scale corrections by 20000.0 for writing out
+            for(j=0;j<(xmax*ymax);j++)(flat_cors[j])*=(20000.0);
+            if(output_data_to_tif_file(line,flat_cors,xmax,ymax,NULL,0,16,0)==0){
+              printf("Couldn't output data to tif file %s.\n",line);
+            }
+          }
+          //If we just wrote out corrections, then we just scaled them
+          //by 20000 and similarly if we just read them in then they were
+          //already scaled by 20000.0.  Unscale them here.
+          for(j=0;j<(xmax*ymax);j++)(flat_cors[j])/=20000.0;
       }
       //Apply correction
       for(j=0;j<(xmax*ymax);j++){
-	      fl[j]*=(flat_cors[j]);
+          fl[j]*=(flat_cors[j]);
       }
 
     }
@@ -1292,76 +1292,76 @@ int main(int argc, char *argv[]){
       j_min=-1;
       dt_min=(int)(0x1ffffff);
       for(j=0;j<n_third;j++){
-	      dt=abs((d_cur-third_d[j])*seconds_per_day+(t_cur-third_t[j]));
-      	//Note we converted time to seconds from milliseconds above
-	      if(dt<dt_min){
-	        dt_min=dt;
-	        j_min=j;
-	      }
+          dt=abs((d_cur-third_d[j])*seconds_per_day+(t_cur-third_t[j]));
+          //Note we converted time to seconds from milliseconds above
+          if(dt<dt_min){
+            dt_min=dt;
+            j_min=j;
+          }
       }
       //If we haven't loaded this file already, then load it
       //-->11/29/04-->Hack to just take next third image
 
       if (third_cur<0){
-	      j_min=0;
+          j_min=0;
       }else{
-	      j_min=third_cur+1;
+          j_min=third_cur+1;
       }
 
 
       if (j_min!=third_cur){
-	      third_cur=j_min;
-	      free(third_image); //get_data...() routine will allocate space
-	      //Load dark image to subtract for this exposure time
-	      free(dark);
-	      dark=NULL;
-	      t_exposure=get_exposure(third_files[third_cur]);
-	      for(j=0;j<n_dark;j++){
-	        if (t_exposure==exposure[j]){
-	          dark=get_data_from_tif_file(dark_files[j],0,NULL,&xmax_new,&ymax_new);
-	          printf("Correcting third image with dark image %s\n",dark_files[j]);
-	          break;
-	        }
-	      }
-	      if((third_image=get_data_from_tif_file(third_files[third_cur],0,dark,
-				                                         &xmax_new,&ymax_new))==NULL){
-	        printf("Couldn't open tif file %s.\n",third_files[third_cur]);
-	        return 0;
-	      }
-	      if ((xmax!=xmax_new)||(ymax!=ymax_new)){
-	        printf("Third file has different dimensions than others\n");
-	        printf("that were already loaded. (%i,%i) is not (%i,%i)\n",
-		        xmax,ymax,xmax_new,ymax_new);
-	        free(third_image);
-	        return 0;
-	      }
-	      //Subtract fluorescence image as a test--for vacuole type
-	      if(third_image_type==vacuole_label){
-	        nloop=xmax*ymax;
-	        tmp1=0.0;
-	        tmp2=0.0;
-	        for(iloop=0;iloop<nloop;iloop++){
-	          tmp1+=(third_image[iloop]);
-	          tmp2+=(fl[iloop]);
-	        }
-	        tmp1/=((float)nloop);
-	        tmp2/=((float)nloop);
-	        for(iloop=0;iloop<nloop;iloop++){
-	          tmp=fl[iloop]-tmp2;
-	          if (tmp>100.0){
-	            tmp=10.0;
-	            third_image[iloop]=(third_image[iloop]-tmp1)/tmp;
-	            if (third_image[iloop]<=0.0) third_image[iloop]=0.0;
-	          }else{
-	            third_image[iloop]=0.0;
-	          }
-	        }
-	      }
+          third_cur=j_min;
+          free(third_image); //get_data...() routine will allocate space
+          //Load dark image to subtract for this exposure time
+          free(dark);
+          dark=NULL;
+          t_exposure=get_exposure(third_files[third_cur]);
+          for(j=0;j<n_dark;j++){
+            if (t_exposure==exposure[j]){
+              dark=get_data_from_tif_file(dark_files[j],0,NULL,&xmax_new,&ymax_new);
+              printf("Correcting third image with dark image %s\n",dark_files[j]);
+              break;
+            }
+          }
+          if((third_image=get_data_from_tif_file(third_files[third_cur],0,dark,
+                                                         &xmax_new,&ymax_new))==NULL){
+            printf("Couldn't open tif file %s.\n",third_files[third_cur]);
+            return 0;
+          }
+          if ((xmax!=xmax_new)||(ymax!=ymax_new)){
+            printf("Third file has different dimensions than others\n");
+            printf("that were already loaded. (%i,%i) is not (%i,%i)\n",
+                xmax,ymax,xmax_new,ymax_new);
+            free(third_image);
+            return 0;
+          }
+          //Subtract fluorescence image as a test--for vacuole type
+          if(third_image_type==vacuole_label){
+            nloop=xmax*ymax;
+            tmp1=0.0;
+            tmp2=0.0;
+            for(iloop=0;iloop<nloop;iloop++){
+              tmp1+=(third_image[iloop]);
+              tmp2+=(fl[iloop]);
+            }
+            tmp1/=((float)nloop);
+            tmp2/=((float)nloop);
+            for(iloop=0;iloop<nloop;iloop++){
+              tmp=fl[iloop]-tmp2;
+              if (tmp>100.0){
+                tmp=10.0;
+                third_image[iloop]=(third_image[iloop]-tmp1)/tmp;
+                if (third_image[iloop]<=0.0) third_image[iloop]=0.0;
+              }else{
+                third_image[iloop]=0.0;
+              }
+            }
+          }
 
-	      recalculate_internal=1; //Must re-calculate centers
-	      output_third_image=1; //Haven't written it out yet
-	      //Make sure to add new array to global variables in segment.
-	      load_global_arrays(2,third_image,NULL,xmax,ymax);
+          recalculate_internal=1; //Must re-calculate centers
+          output_third_image=1; //Haven't written it out yet
+          //Make sure to add new array to global variables in segment.
+          load_global_arrays(2,third_image,NULL,xmax,ymax);
       }
     }
 
@@ -1377,12 +1377,12 @@ int main(int argc, char *argv[]){
         j_min=i;
       }else{
         for(j=0;j<n_phase;j++){
-       	  dt=abs((d_cur-ph_d[j])*seconds_per_day+(t_cur-ph_t[j]));
-	        //Note we converted time to seconds from milliseconds above
-	        if(dt<dt_min){
-	          dt_min=dt;
-	          j_min=j;
-	        }
+             dt=abs((d_cur-ph_d[j])*seconds_per_day+(t_cur-ph_t[j]));
+            //Note we converted time to seconds from milliseconds above
+            if(dt<dt_min){
+              dt_min=dt;
+              j_min=j;
+            }
         }
       }
     } else {
@@ -1395,85 +1395,86 @@ int main(int argc, char *argv[]){
 
     new_phase=0;//Whether have a new file or are using the previous
     if((first==0)||(strcmp(phase_files[j_min],phase_files[j_cur])!=0)){ //new file
-	    //Set the split-cell cuts differently for first image if so
+        //Set the split-cell cuts differently for first image if so
       //requested
-    	if (first==0){
-     	  if (max_d_over_s_cut_t0>-10.0){
-	     	  max_d_over_s_cut=max_d_over_s_cut_t0;
+      if (first==0){
+        if (max_d_over_s_cut_t0>-10.0){
+          max_d_over_s_cut=max_d_over_s_cut_t0;
         }
-	      if (max_split_d_over_minor_t0>-10.0){
-	        max_split_d_over_minor=max_split_d_over_minor_t0;
-	     	}
+        if (max_split_d_over_minor_t0>-10.0){
+          max_split_d_over_minor=max_split_d_over_minor_t0;
+        }
       }else{
-       	max_d_over_s_cut=max_d_over_s_cut_save;
-	      max_split_d_over_minor=max_split_d_over_minor_save;
+        max_d_over_s_cut=max_d_over_s_cut_save;
+        max_split_d_over_minor=max_split_d_over_minor_save;
       }
 
-    	//Try doing recombination of previously found cells
+      //Try doing recombination of previously found cells
       //based on the fluorescence images that we read in since the last
       //call to find_cells(). (If this is the first call it won't do
       //anything since it loops over n_known, which starts at 0).
       if (do_recombination==1){
-	      printf("Doing recombination check.\n");
-	      recombination_check(i_last_find_cell_call,
-			     n_recomb_cuts,
-			     recombination_cuts_type,
-			     recombination_cuts_flag,
-			     recombination_cuts);
-	      if (first!=0){
-	       	//Make output with re-combined data
+          printf("Doing recombination check.\n");
+          recombination_check(i_last_find_cell_call,
+                              n_recomb_cuts,
+                              recombination_cuts_type,
+                              recombination_cuts_flag,
+                              recombination_cuts);
+          if (first!=0){
+            //Make output with re-combined data
           load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax); //just in case
 	       	memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
-	       	//add_cell_number_to_the_data(i-1);
-	       	add_boundary_points_to_data(NULL);
-
-        	//Write out the files
-         	strcpy(line,"COMBINE_");
-         	strcat(line,phase_files[j_cur]);
-         	strcat(line,".out.tif");
-         	printf("Writing found cells and data to output file %s.\n",line);
-         	if(output_data_to_tif_file(line,bf,xmax,ymax,bf_fl_labels,0,8,0)==0){
-           	printf("Couldn't output data to tif file %s.\n",line);
-          }
-       	}
-     	}
-
-     	new_phase=1;
-     	recalculate_internal=1; //New cells so must re-do internal calculations
-     	j_cur=j_min;
-     
-     	first=1;
-     	i_last_find_cell_call=i;//How far back to alter cell list with
-     	//recombination_check_cuts.  i is the loop over the fluorescence
-     	//images, and each i shows up in update_list_of_found_cells() below
+            //add_cell_number_to_the_data(i-1);
+            //add_boundary_points_to_data2(NULL, i-1);
+            add_boundary_points_to_data(NULL);
             
-     	printf("Doing new cell search.\n");
-     	printf("New brightfield image: %s.\n",phase_files[j_cur]);fflush(stdout);
+            //Write out the files
+            strcpy(line,"COMBINE_");
+            strcat(line,phase_files[j_cur]);
+            strcat(line,".out.tif");
+            printf("Writing found cells and data to output file %s.\n",line);
+            if(output_data_to_tif_file(line,bf,xmax,ymax,bf_fl_labels,0,8,0)==0){
+              printf("Couldn't output data to tif file %s.\n",line);
+            }
+             }
+         }
 
-     	if(bf_fl_mapping==bf_fl_mapping_time){
-       	JulianToYMD(ph_d[j_cur],&year,&month,&day);
-       	Int_To_Hours_Minutes_Seconds(ph_t[j_cur],&hours,&minutes,&seconds);
-       	printf("The time stamp of this file is: ");fflush(stdout);
-       	date_stamp(year,month,day);
-       	printf(" at ");
-       	time_stamp(hours,minutes,seconds);
-       	printf(".\n"); fflush(stdout);
-     	}
+         new_phase=1;
+         recalculate_internal=1; //New cells so must re-do internal calculations
+         j_cur=j_min;
+     
+         first=1;
+         i_last_find_cell_call=i;//How far back to alter cell list with
+         //recombination_check_cuts.  i is the loop over the fluorescence
+         //images, and each i shows up in update_list_of_found_cells() below
+            
+         printf("Doing new cell search.\n");
+         printf("New brightfield image: %s.\n",phase_files[j_cur]);fflush(stdout);
 
-     	//Read in brightfield image data for ith file
-     	free(bf);
-    	//Do no dark field correction for bright field image....
-    	if((bf=get_data_from_tif_file(phase_files[j_cur],0,NULL,&xmax_new,&ymax_new))==NULL){
-    	  printf("Couldn't open tif file %s.\n",phase_files[j_cur]);
-	  		free(bf);
-	  		return 0;
+         if(bf_fl_mapping==bf_fl_mapping_time){
+           JulianToYMD(ph_d[j_cur],&year,&month,&day);
+           Int_To_Hours_Minutes_Seconds(ph_t[j_cur],&hours,&minutes,&seconds);
+           printf("The time stamp of this file is: ");fflush(stdout);
+           date_stamp(year,month,day);
+           printf(" at ");
+           time_stamp(hours,minutes,seconds);
+           printf(".\n"); fflush(stdout);
+         }
+
+         //Read in brightfield image data for ith file
+         free(bf);
+        //Do no dark field correction for bright field image....
+        if((bf=get_data_from_tif_file(phase_files[j_cur],0,NULL,&xmax_new,&ymax_new))==NULL){
+          printf("Couldn't open tif file %s.\n",phase_files[j_cur]);
+              free(bf);
+              return 0;
       }
       if ((xmax!=xmax_new)||(ymax!=ymax_new)){
-			  printf("BF file has different dimensions than others\n");
-			  printf("that were already loaded. (%i,%i) is not (%i,%i)\n",
-	      		xmax,ymax,xmax_new,ymax_new);
-			  free(bf);
-			  return 0;
+              printf("BF file has different dimensions than others\n");
+              printf("that were already loaded. (%i,%i) is not (%i,%i)\n",
+                  xmax,ymax,xmax_new,ymax_new);
+              free(bf);
+              return 0;
       }
 
       //Make sure to add new array to global variables in segment.
@@ -1481,68 +1482,68 @@ int main(int argc, char *argv[]){
 
       //In case of aligning to bf, load the current bf image
       if (align_fl==2){
-			  align_image(bf,xmax,ymax,0); //Load bf to compare fl to
+              align_image(bf,xmax,ymax,0); //Load bf to compare fl to
       }
 
-      	//If image type if hexagonal grid then we're going to do some
-      	//FFT's, so make sure is square and each dimension is a power of
-      	//two.
-      	//-->Might have to redefine arrays as I have it!!!--asg 5/19/03
-      	//-->for this part (ie, if making array square probably have to
-      	//-->re-allocate space since I address as j*xmax+i....
-      	/*
-      	if (image_type==hexagonal_grid){
-		    if (xmax>ymax){ //Make sure is square
-	  	  printf("Reducing x-size to match y-size (%i-->%i).\n",xmax,ymax);
-	  	  xmax=ymax;
-		    }else if(ymax>xmax){
-	  	  printf("Reducing y-size to match x-size (%i-->%i).\n",ymax,xmax);
-	  	  ymax=xmax;
-		    }
-		    //Now make sure is divisible by two, and lower it until
-		    //we find nearest power of two.  This method is
-		    //slow but it's fast enough....
-		    j=xmax+1;
-		    do{
-	  	  j--; //Subtract one until we reach a power of two
-	  	  itmp=2;
-	  	  while ((j%itmp)==0) itmp*=2;
-		    }while(itmp<j);
-		    if (j!=xmax){
-	  	  printf("Make size a power of 2 for FFT, new size=%ix%i.\n",j,j);
-		    }
-		    xmax=j;
-		    ymax=j;
-      	}
-      	*/
+          //If image type if hexagonal grid then we're going to do some
+          //FFT's, so make sure is square and each dimension is a power of
+          //two.
+          //-->Might have to redefine arrays as I have it!!!--asg 5/19/03
+          //-->for this part (ie, if making array square probably have to
+          //-->re-allocate space since I address as j*xmax+i....
+          /*
+          if (image_type==hexagonal_grid){
+            if (xmax>ymax){ //Make sure is square
+            printf("Reducing x-size to match y-size (%i-->%i).\n",xmax,ymax);
+            xmax=ymax;
+            }else if(ymax>xmax){
+            printf("Reducing y-size to match x-size (%i-->%i).\n",ymax,xmax);
+            ymax=xmax;
+            }
+            //Now make sure is divisible by two, and lower it until
+            //we find nearest power of two.  This method is
+            //slow but it's fast enough....
+            j=xmax+1;
+            do{
+            j--; //Subtract one until we reach a power of two
+            itmp=2;
+            while ((j%itmp)==0) itmp*=2;
+            }while(itmp<j);
+            if (j!=xmax){
+            printf("Make size a power of 2 for FFT, new size=%ix%i.\n",j,j);
+            }
+            xmax=j;
+            ymax=j;
+          }
+          */
 
       //Search over this file to get cells and fill boundary[] and 
       //interior[] in segment.c.
       //Make the labels[] array (only used as work array in find_cells).
       //printf("labels\n");fflush(stdout);
       if (bf_fl_labels==NULL){
-			  bf_fl_labels=(int *)malloc(xmax*ymax*sizeof(int));
+              bf_fl_labels=(int *)malloc(xmax*ymax*sizeof(int));
       }
       memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
       load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax);
 
-     	//Now if we have a fret image, find the split between the
-     	//upper and lower using the current fluorescence image.
-     	if (fret_image==1){
-		    free(fret_label_array);
-		    fret_label_array=find_split_regions(fl,xmax,ymax); //using FL[] array
-		    //fret_labels() calculates top and bottom regions using fl[] array.
-		    load_global_arrays(4,NULL,fret_label_array,xmax,ymax);
-     	}else{
-		    load_global_arrays(4,NULL,NULL,xmax,ymax);//just in case to
-		    //force a crash if there's something weird going on.
-     	}
+         //Now if we have a fret image, find the split between the
+         //upper and lower using the current fluorescence image.
+         if (fret_image==1){
+            free(fret_label_array);
+            fret_label_array=find_split_regions(fl,xmax,ymax); //using FL[] array
+            //fret_labels() calculates top and bottom regions using fl[] array.
+            load_global_arrays(4,NULL,fret_label_array,xmax,ymax);
+         }else{
+            load_global_arrays(4,NULL,NULL,xmax,ymax);//just in case to
+            //force a crash if there's something weird going on.
+         }
 
-     	//Make sure call load_global_arrays() first:
-     	n_found_cells=find_cells(&found_boundary_points,&found_interior_points);
-     	//We now have a list of interior and boundary points as well as the
-     	//mean x and mean y of the interior points. (These are saved in
-     	//global variables in find_cells().)
+         //Make sure call load_global_arrays() first:
+         n_found_cells=find_cells(&found_boundary_points,&found_interior_points);
+         //We now have a list of interior and boundary points as well as the
+         //mean x and mean y of the interior points. (These are saved in
+         //global variables in find_cells().)
        
       //Free pixels, keeping only the latest that were recently put
       //in the cell lists (the cells just found in find_cells() haven't
@@ -1556,8 +1557,8 @@ int main(int argc, char *argv[]){
       align_image(fl,xmax,ymax,1); //First call will automatically
       //save fl for later alignments if hasn't been called yet
       if ((i==0)&&(align_fl==2)){ //Only compare first image to BF
-	      //align_image(fl,xmax,ymax,0);
-	      //printf("Only comparing first FL image to BF.\n");
+          //align_image(fl,xmax,ymax,0);
+          //printf("Only comparing first FL image to BF.\n");
       }
 
     }
@@ -1568,16 +1569,17 @@ int main(int argc, char *argv[]){
     //passed in parameters.txt then re-align individual cells with
     //the current fluorescence image.
 
-	  if (align_individual_cells==1){
+      if (align_individual_cells==1){
       if (align_individual_cells_boundary==1){
-			  align_found_cells_to_fl(2); //2 to use boundary
+              align_found_cells_to_fl(2); //2 to use boundary
       }else{
-			  align_found_cells_to_fl(0);
+              align_found_cells_to_fl(0);
       }
     }
 
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
 
+    //add_boundary_points_to_data2(NULL, ???);
     add_boundary_points_to_data(NULL);
 
     //Check for nucleus or vacuole, etc, using third image.
@@ -1585,8 +1587,8 @@ int main(int argc, char *argv[]){
       //Conditions to find internal structure, etc
       
       if (third_labels==NULL){
-	      third_labels=(int *)malloc(xmax*ymax*sizeof(int));
-	      memset(third_labels,0,(xmax*ymax*sizeof(int)));
+          third_labels=(int *)malloc(xmax*ymax*sizeof(int));
+          memset(third_labels,0,(xmax*ymax*sizeof(int)));
       }
       //The third_labels[] may be used in calculate_fluorescence...
       //to determine which pixels to ignore.
@@ -1598,21 +1600,21 @@ int main(int argc, char *argv[]){
       //In other words, if you take out the third image for a FRET image
       //it defaults to using the upper part of the image for the nucleus.
       if (third_image_type==no_third_image){
-	      recalculate_internal=1; //Always re-do if not using a third image
+          recalculate_internal=1; //Always re-do if not using a third image
       }
       if(nuclear_fret_lower==0){
-	      internal_structure(0,1); //Use lower part for fret image
+          internal_structure(0,1); //Use lower part for fret image
       }else{
-	      internal_structure(1,1); //Use upper part for fret image
+          internal_structure(1,1); //Use upper part for fret image
       }
     }else{
       //do internal_structure() always using FL image
 
       recalculate_internal=1; //Re-do search for centers
       if (force_nucleus_in_center==1){ 
-	      internal_structure(0,0);
+          internal_structure(0,0);
       }else{
-	      internal_structure(0,1);
+          internal_structure(0,1);
       }
 
     }
@@ -1649,51 +1651,51 @@ int main(int argc, char *argv[]){
     //Only output fluor_files[] if it isn't actually the brightfield
     //image.
     if ((treat_brightfield_as_fluorescence==0)||(flag_bf[i]==0)){
-	    //Write out the files
+        //Write out the files
 
       if (output_individual_cells==1){
-	      strcpy(line,"cells/");
-	      strcat(line,fluor_files[i]);
-	      if(output_individual_cells_to_file(i,line,fl,xmax,ymax,0,8,0)==0){
-	        printf("Couldn't output individual to tif file %s.\n",line);
-	      }
+          strcpy(line,"cells/");
+          strcat(line,fluor_files[i]);
+          if(output_individual_cells_to_file(i,line,fl,xmax,ymax,0,8,0)==0){
+            printf("Couldn't output individual to tif file %s.\n",line);
+          }
       }
       
       strcpy(line,fluor_files[i]);
       strcat(line,".out.tif");
       printf("Writing found cells and data to output file %s.\n",line);
       if(output_data_to_tif_file(line,fl,xmax,ymax,bf_fl_labels,1,8,0)==0){
-	      printf("Couldn't output data to tif file %s.\n",line);
+          printf("Couldn't output data to tif file %s.\n",line);
       }
     }
 
     if (output_third_image==1){
       if (output_individual_cells==1){
-	      strcpy(line,"cells/");
-	      strcat(line,third_files[third_cur]);
-	      if(output_individual_cells_to_file(i,
-					   line,
-					   third_image,
-					   xmax,ymax,
-					   0,
-					   8,
-					   0)==0){
-	     
+          strcpy(line,"cells/");
+          strcat(line,third_files[third_cur]);
+          if(output_individual_cells_to_file(i,
+                       line,
+                       third_image,
+                       xmax,ymax,
+                       0,
+                       8,
+                       0)==0){
+         
           printf("Couldn't output individual to tif file %s.\n",line);
-	      }
+          }
       }
       output_third_image=0;
       strcpy(line,third_files[third_cur]);
       strcat(line,".out.tif");
       printf("Writing found cells and data to output file %s.\n",line);
       if(output_data_to_tif_file(line,
-				 third_image,
-				 xmax,ymax,
-				 third_labels,
-				 2,
-				 8,
-				 0)==0){
-	
+                 third_image,
+                 xmax,ymax,
+                 third_labels,
+                 2,
+                 8,
+                 0)==0){
+    
         printf("Couldn't output data to tif file %s.\n",line);
       }
     }
@@ -1713,16 +1715,17 @@ int main(int argc, char *argv[]){
 
       memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
       //add_cell_number_to_the_data(i);
+      //add_boundary_points_to_data2(NULL, i);
       add_boundary_points_to_data(NULL);
 
       if (output_individual_cells==1){
-	
-	      //Write out the files
-	      strcpy(line,"cells/");
-	      strcat(line,phase_files[j_cur]);
-	      if(output_individual_cells_to_file(i,line,bf,xmax,ymax,0,8,0)==0){
-	        printf("Couldn't output individual to tif file %s.\n",line);
-	      }
+    
+          //Write out the files
+          strcpy(line,"cells/");
+          strcat(line,phase_files[j_cur]);
+          if(output_individual_cells_to_file(i,line,bf,xmax,ymax,0,8,0)==0){
+            printf("Couldn't output individual to tif file %s.\n",line);
+          }
       }
 
       //Write out the files
@@ -1731,13 +1734,13 @@ int main(int argc, char *argv[]){
       //strcat(line,".out_cfp.tif");
       printf("Writing found cells and data to output file %s.\n",line);
       if(output_data_to_tif_file(line,
-				 bf,
-				 xmax,ymax,
-				 bf_fl_labels,
-				 0,
-				 8,
-				 0)==0){
-	
+                 bf,
+                 xmax,ymax,
+                 bf_fl_labels,
+                 0,
+                 8,
+                 0)==0){
+    
         printf("Couldn't output data to tif file %s.\n",line);
       }
 
@@ -1752,16 +1755,17 @@ int main(int argc, char *argv[]){
   if (do_recombination==1){
 
     recombination_check(i_last_find_cell_call,
-			n_recomb_cuts,
-			recombination_cuts_type,
-			recombination_cuts_flag,
-			recombination_cuts);
+            n_recomb_cuts,
+            recombination_cuts_type,
+            recombination_cuts_flag,
+            recombination_cuts);
     
     //Make output with re-combined data
     load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax); //just in case
 
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
     //add_cell_number_to_the_data(i-1);
+    //add_boundary_points_to_data2(NULL, i-1);
     add_boundary_points_to_data(NULL);
     //Write out the files
     strcpy(line,"COMBINE_");
@@ -1770,12 +1774,12 @@ int main(int argc, char *argv[]){
     //strcat(line,".out_cfp.tif");
     printf("Writing found cells and data to output file %s.\n",line);
     if(output_data_to_tif_file(line,
-			       bf,
-			       xmax,ymax,
-			       bf_fl_labels,
-			       0,
-			       8,
-			       0)==0){
+                   bf,
+                   xmax,ymax,
+                   bf_fl_labels,
+                   0,
+                   8,
+                   0)==0){
       printf("Couldn't output data to tif file %s.\n",line);
     }
   }

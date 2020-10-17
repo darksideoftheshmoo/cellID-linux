@@ -6169,6 +6169,95 @@ void add_boundary_points_to_data(struct point *p_in){
   return;
 }
 
+/****************************************************/
+// Andy's add_boundary_points_to_data
+/****************************************************/
+void add_boundary_points_to_data2(struct point *p_in, int i_t){
+
+  struct blob *b; // my addition
+
+  struct point *p1;
+  struct point *p2;
+  int i;
+  float step=.01;
+  float mx,my,s;
+  float x0,y0,x,y;
+  int a,b,a2,b2;
+
+  int border;
+  struct point *p_start;
+  //Add boundary points for border list p_in.
+  //if p_in==NULL then do all n_found borders.
+  //add found_border to d[] array in appropriate place.
+
+  border=found_border; //found_border=5 defined in tif_routines.h
+  p_start=p_in;
+  //for(i=0;i<xmax_ymax;i++)d[i]=0;
+  count=0;
+  for(i=0;i<n_known;i++){ //for(i=0;i<n_found;i++){ //Loop over all cells
+    b=cs[i]; //cs[] points to most recently added cell
+    if(b->i_time==i_t){
+      border = b->index
+
+      //Write number i at position (b->x,b->y)
+      //     printf("Adding number %i at (%e,%e).\n",b->index,b->x,b->y);
+      //fflush(stdout);
+
+      //p_in==NULL when function is called, meaning that no objects have yet been
+      //treated. Therefore, put p_start=boundary[i] to point to get first cell
+      if (p_in==NULL)p_start=boundary[i];
+
+      //Loop over all boundary points until reaching the end (full circuit)
+      for(p1=p_start;p1!=NULL;p1=p1->next){
+        p2=p1->next;
+        if(p2==NULL) p2=p_start; //So make full circuit
+
+        // Calculate x-shift and y-shift between current and next point
+        mx=(float)( (p2->i)-(p1->i) );
+        my=(float)( (p2->j)-(p1->j) );
+
+        // Get xpos and ypos of current point (integers)
+        a=p1->i;
+        b=p1->j;
+
+        // Convert xpos and ypos to float
+        x0=(float) a;
+        y0=(float) b;
+
+        //Loop from 0.01 to 1.0 in steps of 0.01 (not clear why)
+        for(s=step;s<=1.0;s+=step){
+          // Calculate xval and yval by summing:
+          // 1) xpos of current point
+          // 2) x-shift multiplied by current step
+          // 3) 0.5
+          x=x0+mx*s+0.5; //0.5 to round off (place integers in middle of bins)
+          y=y0+my*s+0.5;
+
+          //Convert to integers
+          a2=(int) x;
+          b2=(int) y;
+
+          // if
+          // a!=a2 or b!=b2 (xpos!=xval or ypos!=yval)
+          // AND
+          // a2 and b2 are within image boundaries
+          if(((a!=a2)||(b!=b2))&&(a2>=0)&&(a2<xmax)&&(b2>=0)&&(b2<ymax)){
+            //New point
+            a=a2;
+            b=b2;
+            //Add to image array (b*xmax since it's a 1-dim array)
+            //border is defined elsewhere to border=5
+            d[(b*xmax+a)]=border;
+          }
+        }
+      }
+      count++;
+    }
+  }
+
+  return;
+}
+
 /**********************************************************/
 struct point *circularize_points(struct point *begin, float cut){
   //We start with the list pointed at by begin.  We calculate the value
