@@ -54,6 +54,15 @@ These dependencies can also be satisfied in Arch Linux, sorry for not providing 
 
 `aurman -S openlibm` OR `yay -S openlibm`
 
+### Mac OS
+
+Use `brew` to install the following:
+
+* `autoconf automake libtool` are the compilation tools.
+* `libtiff` is a CellID dependency.
+
+Note: `openlibm` is also required but is seems to be bundled with the OS. 
+
 ### Notes
 
 You may find details on how the automake/conf files are configured by opening them and reading the comments.
@@ -62,6 +71,8 @@ Surprisingly for me, packages may be installed using one name (such as libtiff5)
 
 ## Build and Install
 
+### On Linux
+
 To build and install, please cd into the directory where the files are and run:
 
     autoreconf -fvi
@@ -69,19 +80,31 @@ To build and install, please cd into the directory where the files are and run:
     make -j8
     sudo make install
 
-Please refer to the cellID documentation to learn how to use this program.
+### On Mac OS
 
-Cheers!
+Mac OS bundles `openlibm`, but it may not be found by `pkg-config` automatically.
 
-### Troubleshooting
+    export PKG_CONFIG_PATH="/usr/local/opt/openlibm/lib/pkgconfig"
+    autoreconf -fvi
+    ./configure
+    make -j8
+    sudo make install
+
+If it does not work saying it doesnt find `openlibm`, you may have to install `openlibm` separately with Brew or other method.
+
+### Troubleshooting compilation
 
 If you get a "multiple definitions" error, this occurs with newer gcc versions.
 
 Checkout the other branch: `multiple_definitions_fix`
 
-That one compiles fine on GCC `10.2.0`.
+That one and its derivarives compile fine on GCC `10.2.0`.
 
 ## Usage
+
+Please refer to the cellID documentation to learn how to use this program.
+
+Cheers!
 
 ### Parameters
 
