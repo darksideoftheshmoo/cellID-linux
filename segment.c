@@ -4540,70 +4540,71 @@ void update_list_of_found_cells(int i_t, int secs, int flag){
       //Note that we just incremented total_time above
       update_overlap_value();
       for(j=0;j<loop_total;j++){
-	b=cs[j];  //cs[j] is the previous time point found for cell j
-	if (b->x<=0) continue; //As a flag
-	if((b->i_time)==(i_t-1)){ //We only want the previous image
-	  i++;
-	  fill_overlap_array_with_point_list(b->interior);
-	}
+	      b=cs[j];  //cs[j] is the previous time point found for cell j
+	      if (b->x<=0) continue; //As a flag
+	      if((b->i_time)==(i_t-1)){ //We only want the previous image
+	        i++;
+	        fill_overlap_array_with_point_list(b->interior);
+	      }
       }
       //The overlap array now contains all the points found from the
       //previous image.  We now vary an offset to maximize the total overlap
       //with the current image.
     }
+
     if(i>0){ //If we had a previous image and there were cells
       current_total=0;
 
       if(image_type!=hexagonal_grid){
-	//Loop over all possible overlaps, start with big steps and focus in.
-	//Don't do this for hexagonal grid since it's regularity could lead
-	//to false, large offsets.
-	for(tmp_i=-250;tmp_i<250;tmp_i+=10){
-	  //printf("%i: (%i,%i)=%i.\n",tmp_i,offset_i,offset_j,current_total);
-	  for(tmp_j=-250;tmp_j<250;tmp_j+=10){
-	    if((j=total_overlap_of_all_cells(tmp_i,tmp_j))>current_total){
-	      current_total=j;
-	      offset_i=tmp_i;
-	      offset_j=tmp_j;
-	    }
-	  }
-	}
+	      //Loop over all possible overlaps, start with big steps and focus in.
+	      //Don't do this for hexagonal grid since it's regularity could lead
+	      //to false, large offsets.
+	      for(tmp_i=-250;tmp_i<250;tmp_i+=10){
+	        //printf("%i: (%i,%i)=%i.\n",tmp_i,offset_i,offset_j,current_total);
+	        for(tmp_j=-250;tmp_j<250;tmp_j+=10){
+	          if((j=total_overlap_of_all_cells(tmp_i,tmp_j))>current_total){
+	            current_total=j;
+	            offset_i=tmp_i;
+	            offset_j=tmp_j;
+	          }
+	        }
+	      }
       }
 
       tmp_i=offset_i;
       tmp_j=offset_j;
       
       do{
-	offset_i=tmp_i;
-	offset_j=tmp_j;
-	while(
-	      (isection=total_overlap_of_all_cells(tmp_i+1,tmp_j))>
-	      current_total ){
-	  current_total=isection;
-	  tmp_i++;
-	}
-	if(tmp_i==offset_i){ //Didn't gain anything going right, check left
-	  while(
-		(isection=total_overlap_of_all_cells(tmp_i-1,tmp_j))>
-		current_total ){
-	    current_total=isection;
-	    tmp_i--;
-	  }
-	}
-	while(
-	      (isection=total_overlap_of_all_cells(tmp_i,tmp_j+1))>
-	      current_total ){
-	  current_total=isection;
-	  tmp_j++;
-	}
-	if(tmp_j==offset_j){ //Didn't gain anything going right, check left
-	  while(
-		(isection=total_overlap_of_all_cells(tmp_i,tmp_j-1))>
-		current_total ){
-	    current_total=isection;
-	    tmp_j--;
-	  }
-	}
+	    offset_i=tmp_i;
+	    offset_j=tmp_j;
+	    while(
+	          (isection=total_overlap_of_all_cells(tmp_i+1,tmp_j))>
+	          current_total ){
+	      current_total=isection;
+	      tmp_i++;
+	    }
+	    if(tmp_i==offset_i){ //Didn't gain anything going right, check left
+	      while(
+	    	(isection=total_overlap_of_all_cells(tmp_i-1,tmp_j))>
+	    	current_total ){
+	        current_total=isection;
+	        tmp_i--;
+	      }
+	    }
+	    while(
+	          (isection=total_overlap_of_all_cells(tmp_i,tmp_j+1))>
+	          current_total ){
+	      current_total=isection;
+	      tmp_j++;
+	    }
+	    if(tmp_j==offset_j){ //Didn't gain anything going right, check left
+	      while(
+	    	(isection=total_overlap_of_all_cells(tmp_i,tmp_j-1))>
+	    	current_total ){
+	        current_total=isection;
+	        tmp_j--;
+	      }
+	    }
       } while((tmp_i!=offset_i)||(tmp_j!=offset_j)) ;
       
     } //If there was a previous image to calculate offset against
@@ -4660,13 +4661,13 @@ void update_list_of_found_cells(int i_t, int secs, int flag){
     //number of pixels used in the fluorescence sum calculation.
     if (have_fret_image==1){
       if(fret_copy_type[i]==1){
-	bnew->a=(-(bnew->a));
-	bnew->n=(-(bnew->n));
+	      bnew->a=(-(bnew->a));
+	      bnew->n=(-(bnew->n));
       }else if(fret_copy_type[i]<-1){
-	printf("The %ith cell in the current image isn't marked",i);
-	printf("whether it's an original or a copy.\n");
-	fflush(stdout);
-	exit(0);
+	      printf("The %ith cell in the current image isn't marked",i);
+	      printf("whether it's an original or a copy.\n");
+	      fflush(stdout);
+	      exit(0);
       }
     }
     bnew->interior=interior[i];
@@ -7987,12 +7988,11 @@ struct point *copy_cell_for_split_regions(
 
 /**************************************************************/
 // First argument, array to load
-// type==0          c
-// type==1          fl
-// type==2          third_image
-// type==3          d
+// type==0          c             //Global Arrays float *c=NULL;    //Bright field image array
+// type==1          fl            //Global Arrays float *fl=NULL;   //Fluorescence image array
+// type==2          third_image   //Global Arrays float *third_image=NULL;
+// type==3          d             //Global Arrays int *d=NULL;
 // type==4          fret_labels
-
 void load_global_arrays(int type, float *v1, int *v2,int xmax_in, int ymax_in){
 
   xmax=xmax_in;
