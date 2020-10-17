@@ -22,7 +22,7 @@ The original source can be found at sourceforge ([link](https://sourceforge.net/
 
 ## Dependencies
 
-### Ubuntu
+### Ubuntu Linux
 
 Disclaimer: it is possible that not all of the installed packages are strictly required. I have not yet checked, but surely the "-dev" ones are essential in Ubuntu.
 
@@ -36,7 +36,7 @@ You may install these in Ubuntu systems by running:
 
 `sudo apt-get install automake autoconf libtool`
 
-The configure.ac and Makefile.am files have been set to require libtiff5-dev, libopenlibm-dev, and libglib2.0-dev.
+The `configure.ac` and `Makefile.am` files have been set to require `libtiff5-dev`, `libopenlibm-dev`, and `libglib2.0-dev` (this last dependency was removed from this branch).
 
 * libglib2.0-dev: 2.48.2-0ubuntu1
 * libtiff5-dev: 4.0.6-1ubuntu0.4
@@ -46,7 +46,7 @@ You may install these in Ubuntu systems by running:
 
 `sudo apt-get install libglib2.0 libglib2.0-dev libtiff5 libtiff5-dev libopenlibm-dev`
 
-### Arch
+### Arch Linux
 
 These dependencies can also be satisfied in Arch Linux, sorry for not providing detailed instructions. I got openlibm from AUR, the rest are provided by standard repos.
 
@@ -71,7 +71,7 @@ Surprisingly for me, packages may be installed using one name (such as libtiff5)
 
 ## Build and Install
 
-### On Linux
+### Linux
 
 To build and install, please cd into the directory where the files are and run:
 
@@ -80,7 +80,7 @@ To build and install, please cd into the directory where the files are and run:
     make -j8
     sudo make install
 
-### On Mac OS
+### Mac OS
 
 Mac OS bundles `openlibm`, but it may not be found by `pkg-config` automatically.
 
