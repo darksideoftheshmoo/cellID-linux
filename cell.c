@@ -1422,8 +1422,12 @@ int main(int argc, char *argv[]){
                               recombination_cuts);
           if (first!=0){
             //Make output with re-combined data
-          load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax); //just in case
-	       	memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
+            load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax); // "just in case" 
+                                                               // if (type==3) segment.c sets d=v2;
+                                                               // this "v2" is the third argument "int *v2", which here receives bf_fl_labels
+                                                               // bf_fl_labels is declared above as: int *bf_fl_labels=NULL; and not modified elsewhere
+            
+            memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));    // llenar bf_fl_labels con ceros
             //add_cell_number_to_the_data(i-1);
             //add_boundary_points_to_data2(NULL, i-1);
             add_boundary_points_to_data(NULL);
