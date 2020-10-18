@@ -36,23 +36,23 @@ contains the following copyright notice:
    "Copyright (c) 1988-1997 Sam Leffler
     Copyright (c) 1991-1997 Silicon Graphics, Inc.
 
-    Permission to use, copy, modify, distribute, and sell this software and 
+    Permission to use, copy, modify, distribute, and sell this software and
     its documentation for any purpose is hereby granted without fee, provided
     that (i) the above copyright notices and this permission notice appear in
     all copies of the software and related documentation, and (ii) the names
     of Sam Leffler and Silicon Graphics may not be used in any advertising or
     publicity relating to the software without the specific, prior written
-    permission of Sam Leffler and Silicon Graphics.  
+    permission of Sam Leffler and Silicon Graphics.
 
-    THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
-    EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
-    WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+    THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
+    WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
 
     IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
     ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
     OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
-    WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
-    LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+    WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
+    LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
     OF THIS SOFTWARE."
 
 End-copyright-notice-for-Libtiff
@@ -155,7 +155,7 @@ float *get_data_from_tif_file(char *file,
       printf("Unknown bits per pixel size: %i.\n",bitspersample);
       return NULL;
     }
-    
+
     TIFFGetField(tif,TIFFTAG_ROWSPERSTRIP, &rowsperstrip);
     //printf("Rows per strip = %i\n",rowsperstrip);
 
@@ -177,7 +177,7 @@ float *get_data_from_tif_file(char *file,
     }else{
       data_8=(unsigned char *)malloc(xmax_ymax*sizeof(unsigned short));
       tmp_p8=data_8;
-      
+
       for(row=0;row<image_length;row++){
   TIFFReadScanline(tif,buf,row,1);
   memcpy(tmp_p8,buf,scanline_size);
@@ -185,9 +185,9 @@ float *get_data_from_tif_file(char *file,
       }
 
     }
-    
+
     _TIFFfree(buf);
-    
+
     TIFFClose(tif);
   }
 
@@ -221,8 +221,8 @@ float *get_data_from_tif_file(char *file,
     for(i=0;i<xmax_ymax;i++){
       image_data[i]=array_max-image_data[i];
     }
-  } 
-  
+  }
+
   return image_data;
 }
 
@@ -242,7 +242,7 @@ int output_data_to_tif_file(char *file,
   //(xmax_data,ymax_data)=size of input array (ie, "output_data")
 
   //uint32 rowsperstrip=8;
-  uint32 planarconfig=1; 
+  uint32 planarconfig=1;
   uint16 bitspersample=8;
   uint32 image_width=xmax_data;
   uint16 photometric=1;
@@ -252,7 +252,7 @@ int output_data_to_tif_file(char *file,
 
   float array_max,array_min;
   float scale;
-  
+
   tdata_t data_buf;
 
   TIFF *tif;
@@ -269,7 +269,10 @@ int output_data_to_tif_file(char *file,
 
   int u;
 
-  bit_size=16;  // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
+  // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
+  if (type==0) {
+    bit_size=16;
+  }
   bitspersample=(uint16)bit_size;
 
   tif=TIFFOpen(file,"w");
@@ -302,30 +305,35 @@ int output_data_to_tif_file(char *file,
     return 0;
   }
 
-  //Get max and min
-  array_max=0.0;
-  array_min=1.0e15;
-  for(j=0;j<ymax_data;j++){
-    for(i=0;i<xmax_data;i++){
-      u=j*xmax_data+i;
-      if(output_data[u]>array_max)array_max=output_data[u];
-      if(output_data[u]<array_min)array_min=output_data[u];
-    }
-  }
-
-  array_max=65535.0;  // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
-  array_min=0.0;  // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
-
-  if (array_max>array_min){
+  if(type==0){
+    array_max=65535.0;  // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
+    array_min=0.0;  // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
     scale=array_max-array_min; // mask_mod, originally: scale=1.0/(array_max-array_min);
-  }else{
-    scale=0.0;
+    onetmp=1.0;
   }
-  
-  //Value of one degree of grayness:
-  onetmp=1.0;
-  if (bitspersample==8){
-    onetmp=scale/xmax8;  // mask_mod, originally: onetmp=1.0/(scale*xmax8);
+  else {
+    //Get max and min
+    array_max=0.0;
+    array_min=1.0e15;
+    for(j=0;j<ymax_data;j++){
+      for(i=0;i<xmax_data;i++){
+        u=j*xmax_data+i;
+        if(output_data[u]>array_max)array_max=output_data[u];
+        if(output_data[u]<array_min)array_min=output_data[u];
+      }
+    }
+    if (array_max>array_min){
+      scale=1.0/(array_max-array_min);
+    }else{
+      scale=0.0;
+    }
+
+    //Value of one degree of grayness:
+    onetmp=1.0;
+    if (bitspersample==8){
+      //onetmp=scale/xmax8;  // mask_mod, originally: onetmp=1.0/(scale*xmax8);
+      onetmp=1.0/(scale*xmax8);
+    }
   }
 
   for(j=0;j<ymax_data;j++){
@@ -344,7 +352,22 @@ int output_data_to_tif_file(char *file,
           if(k>=20){                               // As modified in segment.c, values of "k=labels[u]" >= 20 should be cell boundaries (a different "int" per cell starting at 20).
             tmp=array_max-(labels[u]-20)*onetmp;   // In that case, set the intensity value of the boundary pixel to something related to the cellid
                                                    // Note that since in segment.c "d[(b*xmax+a)]=i+1+19" starts at 20, then labels[u]==19 can mean something else.
-
+          }else if(k==found_border){
+ 				    tmp=array_max;
+ 				  }else if(k==found_border_a){
+ 				    tmp=array_max-onetmp;
+ 				  }else if(k==found_border_b){
+ 				    tmp=array_max-(2.0*onetmp);
+ 				  }else if(k==found_border_c){
+ 				    tmp=array_max-(3.0*onetmp);
+ 				  }else if(k==found_border_d){
+ 				    tmp=array_max-(4.0*onetmp);
+ 				  }else if(k==found_border_e){
+ 				    tmp=array_max-(5.0*onetmp);
+ 				  }else if(k==found_border_f){
+ 				    tmp=array_max-(6.0*onetmp);
+ 				  }else if(k==found_border_g){
+ 				    tmp=array_max-(7.0*onetmp);
           }else if(k==cell_label){                 // tif_routines.h says: #define cell_label 6, the default for cell labels if present.
               tmp=array_max-(15.0*onetmp);
           }else if(k==delete_pixel){               // tif_routines.h says: #define delete_pixel 15
@@ -376,17 +399,10 @@ int output_data_to_tif_file(char *file,
         //Original is assumed to be 16-bit data, so just replace it here.
       }
     }
-    TIFFWriteScanline(tif,data_buf,j,1);    
+    TIFFWriteScanline(tif,data_buf,j,1);
   }
-  
+
   TIFFClose(tif);
   free(data_buf);
   return 1;
 }
-
-
-
-
-
-
-
