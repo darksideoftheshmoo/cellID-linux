@@ -62,10 +62,10 @@ Use `brew` (Homebrew) to install the following:
 * `autoconf automake libtool` are the compilation tools:
     brew install autoconf automake libtool
 
-* `libtiff` is a CellID dependency.
-    brew install libtiff
+* `libtiff` and `openlibm` are CellID dependencies.
+    brew install libtiff openlibm
 
-Note: `openlibm` is also required, but seems to be bundled with the OS. 
+Note: `openlibm` is apparently bundled with the OS, but I was unable to make to compiler find this installation. 
 
 ### Notes
 
@@ -86,15 +86,16 @@ To build and install, please cd into the directory with the CellID files and run
 
 ### macOS
 
-macOS bundles `openlibm`, but it may not be found by `pkg-config` automatically.
+`openlibm` it not found by `pkg-config` automatically, and needs to be manually configured:
 
     export PKG_CONFIG_PATH="/usr/local/opt/openlibm/lib/pkgconfig"
+
+To build and install, please cd into the directory with the CellID files and run:
+
     autoreconf -fvi
     ./configure
     make -j8
     sudo make install
-
-If it does not work saying it doesn't find `openlibm`, you may have to install `openlibm` separately with brew.
 
 ### Troubleshooting compilation
 
