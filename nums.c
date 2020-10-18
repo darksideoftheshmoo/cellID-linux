@@ -36,23 +36,23 @@ contains the following copyright notice:
    "Copyright (c) 1988-1997 Sam Leffler
     Copyright (c) 1991-1997 Silicon Graphics, Inc.
 
-    Permission to use, copy, modify, distribute, and sell this software and 
+    Permission to use, copy, modify, distribute, and sell this software and
     its documentation for any purpose is hereby granted without fee, provided
     that (i) the above copyright notices and this permission notice appear in
     all copies of the software and related documentation, and (ii) the names
     of Sam Leffler and Silicon Graphics may not be used in any advertising or
     publicity relating to the software without the specific, prior written
-    permission of Sam Leffler and Silicon Graphics.  
+    permission of Sam Leffler and Silicon Graphics.
 
-    THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
-    EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
-    WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+    THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
+    WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
 
     IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
     ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
     OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
-    WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
-    LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+    WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
+    LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
     OF THIS SOFTWARE."
 
 End-copyright-notice-for-Libtiff
@@ -168,7 +168,7 @@ void add_numbers_to_data(int n, int x, int y, int *d, int xmax, int ymax){
   do{
     digit=(k%10);
     k=k/10;
-    
+
     p=numbers[digit]; //Which number to add
 
     for(i=xdim;i>=0;i--){
@@ -180,14 +180,15 @@ void add_numbers_to_data(int n, int x, int y, int *d, int xmax, int ymax){
 	         iy=y+j;
 	         if((ix>=0)&&(ix<xmax)&&(iy>=0)&&(iy<ymax)){
 	           // if(d[ix][iy]!=found_border){ //Don't overwrite border
-	           d[(iy*xmax)+ix]=(2*n+1)+20;  //d[(iy*xmax)+ix]=cell_label;
+	           //d[(iy*xmax)+ix]=(2*n+1)+20;  //d[(iy*xmax)+ix]=cell_label;
+             d[(iy*xmax)+ix]=1+19;
 	           //}
 	         }
 	       }
       }
     }
-    
-    x-=xdim; //Move location to left for next digit since we do first 
+
+    x-=xdim; //Move location to left for next digit since we do first
     //digits of n first
   } while(k>0);
 
@@ -227,9 +228,9 @@ int search_data_for_number(int n, int *x0, int *y0,
       do{
 	digit=(k%10);
 	k=k/10;
-	
+
 	p=numbers[digit]; //Which number to look for
- 
+
 	for(i=xdim;i>=0;i--){
 	  for(j=ydim-1;j>=0;j--){
 	    u=j*xdim+i;
@@ -248,10 +249,10 @@ int search_data_for_number(int n, int *x0, int *y0,
 	    }else{
 	      goto next_start; //Numbers don't go over bounds
 	    }
-	  } 
-	} 
-	
-	x-=xdim; //Move location to left for next digit since we do first 
+	  }
+	}
+
+	x-=xdim; //Move location to left for next digit since we do first
 	// digits of n first
       } while(k>0);
 
@@ -272,9 +273,9 @@ int search_data_for_number(int n, int *x0, int *y0,
 	      iy=y+j;
 	      if((ix>=0)&&(ix<xmax)&&(iy>=0)&&(iy<ymax)){
 		if (bfi[(iy*xmax)+ix]!=a)goto next_digit;
-	      } 
-	    } 
-	  } 
+	      }
+	    }
+	  }
 	}
 	//If we're here then we found a number. Reject this position
 	goto next_start;
@@ -347,7 +348,7 @@ void date_stamp(int year, int month, int day){
   stamp[0]='\0';
   digits_to_string(stamp,day,31);
   printf("%s",stamp);
-  
+
 return;
 }
 
@@ -368,10 +369,6 @@ void time_stamp(int hours, int minutes, int seconds){
   stamp[0]='\0';
   digits_to_string(stamp,seconds,60);
   printf("%s",stamp);
-  
+
 return;
 }
-
-
-
-

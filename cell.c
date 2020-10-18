@@ -36,22 +36,22 @@ contains the following copyright notice:
    "Copyright (c) 1988-1997 Sam Leffler
     Copyright (c) 1991-1997 Silicon Graphics, Inc.
 
-    Permission to use, copy, modify, distribute, and sell this software and 
+    Permission to use, copy, modify, distribute, and sell this software and
     its documentation for any purpose is hereby granted without fee, provided
     that (i) the above copyright notices and this permission notice appear in
     all copies of the software and related documentation, and (ii) the names
     of Sam Leffler and Silicon Graphics may not be used in any advertising or
     publicity relating to the software without the specific, prior written
-    permission of Sam Leffler and Silicon Graphics.  
+    permission of Sam Leffler and Silicon Graphics.
 
-    THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
-    EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
-    WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+    THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
+    WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
 
     IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
     ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
     OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
-    WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
+    WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
     LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
     OF THIS SOFTWARE."
 
@@ -135,12 +135,12 @@ int main(int argc, char *argv[]){
 
   FILE *fp_in;
   FILE *fp;
-  
-  int bf_index[max_files]; //V1.2a Index of the BF file used to find cells, 
+
+  int bf_index[max_files]; //V1.2a Index of the BF file used to find cells,
                            //for each fluorescent file
   FILE *bf_fl_file=NULL;
   char bf_fl_file_name[500];
-  
+
   char *flat_files[max_files]; //For flattening image
   char *dark_files[max_files]; //For subtracting fixed background
   char *phase_files[max_files];
@@ -266,7 +266,7 @@ int main(int argc, char *argv[]){
   nucleus_radii[3]=5;
   nucleus_radii[4]=6;
   nucleus_radii[5]=7;
-  
+
 
   file_type=list_file; //V1.2a
   bf_fl_mapping=bf_fl_mapping_time;//V1.2a
@@ -276,10 +276,10 @@ int main(int argc, char *argv[]){
 
 
   //Command line parsing variables
- 
+
   char *equal_sign = NULL;
   int help_flag = 0;
-  
+
   char *param_file = "parameters.txt";
   char *dark_list_file = "dark.txt";
   char *flat_list_file = "flat.txt";
@@ -288,7 +288,7 @@ int main(int argc, char *argv[]){
   char *fluor_list_file = NULL;
   char *third_list_file = NULL;
   char *output_basename = NULL;
-  
+
   char *fret_bf = NULL;
   char *fret_nuclear = NULL;
   char *str_align_fl = NULL;
@@ -296,7 +296,7 @@ int main(int argc, char *argv[]){
   //V1.4a
   char *file_basename = NULL; // rcell2: used to be gchar, unsure if this is ok
                                                             // for getting correct channel identification from filenames with paths
- 
+
   char str_third_img_label[500];
   char *pnt_third_img_label = NULL;
   char str_image_type[500];
@@ -352,7 +352,7 @@ int main(int argc, char *argv[]){
       printf("%s ", argv[optind++]);
       printf("\n");
   }
- 
+
   //Checking for parameters file option in command line manually
   for(i=1;i<argc;i++){
     if(strstr(argv[i],"-?")!=NULL||strstr(argv[i],"--help")!=NULL||argc==1){
@@ -363,15 +363,15 @@ int main(int argc, char *argv[]){
       equal_sign=strstr(argv[i],"=");
       if(equal_sign==NULL){
         if(i+1<argc && argv[i+1][0]!='-'){
-          param_file=argv[i+1]; 
+          param_file=argv[i+1];
         }else{
           printf("Filename requiered after -p or --param option");
-          return 0;  
-        }  
+          return 0;
+        }
       } else {
-        param_file=++equal_sign;  
+        param_file=++equal_sign;
       }
-    }    
+    }
   }
 
   if(help_flag==0 && (fp=fopen(param_file,"r"))!=NULL ){
@@ -419,7 +419,7 @@ int main(int argc, char *argv[]){
           }else if(strstr(line,"image_type")!=NULL){
              sscanf(line,"%s %s",line2,str_image_type);
 
-        
+
         //V1.2a bright field to fluorescence mapping
         }else if(strstr(line,"bf_fl_mapping")!=NULL){
           sscanf(line,"%s %s",line2,line3);
@@ -433,7 +433,7 @@ int main(int argc, char *argv[]){
           } else {
             printf("-%s- is a invalid value for bf_fl_mapping in parameter.txt.\n",line3);
             printf("Using time mapping by default.\n");
-            bf_fl_mapping=bf_fl_mapping_time; 
+            bf_fl_mapping=bf_fl_mapping_time;
           }
 
           }else if(strstr(line,"fret")!=NULL){
@@ -485,7 +485,7 @@ int main(int argc, char *argv[]){
             //printf("Adding BF image as additional fluorescence image.\n");
           }else if (strstr(line,"third_image")!=NULL){
             sscanf(line,"%s %s",line2,str_third_img_label);
-          
+
 
           }else if(strstr(line,"align_individual_cells")!=NULL){
             align_individual_cells=1;
@@ -571,18 +571,18 @@ int main(int argc, char *argv[]){
 
     //V1.4.5
     printf("Using nucleus radii %i %i %i %i %i %i px.\n",nucleus_radii[0],nucleus_radii[1]
-                ,nucleus_radii[2],nucleus_radii[3],nucleus_radii[4],nucleus_radii[5]);  
+                ,nucleus_radii[2],nucleus_radii[3],nucleus_radii[4],nucleus_radii[5]);
 
     if(pnt_third_img_label==NULL) pnt_third_img_label=&str_third_img_label[0];
     if(pnt_image_type==NULL) pnt_image_type=&str_image_type[0];
-    
-  
+
+
   if(help_flag==1){
     printf("For help type 'cell --help'\n");
     printf("Required options: --bright brightfile.txt --fluor fluorfile.txt");
-    return 0; 
+    return 0;
   }
-  
+
   if(output_individual_cells==1){
       system("mkdir -p cells");
   }
@@ -593,7 +593,7 @@ int main(int argc, char *argv[]){
     fret_image=1;
     if (strstr(fret_bf,"top")!=NULL){
         //Now check if the split-brightfield has an image on top only or
-        //bottom only, or bottom and top 
+        //bottom only, or bottom and top
       image_type=fret_bf_top_only;
       //printf("Cells on top part of BF image only.\n");
     }else if((strstr(fret_bf,"bottom"))!=NULL){
@@ -604,7 +604,7 @@ int main(int argc, char *argv[]){
         //printf("Cells on bottom and top part of BF image.\n");
       }
   }
-    if(fret_nuclear!=NULL){ 
+    if(fret_nuclear!=NULL){
       fret_image=1;
       if(strstr(fret_nuclear,"top")!=NULL){
         nuclear_fret_lower=1;
@@ -612,7 +612,7 @@ int main(int argc, char *argv[]){
         nuclear_fret_lower=0;
       }
   }
-  
+
   //Printing the final fret and image type parameters
   if (fret_image==1){
      printf("Searching a split FRET image.\n");
@@ -622,8 +622,8 @@ int main(int argc, char *argv[]){
         printf("Cells on bottom part of BF image only.\n");
       }else if(image_type==fret_bf_bottom_and_top){
         printf("Cells on bottom and top part of BF image.\n");
-      }    
-    //If nuclear_fret_lower wasn't set, set to defaults  
+      }
+    //If nuclear_fret_lower wasn't set, set to defaults
     if (nuclear_fret_lower==(-1)){
       if (third_image_type==no_third_image){
           nuclear_fret_lower=1; //Upper part if third image
@@ -636,9 +636,9 @@ int main(int argc, char *argv[]){
     }else{
       printf("Using bottom part of nuclear-image for nucleus.\n");
     }
-  
+
   } else {
-    //image_type is either a fret type, or one of the following 
+    //image_type is either a fret type, or one of the following
     if (strstr(pnt_image_type,"bright")!=NULL){
         image_type=bright_field;                                         // "#define bright_field 0" at image_type.h
         printf("Searching brightfield image for cells.\n");
@@ -665,23 +665,23 @@ int main(int argc, char *argv[]){
       align_fl=2;
     }else{
       printf("'%s' is a invalid value for --align-fl, no aligment will be done.\n"
-        ,str_align_fl);  
-    } 
+        ,str_align_fl);
+    }
   }
-  
+
   //Printing final values
   if(align_fl==1){
     printf("Will align all FL files to first FL file.\n");
   }else if (align_fl==2){
     printf("Will align first FL files to brightfield.\n");
   }
-  
+
 
   if(treat_brightfield_as_fluorescence==1){
-      printf("Adding BF image as additional fluorescence image.\n"); 
+      printf("Adding BF image as additional fluorescence image.\n");
   }
 
-  //Cheking for third image type, note that the same string has been read in 
+  //Cheking for third image type, note that the same string has been read in
   //parametes.txt and steped on with GOptions
   if((strstr(pnt_third_img_label,"nuclear")!=NULL)){
       third_image_type=nuclear_label;
@@ -695,7 +695,7 @@ int main(int argc, char *argv[]){
     }
       third_image_type=no_third_image;
     }
-  
+
   //printing values
   if(align_individual_cells_boundary==1){
     align_individual_cells=1;
@@ -707,7 +707,7 @@ int main(int argc, char *argv[]){
 
 
   if (overall_id_offset>=0){
-              
+
       strcpy(append,"a");
       do_append=1;
       printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
@@ -721,7 +721,7 @@ int main(int argc, char *argv[]){
       printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
       printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
       printf("All cells will be given ID offset %i.\n",
-        overall_id_offset); 
+        overall_id_offset);
 
   }else if (overall_id_offset==-1){
     overall_id_offset=0;
@@ -805,7 +805,7 @@ int main(int argc, char *argv[]){
   n_fluor=i;
 
   if (treat_brightfield_as_fluorescence==1){
-        
+
     //if mapping list we have to duplicate the phase file list
     if(bf_fl_mapping==bf_fl_mapping_list){
       //adding first bf as fl
@@ -813,10 +813,10 @@ int main(int argc, char *argv[]){
       strcpy(phase_files[n_phase],phase_files[0]);
       fluor_files[n_fluor]=(char *)malloc(max_strlen*sizeof(char));
       strcpy(fluor_files[n_fluor],phase_files[0]);
-          
-      n_bf_as_fl=1;            
 
-      //adding new bf as fl 
+      n_bf_as_fl=1;
+
+      //adding new bf as fl
       for(i=1;i<n_phase;i++){
           for(j=0;j<i;j++){
               if(strstr(phase_files[i],phase_files[j])==NULL){//new bf
@@ -1357,8 +1357,8 @@ int main(int argc, char *argv[]){
       //Mapping bright field and fluorescence by order.
       j_min=i;
     }
-   
-    bf_index[i]=j_min; //keeping track of the bright field image use to detect 
+
+    bf_index[i]=j_min; //keeping track of the bright field image use to detect
                        //the cells of the current fluorescent file.
 
     new_phase=0;//Whether have a new file or are using the previous
@@ -1390,17 +1390,15 @@ int main(int argc, char *argv[]){
                             recombination_cuts);
         if (first!=0){
           //Make output with re-combined data
-          load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax);  // "just in case" 
+          load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax);  // "just in case"
                                                               // con type==3, bf_fl_labels se _asocia_ con el array "d"
                                                               // bf_fl_labels is declared above as "int *bf_fl_labels=NULL;" and not used in other files
-          
+
           memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));     // llenar bf_fl_labels con ceros, esto quizas haga que "d" tenga ceros también
-          
+
           //add_cell_number_to_the_data(i-1);
-          
-          add_boundary_points_to_data2(NULL, i-1);
-          //add_boundary_points_to_data(NULL);
-          
+          add_boundary_points_to_data(NULL);
+
           //Write out the files
           strcpy(line,"COMBINE_");
           strcat(line,phase_files[j_cur]);
@@ -1458,13 +1456,13 @@ int main(int argc, char *argv[]){
         align_image(bf,xmax,ymax,0); //Load bf to compare fl to
       }
 
-      //Search over this file to get cells and fill boundary[] and 
+      //Search over this file to get cells and fill boundary[] and
       //interior[] in segment.c.
 
       //Make the labels[] array (only used as work array in find_cells).
       //printf("labels\n");fflush(stdout);
       if (bf_fl_labels==NULL){
-        bf_fl_labels=(int *)malloc(xmax*ymax*sizeof(int));  // declarar bf_fl_labels como un array para los pixeles 
+        bf_fl_labels=(int *)malloc(xmax*ymax*sizeof(int));  // declarar bf_fl_labels como un array para los pixeles
       }                                                     // ver: www.geeksforgeeks.org/dynamic-memory-allocation-in-c-using-malloc-calloc-free-and-realloc
       memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));       // luego lo llena de ceros (porque se inicializa con "junk")
       load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax);    // con type==3, bf_fl_labels se _asocia_ con el array "d"
@@ -1486,7 +1484,7 @@ int main(int argc, char *argv[]){
       //We now have a list of interior and boundary points as well as the
       //mean x and mean y of the interior points. (These are saved in
       //global variables in find_cells().)
-       
+
       //Free pixels, keeping only the latest that were recently put
       //in the cell lists (the cells just found in find_cells() haven't
       //been added to the list yet).
@@ -1521,11 +1519,10 @@ int main(int argc, char *argv[]){
 
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
 
-    //add_boundary_points_to_data2(NULL, ???);
     add_boundary_points_to_data(NULL);
 
     //Check for nucleus or vacuole, etc, using third image.
-    if ((third_image_type!=no_third_image)||(fret_image==1)){ 
+    if ((third_image_type!=no_third_image)||(fret_image==1)){
 
       //Conditions to find internal structure, etc
       if (third_labels==NULL){
@@ -1555,7 +1552,7 @@ int main(int argc, char *argv[]){
       //do internal_structure() always using FL image
 
       recalculate_internal=1; //Re-do search for centers
-      if (force_nucleus_in_center==1){ 
+      if (force_nucleus_in_center==1){
           internal_structure(0,0);
       }else{
           internal_structure(0,1);
@@ -1602,94 +1599,97 @@ int main(int argc, char *argv[]){
             printf("Couldn't output individual to tif file %s.\n",line);
           }
       }
-      
+
       strcpy(line,fluor_files[i]);
       strcat(line,".out.tif");
       printf("Writing found cells and data to output file %s.\n",line);
-      if(output_data_to_tif_file(line,fl,xmax,ymax,bf_fl_labels,1,8,0)==0){
-          printf("Couldn't output data to tif file %s.\n",line);
-      }
-    }
-
-    if (output_third_image==1){
-      if (output_individual_cells==1){
-          strcpy(line,"cells/");
-          strcat(line,third_files[third_cur]);
-          if(output_individual_cells_to_file(i,
-                                             line,
-                                             third_image,
-                                             xmax,ymax,
-                                             0,
-                                             8,
-                                             0)==0){
-         
-          printf("Couldn't output individual to tif file %s.\n",line);
-          }
-      }
-      output_third_image=0;
-      strcpy(line,third_files[third_cur]);
-      strcat(line,".out.tif");
-      printf("Writing found cells and data to output file %s.\n",line);
-      if(output_data_to_tif_file(line,
-                                 third_image,
-                                 xmax,ymax,
-                                 third_labels,
-                                 2,
-                                 8,
-                                 0)==0){
-    
-        printf("Couldn't output data to tif file %s.\n",line);
-      }
-    }
-
-    if (align_individual_cells==1){
-      align_found_cells_to_fl(1); //Re-set the BF boundaries, etc
-    }
-
-    if(new_phase==1){ //Haven't written out yet
-      //We do it down here so we can write it out after we've added
-      //the numbers labelling the cells.  We use the updated list of
-      //known cells for the numbers, so we need to have run over the
-      //fluorescence stuff already.
-      //Label each cell in the tiff file with a number
-
-      load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax);  //just in case
-                                                          // con type==3, bf_fl_labels se _asocia_ con el array "d"
-
-      memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
-      
-      //add_cell_number_to_the_data(i);
-      
-      add_boundary_points_to_data2(NULL, i);
-      //add_boundary_points_to_data(NULL);
-
-      if (output_individual_cells==1){
-        //Write out the files
-        strcpy(line,"cells/");
-        strcat(line,phase_files[j_cur]);
-        if(output_individual_cells_to_file(i,line,bf,xmax,ymax,0,8,0)==0){
-          printf("Couldn't output individual to tif file %s.\n",line);
+      // Andy: This 'if' clause can be included to avoid overwriting the original
+      // BF.out when BF_as_FL is activated. However, since this functionality
+      // has a more serious bug, I've commented out this part.
+      //if(flag[i]!=4){
+        if(output_data_to_tif_file(line,fl,xmax,ymax,bf_fl_labels,1,8,0)==0){
+            printf("Couldn't output data to tif file %s.\n",line);
         }
-      }
+      //}
+  }
 
-      //Write out the files
-      strcpy(line,phase_files[j_cur]);
-      strcat(line,".out.tif");
-      //strcat(line,".out_cfp.tif");
-      printf("Writing found cells and data to output file %s.\n",line);
-      if(output_data_to_tif_file(line,
-                 bf,
-                 xmax,ymax,
-                 bf_fl_labels,
-                 0,
-                 8,
-                 0)==0){
-    
-        printf("Couldn't output data to tif file %s.\n",line);
-      }
+  if (output_third_image==1){
+    if (output_individual_cells==1){
+        strcpy(line,"cells/");
+        strcat(line,third_files[third_cur]);
+        if(output_individual_cells_to_file(i,
+                                           line,
+                                           third_image,
+                                           xmax,ymax,
+                                           0,
+                                           8,
+                                           0)==0){
 
+        printf("Couldn't output individual to tif file %s.\n",line);
+        }
     }
-    
+    output_third_image=0;
+    strcpy(line,third_files[third_cur]);
+    strcat(line,".out.tif");
+    printf("Writing found cells and data to output file %s.\n",line);
+    if(output_data_to_tif_file(line,
+                               third_image,
+                               xmax,ymax,
+                               third_labels,
+                               2,
+                               8,
+                               0)==0){
+
+      printf("Couldn't output data to tif file %s.\n",line);
+    }
+  }
+
+  if (align_individual_cells==1){
+    align_found_cells_to_fl(1); //Re-set the BF boundaries, etc
+  }
+
+  if(new_phase==1){ //Haven't written out yet
+    //We do it down here so we can write it out after we've added
+    //the numbers labelling the cells.  We use the updated list of
+    //known cells for the numbers, so we need to have run over the
+    //fluorescence stuff already.
+    //Label each cell in the tiff file with a number
+
+    load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax);  //just in case
+                                                        // con type==3, bf_fl_labels se _asocia_ con el array "d"
+
+    memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
+
+    add_cell_number_to_the_data(i);
+    add_boundary_points_to_data2(NULL, i);
+
+    if (output_individual_cells==1){
+      //Write out the files
+      strcpy(line,"cells/");
+      strcat(line,phase_files[j_cur]);
+      if(output_individual_cells_to_file(i,line,bf,xmax,ymax,0,8,0)==0){
+        printf("Couldn't output individual to tif file %s.\n",line);
+      }
+    }
+
+    //Write out the files
+    strcpy(line,phase_files[j_cur]);
+    strcat(line,".out.tif");
+    //strcat(line,".out_cfp.tif");
+    printf("Writing found cells and data to output file %s.\n",line);
+    if(output_data_to_tif_file(line,
+               bf,
+               xmax,ymax,
+               bf_fl_labels,
+               0,
+               8,
+               0)==0){
+
+      printf("Couldn't output data to tif file %s.\n",line);
+    }
+
+  }
+
   }//end loop over the number of fluorescence files
 
   //We're done the loop over the fluorescence image. We've been calling
@@ -1703,16 +1703,14 @@ int main(int argc, char *argv[]){
                         recombination_cuts_type,
                         recombination_cuts_flag,
                         recombination_cuts);
-    
+
     //Make output with re-combined data
     load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax);  //just in case
                                                         // con type==3, bf_fl_labels se _asocia_ con el array "d"
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
-    
+
     //add_cell_number_to_the_data(i-1);
-    
-    add_boundary_points_to_data2(NULL, i-1);
-    //add_boundary_points_to_data(NULL);
+    add_boundary_points_to_data(NULL);
 
     //Write out the files
     strcpy(line,"COMBINE_");
@@ -1732,7 +1730,7 @@ int main(int argc, char *argv[]){
   }
 
   //Now write out the list of cells
-  if(output_basename==NULL){ 
+  if(output_basename==NULL){
     //The basename of the output file was passed in as an
     //argument.  It should contain the directory path of where to put
     //the output files.
@@ -1740,47 +1738,38 @@ int main(int argc, char *argv[]){
   }
 
   printf("Writing output to files to directory %s.\n",output_basename);
-  
+
   //if(output_cells(line2,append,time_index)==0){
   if(paw_output==1){
     printf("Output file in PAW format.\n");
     if(output_cells(output_basename,append,time_index)==0){
       printf("Couldn't open X output files: %s.\n",line2);
     }
-  } else {  
+  } else {
     printf("Output file in R format.\n");
     if(output_cells_single_file(output_basename,append,time_index)==0){
       printf("Couldn't open X output files: %s.\n",line2);
     }
   }
-  
+
   //V1.2a Creating brightfield - fluorescent mapping file
   strcpy(bf_fl_file_name, output_basename);
   strcat(bf_fl_file_name, "_bf_fl_mapping");
-  
+
   if((bf_fl_file=fopen(bf_fl_file_name,"w"))==NULL){
     printf("Couldn't open file %s\n",bf_fl_file_name);
     fflush(stdout);
     return 0;
   }
-  
+
   fprintf(bf_fl_file,"fluor\tflag\tt.frame\tbright\tbf.as.fl\n");
   for(i=0;i<n_fluor;i++){
-    fprintf(bf_fl_file,"%s\t%i\t%i\t%s\t%i\n",fluor_files[i],flag[i], 
-                          time_index[i],phase_files[bf_index[i]],flag_bf[i]);  
-  }  
-  
+    fprintf(bf_fl_file,"%s\t%i\t%i\t%s\t%i\n",fluor_files[i],flag[i],
+                          time_index[i],phase_files[bf_index[i]],flag_bf[i]);
+  }
+
   if (bf_fl_file!=NULL)fclose(bf_fl_file);
-  
+
 return 1;
 
 }
-  
-
-
-
-
-
-
-
-
