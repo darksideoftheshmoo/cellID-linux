@@ -347,8 +347,6 @@ int output_data_to_tif_file(char *file,
 
           }else if(k==cell_label){                 // tif_routines.h says: #define cell_label 6, the default for cell labels if present.
               tmp=array_max;  // tmp=array_max-(15.0*onetmp);
-          }else if(k==delete_pixel){               // tif_routines.h says: #define delete_pixel 15
-            tmp=array_min;
           } else {
             tmp=array_min;
           }
@@ -356,6 +354,8 @@ int output_data_to_tif_file(char *file,
         }else if (type==1){                        // The default value for FL type is 1
           if(labels[u]==found_border){
             tmp=array_max;
+          } else if(k>=20){
+            tmp=array_max-(k-20)*onetmp;
           }
 
         }else if (type==2){                        // The default value for third_image type is 2
