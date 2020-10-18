@@ -2,6 +2,14 @@
 
 This is meant to aid compilation of CellID v1.4 in GNU/linux systems.
 
+Please read the `README.txt` file, which contains key information on:
+
+1. Compiling Cell-ID
+2. Running Cell-ID
+3. Outputs from Cell-ID
+4. Brief description of code (though it is indeed brief, the outline is very useful for modifications)
+5. Data analysis package PAW
+
 There is also _VCellID_, a friendlier and more automated graphical user interface for Cell-ID.
 
 I became tired of fighting with unincluded dependencies, and so tried autotools by following [this](https://robots.thoughtbot.com/the-magic-behind-configure-make-make-install) tutorial and using other web resources. It was useful to understand the code, and further resources can be found in the comments within the configure.ac and Makefile.am files, explaining each line.
