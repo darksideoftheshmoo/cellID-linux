@@ -1410,21 +1410,10 @@ int main(int argc, char *argv[]){
                                                               // bf_fl_labels is declared above as "int *bf_fl_labels=NULL;" and not used in other files
 
           memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));     // llenar bf_fl_labels con ceros, esto quizas haga que "d" tenga ceros también
-<<<<<<< HEAD
 
           //add_cell_number_to_the_data(i-1);
           add_boundary_points_to_data(NULL);
 
-=======
-          
-          if(label_cells==1){                // mask_mod
-            add_cell_number_to_the_data(i-1);  // its argument is "int i_t"
-          }
-          
-          add_boundary_points_to_data2(NULL, i-1);  // only executed for enabled do_recombination (default disabled)
-          //add_boundary_points_to_data(NULL);  // only executed for enabled do_recombination (default disabled)
-          
->>>>>>> 549c8cfa024602874e56ef5e3fb9be76fdd5db28
           //Write out the files
           strcpy(line,"COMBINE_");
           strcat(line,phase_files[j_cur]);
@@ -1552,12 +1541,7 @@ int main(int argc, char *argv[]){
 
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));  // mask_mod: reset bf_fl_labels to 0
 
-<<<<<<< HEAD
-    add_boundary_points_to_data(NULL);
-=======
-    add_boundary_points_to_data(NULL);          // mask_mod: this is the key call to add boundaries to FL.out images
-    //add_boundary_points_to_data2(NULL, ???);  // mask_mod: what t.frame is this? cell number labels are not added to FLs
->>>>>>> 549c8cfa024602874e56ef5e3fb9be76fdd5db28
+    add_boundary_points_to_data(NULL); // mask_mod: this is the key call to add boundaries to FL.out images
 
     //Check for nucleus or vacuole, etc, using third image.
     if ((third_image_type!=no_third_image)||(fret_image==1)){
@@ -1641,7 +1625,7 @@ int main(int argc, char *argv[]){
       strcpy(line,fluor_files[i]);
       strcat(line,".out.tif");
       printf("Writing found cells and data to output file %s.\n",line);
-<<<<<<< HEAD
+
       // Andy: This 'if' clause can be included to avoid overwriting the original
       // BF.out when BF_as_FL is activated. However, since this functionality
       // has a more serious bug, I've commented out this part.
@@ -1666,50 +1650,6 @@ int main(int argc, char *argv[]){
 
         printf("Couldn't output individual to tif file %s.\n",line);
         }
-=======
-      if(output_data_to_tif_file(line,
-                                 fl,
-                                 xmax,
-                                 ymax,
-                                 bf_fl_labels,
-                                 1,
-                                 8,
-                                 0)==0){
-          printf("Couldn't output data to tif file %s.\n",line);
-      }
-    }
-
-    if (output_third_image==1){
-      if (output_individual_cells==1){
-          strcpy(line,"cells/");
-          strcat(line,third_files[third_cur]);
-          if(output_individual_cells_to_file(i,
-                                             line,
-                                             third_image,
-                                             xmax,ymax,
-                                             0,
-                                             8,
-                                             0)==0){
-         
-          printf("Couldn't output individual to tif file %s.\n",line);
-          }
-      }
-      output_third_image=0;
-      strcpy(line,third_files[third_cur]);
-      strcat(line,".out.tif");
-      printf("Writing found cells and data to output file %s.\n",line);
-      if(output_data_to_tif_file(line,
-                                 third_image,
-                                 xmax,
-                                 ymax,
-                                 third_labels,
-                                 2,
-                                 8,
-                                 0)==0){
-    
-        printf("Couldn't output data to tif file %s.\n",line);
-      }
->>>>>>> 549c8cfa024602874e56ef5e3fb9be76fdd5db28
     }
     output_third_image=0;
     strcpy(line,third_files[third_cur]);
@@ -1738,19 +1678,8 @@ int main(int argc, char *argv[]){
     //fluorescence stuff already.
     //Label each cell in the tiff file with a number
 
-<<<<<<< HEAD
     load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax);  //just in case
                                                         // con type==3, bf_fl_labels se _asocia_ con el array "d"
-=======
-      memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
-      
-      if(label_cells==1){                // mask_mod
-        add_cell_number_to_the_data(i);  // its argument is "int i_t"
-      }
-      
-      add_boundary_points_to_data2(NULL, i);
-      //add_boundary_points_to_data(NULL);
->>>>>>> 549c8cfa024602874e56ef5e3fb9be76fdd5db28
 
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
 
@@ -1759,27 +1688,10 @@ int main(int argc, char *argv[]){
 
     if (output_individual_cells==1){
       //Write out the files
-<<<<<<< HEAD
       strcpy(line,"cells/");
       strcat(line,phase_files[j_cur]);
       if(output_individual_cells_to_file(i,line,bf,xmax,ymax,0,8,0)==0){
         printf("Couldn't output individual to tif file %s.\n",line);
-=======
-      strcpy(line,phase_files[j_cur]);
-      strcat(line,".out.tif");
-      //strcat(line,".out_cfp.tif");
-      printf("Writing found cells and data to output file %s.\n",line);
-      if(output_data_to_tif_file(line,
-                                 bf,
-                                 xmax,
-                                 ymax,
-                                 bf_fl_labels,
-                                 0,
-                                 8,
-                                 0)==0){
-    
-        printf("Couldn't output data to tif file %s.\n",line);
->>>>>>> 549c8cfa024602874e56ef5e3fb9be76fdd5db28
       }
     }
 
@@ -1819,19 +1731,9 @@ int main(int argc, char *argv[]){
     load_global_arrays(3,NULL,bf_fl_labels,xmax,ymax);  //just in case
                                                         // con type==3, bf_fl_labels se _asocia_ con el array "d"
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
-<<<<<<< HEAD
 
     //add_cell_number_to_the_data(i-1);
     add_boundary_points_to_data(NULL);
-=======
-    
-    if(label_cells==1){                  // mask_mod
-      add_cell_number_to_the_data(i-1);  // its argument is "int i_t"
-    }
-    
-    add_boundary_points_to_data2(NULL, i-1);  // only executed for enabled do_recombination (default disabled)
-    //add_boundary_points_to_data(NULL);  // only executed for enabled do_recombination (default disabled)
->>>>>>> 549c8cfa024602874e56ef5e3fb9be76fdd5db28
 
     //Write out the files
     strcpy(line,"COMBINE_");

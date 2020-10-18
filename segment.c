@@ -1111,7 +1111,7 @@ int find_cells(struct point ***boundary_out,struct point ***interior_out){
 	      i--;                  //Repeat the check on the first cell
       }else{
 	      //printf("Undoing split: %i (%e,%e,%e)\n",i,tmp,minor_s0,minor_s1); // mask_mod: comente esto que tiraba mensajes a lo pavote
-	      
+
 	      //Undo the mess we made above. (Recombine the two cells)
 	      for(p=s0;(p->next)!=NULL;p=(p->next)) ; //End of s0
 	      //Heal the split here
@@ -6142,15 +6142,7 @@ void add_boundary_points_to_data(struct point *p_in){
           //New point
           a=a2;
           b=b2;
-<<<<<<< HEAD
           d[(b*xmax+a)]=border;
-=======
-          d[(b*xmax+a)]=border; // mask_mod change would be: d[(b*xmax+a)]=i+1+19; originally: d[(b*xmax+a)]=border;
-                                // mask_mod: boundary points have values related to which type of boundary they are
-                                // mask_mod: lower integers are already in use, see tif_routines.h for reference
-                                // mask_mod: integers greater than 15 should be unused. Just in case, we add 20.
-
->>>>>>> 549c8cfa024602874e56ef5e3fb9be76fdd5db28
 	      }
       }
     }

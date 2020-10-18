@@ -180,12 +180,8 @@ void add_numbers_to_data(int n, int x, int y, int *d, int xmax, int ymax){
 	         iy=y+j;
 	         if((ix>=0)&&(ix<xmax)&&(iy>=0)&&(iy<ymax)){
 	           // if(d[ix][iy]!=found_border){ //Don't overwrite border
-<<<<<<< HEAD
 	           //d[(iy*xmax)+ix]=(2*n+1)+20;  //d[(iy*xmax)+ix]=cell_label;
              d[(iy*xmax)+ix]=1+19;
-=======
-	           d[(iy*xmax)+ix]=cell_label;  //  mask_mod: d[(iy*xmax)+ix]=n+20;
->>>>>>> 549c8cfa024602874e56ef5e3fb9be76fdd5db28
 	           //}
 	         }
 	       }
