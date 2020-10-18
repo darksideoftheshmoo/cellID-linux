@@ -12,7 +12,7 @@ This branch has removed the glib dependency, **it has not been thoroughly tested
 
 This branch outputs BF tiff files with blank background and cell boundary pixel intensities corresponding to CellID. **It has not been thoroughly tested**.
 
-The cell boundary pixel *should* correspond to the cellid according this formula: `CellID = 65535 - pixel_intensity`. However, time courses do not play nice with this; the formula holds only for the first t.frame. After the first t.frame, this does not work any longer.
+The cell boundary pixel *should* correspond to the cellid according to this formula: `CellID = 65535 - pixel_intensity`.
 
 ## Credits
 
@@ -54,14 +54,18 @@ These dependencies can also be satisfied in Arch Linux, sorry for not providing 
 
 `aurman -S openlibm` OR `yay -S openlibm`
 
-### Mac OS
+### macOS
+It may be necessary to install Apple's Command Line Tools for Cell-ID to compile successfully. Try the instructions below, and if you are unable to compile, install Command Line Tools and try again.
 
-Use `brew` to install the following:
+Use `brew` (Homebrew) to install the following:
 
-* `autoconf automake libtool` are the compilation tools.
-* `libtiff` is a CellID dependency.
+* `autoconf automake libtool` are the compilation tools:
+    brew install autoconf automake libtool
 
-Note: `openlibm` is also required but is seems to be bundled with the OS. 
+* `libtiff` and `openlibm` are CellID dependencies.
+    brew install libtiff openlibm
+
+Note: `openlibm` is apparently bundled with the OS, but I was unable to make to compiler find this installation. 
 
 ### Notes
 
@@ -73,24 +77,25 @@ Surprisingly for me, packages may be installed using one name (such as libtiff5)
 
 ### Linux
 
-To build and install, please cd into the directory where the files are and run:
+To build and install, please cd into the directory with the CellID files and run:
 
     autoreconf -fvi
     ./configure
     make -j8
     sudo make install
 
-### Mac OS
+### macOS
 
-Mac OS bundles `openlibm`, but it may not be found by `pkg-config` automatically.
+`openlibm` it not found by `pkg-config` automatically, and needs to be manually configured:
 
     export PKG_CONFIG_PATH="/usr/local/opt/openlibm/lib/pkgconfig"
+
+To build and install, please cd into the directory with the CellID files and run:
+
     autoreconf -fvi
     ./configure
     make -j8
     sudo make install
-
-If it does not work saying it doesnt find `openlibm`, you may have to install `openlibm` separately with Brew or other method.
 
 ### Troubleshooting compilation
 
@@ -98,7 +103,7 @@ If you get a "multiple definitions" error, this occurs with newer gcc versions.
 
 Checkout the other branch: `multiple_definitions_fix`
 
-That one and its derivarives compile fine on GCC `10.2.0`.
+That one and its derivatives compile fine on GCC `10.2.0`.
 
 ## Usage
 
