@@ -342,11 +342,11 @@ int output_data_to_tif_file(char *file,
         k=labels[u];
         if (type==0){                              // The default value for BF type and flat_cors is 0.
           if(k>=20){                               // As modified in segment.c, values of "k=labels[u]" >= 20 should be cell boundaries (a different "int" per cell starting at 20).
-            tmp=array_max-(labels[u]-20)*onetmp;   // In that case, set the intensity value of the boundary pixel to something related to the cellid
+            tmp=array_max-(k-20)*onetmp;   // In that case, set the intensity value of the boundary pixel to something related to the cellid
                                                    // Note that since in segment.c "d[(b*xmax+a)]=i+1+19" starts at 20, then labels[u]==19 can mean something else.
 
           }else if(k==cell_label){                 // tif_routines.h says: #define cell_label 6, the default for cell labels if present.
-              tmp=array_max-(15.0*onetmp);
+              tmp=array_max;  // tmp=array_max-(15.0*onetmp);
           }else if(k==delete_pixel){               // tif_routines.h says: #define delete_pixel 15
             tmp=array_min;
           } else {

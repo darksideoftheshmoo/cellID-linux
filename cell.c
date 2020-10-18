@@ -1228,7 +1228,14 @@ int main(int argc, char *argv[]){
             printf("Writing corrections to output file %s.\n",line);
             //Scale corrections by 20000.0 for writing out
             for(j=0;j<(xmax*ymax);j++)(flat_cors[j])*=(20000.0);
-            if(output_data_to_tif_file(line,flat_cors,xmax,ymax,NULL,0,16,0)==0){
+            if(output_data_to_tif_file(line,
+                                       flat_cors,
+                                       xmax,
+                                       ymax,
+                                       NULL,  // do not write cell labels for "flat_cors"
+                                       0,
+                                       16,
+                                       0)==0){
               printf("Couldn't output data to tif file %s.\n",line);
             }
           }
@@ -1377,7 +1384,8 @@ int main(int argc, char *argv[]){
         max_split_d_over_minor=max_split_d_over_minor_save;
       }
 
-      //Try doing recombination of previously found cells
+      //If "do_recombination" is enabled (default 0, disabled)
+      //try doing recombination of previously found cells
       //based on the fluorescence images that we read in since the last
       //call to find_cells(). (If this is the first call it won't do
       //anything since it loops over n_known, which starts at 0).
@@ -1398,21 +1406,28 @@ int main(int argc, char *argv[]){
           
           //add_cell_number_to_the_data(i-1);
           
-          add_boundary_points_to_data2(NULL, i-1);
-          //add_boundary_points_to_data(NULL);
+          //add_boundary_points_to_data2(NULL, i-1);  // only executed for enabled do_recombination (default disabled)
+          //add_boundary_points_to_data(NULL);  // only executed for enabled do_recombination (default disabled)
           
           //Write out the files
           strcpy(line,"COMBINE_");
           strcat(line,phase_files[j_cur]);
           strcat(line,".out.tif");
           printf("Writing found cells and data to output file %s.\n",line);
-          if(output_data_to_tif_file(line,bf,xmax,ymax,bf_fl_labels,0,8,0)==0){
+          if(output_data_to_tif_file(line,
+                                     bf,
+                                     xmax,
+                                     ymax,
+                                     bf_fl_labels,
+                                     0,
+                                     8,
+                                     0)==0){
             printf("Couldn't output data to tif file %s.\n",line);
           }
         }
       }
 
-      new_phase=1;
+      new_phase=1;            // flag a "new brightfield image"
       recalculate_internal=1; //New cells so must re-do internal calculations
       j_cur=j_min;
 
@@ -1521,8 +1536,8 @@ int main(int argc, char *argv[]){
 
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
 
-    //add_boundary_points_to_data2(NULL, ???);
-    add_boundary_points_to_data(NULL);
+    //add_boundary_points_to_data2(NULL, ???);  // mask_mod: what t.frame is this?
+    //add_boundary_points_to_data(NULL);        // mask_mod: commented out for tests
 
     //Check for nucleus or vacuole, etc, using third image.
     if ((third_image_type!=no_third_image)||(fret_image==1)){ 
@@ -1606,7 +1621,14 @@ int main(int argc, char *argv[]){
       strcpy(line,fluor_files[i]);
       strcat(line,".out.tif");
       printf("Writing found cells and data to output file %s.\n",line);
-      if(output_data_to_tif_file(line,fl,xmax,ymax,bf_fl_labels,1,8,0)==0){
+      if(output_data_to_tif_file(line,
+                                 fl,
+                                 xmax,
+                                 ymax,
+                                 bf_fl_labels,
+                                 1,
+                                 8,
+                                 0)==0){
           printf("Couldn't output data to tif file %s.\n",line);
       }
     }
@@ -1632,7 +1654,8 @@ int main(int argc, char *argv[]){
       printf("Writing found cells and data to output file %s.\n",line);
       if(output_data_to_tif_file(line,
                                  third_image,
-                                 xmax,ymax,
+                                 xmax,
+                                 ymax,
                                  third_labels,
                                  2,
                                  8,
@@ -1658,7 +1681,7 @@ int main(int argc, char *argv[]){
 
       memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
       
-      //add_cell_number_to_the_data(i);
+      add_cell_number_to_the_data(i);
       
       add_boundary_points_to_data2(NULL, i);
       //add_boundary_points_to_data(NULL);
@@ -1678,12 +1701,13 @@ int main(int argc, char *argv[]){
       //strcat(line,".out_cfp.tif");
       printf("Writing found cells and data to output file %s.\n",line);
       if(output_data_to_tif_file(line,
-                 bf,
-                 xmax,ymax,
-                 bf_fl_labels,
-                 0,
-                 8,
-                 0)==0){
+                                 bf,
+                                 xmax,
+                                 ymax,
+                                 bf_fl_labels,
+                                 0,
+                                 8,
+                                 0)==0){
     
         printf("Couldn't output data to tif file %s.\n",line);
       }
@@ -1711,8 +1735,8 @@ int main(int argc, char *argv[]){
     
     //add_cell_number_to_the_data(i-1);
     
-    add_boundary_points_to_data2(NULL, i-1);
-    //add_boundary_points_to_data(NULL);
+    //add_boundary_points_to_data2(NULL, i-1);  // only executed for enabled do_recombination (default disabled)
+    //add_boundary_points_to_data(NULL);  // only executed for enabled do_recombination (default disabled)
 
     //Write out the files
     strcpy(line,"COMBINE_");
@@ -1722,7 +1746,8 @@ int main(int argc, char *argv[]){
     printf("Writing found cells and data to output file %s.\n",line);
     if(output_data_to_tif_file(line,
                                bf,
-                               xmax,ymax,
+                               xmax,
+                               ymax,
                                bf_fl_labels,
                                0,
                                8,
