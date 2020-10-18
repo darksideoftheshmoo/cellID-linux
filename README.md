@@ -1,6 +1,6 @@
 # cellID-linux
 
-This is meant to aid compilation of cellID v1.4 in GNU/linux systems.
+This is meant to aid compilation of CellID v1.4 in GNU/linux systems.
 
 There is also _VCellID_, a friendlier and more automated graphical user interface for Cell-ID.
 
@@ -13,6 +13,8 @@ This branch has removed the glib dependency, **it has not been thoroughly tested
 This branch outputs BF tiff files with blank background and cell boundary pixel intensities corresponding to CellID. **It has not been thoroughly tested**.
 
 The cell boundary pixel *should* correspond to the cellid according to this formula: `CellID = 65535 - pixel_intensity`.
+
+Labeling of cells is disabled by default, enable by including the `-l` in your command options.
 
 ## Credits
 
@@ -86,15 +88,15 @@ To build and install, please cd into the directory with the CellID files and run
 
 ### macOS
 
-`openlibm` it not found by `pkg-config` automatically, and needs to be manually configured:
+`openlibm` is not found by `pkg-config` automatically, and needs to be manually configured. Run this first:
 
     export PKG_CONFIG_PATH="/usr/local/opt/openlibm/lib/pkgconfig"
 
-To build and install, please cd into the directory with the CellID files and run:
+Then, to build and install, please `cd` into the directory with the CellID files and run:
 
     autoreconf -fvi
     ./configure
-    make -j8
+    make -j4
     sudo make install
 
 ### Troubleshooting compilation
@@ -107,17 +109,21 @@ That one and its derivatives compile fine on GCC `10.2.0`.
 
 ## Usage
 
+`$ cell -p parameters.txt -o /path/to/output/dir -b bf_images_list.txt -f fl_images_list.txt -l`
+
+In general, each `cell` execution will deal with one "position" at a time.
+
 Please refer to the cellID documentation to learn how to use this program.
 
 Cheers!
 
 ### Parameters
 
-`$ cell -p parameters.txt`
-
 Example parameters are in the `parameters_example.txt` file, and a full description is available in `parameters_description.txt` (copied from Gordon et. al. 2007).
 
-Run `cell --help-all` for commandline help.
+The `-o` option refers to the output directory.
+
+The `-b` and `-f` receive paths to text files containing BF and FL file paths (one per line, ordered by t.frame).
 
 ## Output
 
