@@ -1108,9 +1108,10 @@ int find_cells(struct point ***boundary_out,struct point ***interior_out){
 	      boundary[i]=s0; //Overwrite current position with first cell
 	      boundary[n_found]=s1; //Put second at the end of the list
 	      n_found++;
-	      i--; //Repeat the check on the first cell
+	      i--;                  //Repeat the check on the first cell
       }else{
-	      printf("Undoing split: %i (%e,%e,%e)\n",i,tmp,minor_s0,minor_s1);
+	      //printf("Undoing split: %i (%e,%e,%e)\n",i,tmp,minor_s0,minor_s1); // mask_mod: comente esto que tiraba mensajes a lo pavote
+	      
 	      //Undo the mess we made above. (Recombine the two cells)
 	      for(p=s0;(p->next)!=NULL;p=(p->next)) ; //End of s0
 	      //Heal the split here
@@ -6141,7 +6142,15 @@ void add_boundary_points_to_data(struct point *p_in){
           //New point
           a=a2;
           b=b2;
+<<<<<<< HEAD
           d[(b*xmax+a)]=border;
+=======
+          d[(b*xmax+a)]=border; // mask_mod change would be: d[(b*xmax+a)]=i+1+19; originally: d[(b*xmax+a)]=border;
+                                // mask_mod: boundary points have values related to which type of boundary they are
+                                // mask_mod: lower integers are already in use, see tif_routines.h for reference
+                                // mask_mod: integers greater than 15 should be unused. Just in case, we add 20.
+
+>>>>>>> 549c8cfa024602874e56ef5e3fb9be76fdd5db28
 	      }
       }
     }
@@ -6173,7 +6182,7 @@ void add_boundary_points_to_data2(struct point *p_in, int i_t){
   //if p_in==NULL then do all n_found borders.
   //add found_border to d[] array in appropriate place.
 
-  border=found_border; //found_border=5 defined in tif_routines.h
+  //border=found_border; //found_border=5 defined in tif_routines.h
   p_start=p_in;
   //for(i=0;i<xmax_ymax;i++)d[i]=0;
   for(i=0;i<n_known;i++){ //for(i=0;i<n_found;i++){ //Loop over all cells
@@ -6181,7 +6190,7 @@ void add_boundary_points_to_data2(struct point *p_in, int i_t){
                     // therefore cs is a list of "blob" objects, each representing a cell's data
                     // defined below as cs[n_known]=bnew;
     if(cellblob->i_time==i_t){
-      border = cellblob->index;
+      border=cellblob->index;
 
       //Write number i at position (b->x,b->y)
       //     printf("Adding number %i at (%e,%e).\n",b->index,b->x,b->y);
