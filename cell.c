@@ -1411,8 +1411,10 @@ int main(int argc, char *argv[]){
 
           memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));     // llenar bf_fl_labels con ceros, esto quizas haga que "d" tenga ceros también
 
-          //add_cell_number_to_the_data(i-1);
-          add_boundary_points_to_data(NULL);
+          if(label_cells==1){                  // mask_mod
+            add_cell_number_to_the_data(i-1);  // its argument is "int i_t", maybe its the "time"
+          }
+          add_boundary_points_to_data(NULL);   // only executed for enabled do_recombination (default disabled)
 
           //Write out the files
           strcpy(line,"COMBINE_");
@@ -1630,10 +1632,17 @@ int main(int argc, char *argv[]){
       // BF.out when BF_as_FL is activated. However, since this functionality
       // has a more serious bug, I've commented out this part.
       //if(flag[i]!=4){
-        if(output_data_to_tif_file(line,fl,xmax,ymax,bf_fl_labels,1,8,0)==0){
-            printf("Couldn't output data to tif file %s.\n",line);
+      if(output_data_to_tif_file(line,
+                                 fl,
+                                 xmax,
+                                 ymax,
+                                 bf_fl_labels,
+                                 1,
+                                 8,
+                                 0)==0){
+          printf("Couldn't output data to tif file %s.\n",line);
         }
-      //}
+      //}  // Andy: cosing bracket for the proposed if clause above
   }
 
   if (output_third_image==1){
@@ -1643,7 +1652,8 @@ int main(int argc, char *argv[]){
         if(output_individual_cells_to_file(i,
                                            line,
                                            third_image,
-                                           xmax,ymax,
+                                           xmax,
+                                           ymax,
                                            0,
                                            8,
                                            0)==0){
@@ -1683,7 +1693,9 @@ int main(int argc, char *argv[]){
 
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
 
-    add_cell_number_to_the_data(i);
+    if(label_cells==1){                // mask_mod: optional labeling through "-l" command line option
+      add_cell_number_to_the_data(i);  // its argument is "int i_t"
+    }
     add_boundary_points_to_data2(NULL, i);
 
     if (output_individual_cells==1){
@@ -1701,12 +1713,13 @@ int main(int argc, char *argv[]){
     //strcat(line,".out_cfp.tif");
     printf("Writing found cells and data to output file %s.\n",line);
     if(output_data_to_tif_file(line,
-               bf,
-               xmax,ymax,
-               bf_fl_labels,
-               0,
-               8,
-               0)==0){
+                               bf,
+                               xmax,
+                               ymax,
+                               bf_fl_labels,
+                               0,
+                               8,
+                               0)==0){
 
       printf("Couldn't output data to tif file %s.\n",line);
     }
@@ -1732,8 +1745,10 @@ int main(int argc, char *argv[]){
                                                         // con type==3, bf_fl_labels se _asocia_ con el array "d"
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
 
-    //add_cell_number_to_the_data(i-1);
-    add_boundary_points_to_data(NULL);
+    if(label_cells==1){                  // mask_mod: optional labeling through "-l" command line option
+      add_cell_number_to_the_data(i-1);  // mask_mod: its argument is "int i_t"
+    }
+    add_boundary_points_to_data(NULL);   // mask_mod: this chunk is only executed for enabled do_recombination (default disabled)
 
     //Write out the files
     strcpy(line,"COMBINE_");
