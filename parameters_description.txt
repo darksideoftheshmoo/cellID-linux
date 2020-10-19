@@ -30,6 +30,17 @@
 ## Image type of the image that is used to find the cells
 image_type brightfield
 
+## "bf_fl_mapping" option description (by guesswork, mask_mod branch).
+## The mapping between brightfield and fluorescence images can be made
+## by acquisition time, or derived from the order in the list of paths
+## passed as command line options "-b" and "-f" to cell.
+## If the order is by "list", then the paths must be grouped and ordered
+## first by t.frame (ascending) and then by channel.
+## If the order is by "time", cell derives the BF-FL mapping from the
+## acquisition time in the TIFF metadata.
+## bf_fl_mapping time
+bf_fl_mapping list 
+
 ## If we have a "fret" image or not (a "fret" image here means that
 ## the image is split into an upper and lower half, each with its own
 ## excitation filter in front of it).

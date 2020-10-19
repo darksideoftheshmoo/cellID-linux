@@ -119,7 +119,7 @@ That one and its derivatives compile fine on GCC `10.2.0`.
 
 `$ cell -p parameters.txt -o /path/to/output/dir -b bf_images_list.txt -f fl_images_list.txt -l`
 
-In general, each `cell` execution will deal with one "position" at a time.
+Each `cell` execution will deal with one "position" at a time.
 
 Please refer to the cellID documentation to learn how to use this program.
 
