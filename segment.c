@@ -6276,11 +6276,11 @@ void add_boundary_points_to_data(struct point *p_in){
 				//if(count%5!=3&&count%5!=4){ //mask_mod: uncomment for dashed boundaries
 					if(((a!=a2)||(b!=b2))&&(a2>=0)&&(a2<xmax)&&(b2>=0)&&(b2<ymax)){
 						//New point
-						a=a2;			//mask_mod: commented for smoother visualizaton
+						a=a2;
 						b=b2;
-						d[(b*xmax+a)]=border;  // border=found_border;  // tif_routines.h says: #define found_border 5
+						d[(b*xmax+a)]=border;  // border=found_border; tif_routines.h: #define found_border 5
 					}
-				//}
+				//} //mask_mod: uncomment for dashed boundaries
       }
 			//count++; //mask_mod: uncomment for dashed boundaries
     }
