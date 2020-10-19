@@ -18,13 +18,13 @@ I became tired of fighting with unincluded dependencies, and so tried autotools 
 
 This branch has removed the glib dependency, **it has not been thoroughly tested**.
 
-This branch outputs BF tiff files with blank background and cell boundary pixel intensities corresponding to CellID. **It has not been thoroughly tested**.
+This branch outputs BF tiff files with blank background and cell boundary pixel intensities proportional to each cellID, following this relationship: `cellID = 65535 - boundary_intensity - 1` (see image 1 at the end of the readme). This option is enabled by default. **It has not been thoroughly tested**.
 
-This branch outputs BF tiff files with blank background and cell interior pixel intensities corresponding to CellID. **It has not been thoroughly tested**.
+This branch outputs BF tiff files with blank background and cell interior pixel intensities proportional to each cellID, following this relationship: `cellID = 65535 - boundary_intensity - 1`. **It has not been thoroughly tested**. To enable this feature, call cell with option `-i`.
 
-The cell boundary pixel *should* correspond to the cellid according to this formula: `CellID = 65535 - pixel_intensity`.
+Labeling of cells is disabled by default, enable by including the `-l` in your command options. This will add cellID numbers to the cells, with maximum pixel intensity.
 
-Labeling of cells is disabled by default, enable by including the `-l` in your command options.
+Another way of getting the boundary and interior points is with the `-m` option. This makes cell create a new output file with a table of x/y coorinates for all cell boundary and interior pixel (each identified with cellID, t.frame, flag, and "pixtype").
 
 ## Credits
 
@@ -138,3 +138,11 @@ The `-b` and `-f` receive paths to text files containing BF and FL file paths (o
 ## Output
 
 For convenience, I have copied the `out_all` columns' description to `output_descriptions.csv`.
+
+# Appendix
+
+## Image 1
+
+Notice de value for the boundary of this cell with id = 0 is 65534, which is consistent: `boundary_intensity = 65535 - cellID - 1`
+
+![cellid_intensity_relationship](doc/cellid_intensity_relationship.png)
