@@ -1821,6 +1821,7 @@ int main(int argc, char *argv[]){
 
   if (bf_fl_file!=NULL)fclose(bf_fl_file);
 
-return 1;
-
+  printf("\n\n******** CellID is done! enjoy your single cell datasets :) ********\n");
+  fflush(stdout);
+  return 1;
 }

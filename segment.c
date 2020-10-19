@@ -5324,6 +5324,8 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
       b=b->next;
     }
   }
+  printf("output_cells_single_file: done writing! closing file...\n");
+  fflush(stdout);
   if (fp!=NULL)fclose(fp);
 
   if(out_mask==1) printf("mask_mod: done writing, closing fp2\n");
