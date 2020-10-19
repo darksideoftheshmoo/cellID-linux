@@ -4977,14 +4977,18 @@ void add_cell_number_to_the_data(int i_t){
 int output_cells_single_file(char *basename, char *append, int *time_index, int out_mask){
   //basename is where file goes+beginning of output name
   //append is "" for overwrite or "a" for append
+  printf("\noutput_cells_single_file: initializing...\n");
+  fflush(stdout);
 
   int i,j;
   struct blob *b;
   FILE *fp=NULL;
   char file[500];
+  if(out_mask==1) printf("mask_mod: defining FILE for output");
   FILE *fp2=NULL;       // mask_mod
+  if(out_mask==1) printf("mask_mod: defining char mask_file for output");
   char mask_file[500];  // mask_mod
-
+  if(out_mask==1) printf("mask_mod: defining variables for TSV output");
   struct point *mask_mod_p1;                             // mask_mod
   struct point *mask_mod_p2;                             // mask_mod
   int mask_mod_i;                                        // mask_mod
@@ -4992,6 +4996,9 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
   float mask_mod_mx,mask_mod_my,mask_mod_s;              // mask_mod
   float mask_mod_x0,mask_mod_y0,mask_mod_x,mask_mod_y;   // mask_mod
   int mask_mod_a,mask_mod_b,mask_mod_a2,mask_mod_b2;     // mask_mod
+  
+  printf("output_cells_single_file: initialization done!\n");
+  fflush(stdout);
 
   //char sys_cmd[500];
   int time1,time2;
@@ -5058,15 +5065,18 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
 
   fprintf(fp,"f.local.bg \t a.local.bg \t a.local \t f.local2.bg \t");
   fprintf(fp,"a.local2.bg \t a.local2 \t ");
-
   fprintf(fp,"a.surf \t con.vol \t sphere.vol ");
 
   fprintf(fp,"\n");
 
   // mask_mod: Put all cell boundaries into a mask file
+  if(out_mask==1) printf("mask_mod: setting up TSV file name\n");
+  fflush(stdout);
   strcpy(mask_file,basename);
   strcat(mask_file,"_all_masks.tsv");
   // mask_mod: open the mask file (closed at the end)
+  if(out_mask==1) printf("mask_mod: opening up TSV file\n");
+  fflush(stdout);
   if(out_mask==1){
     if((fp2=fopen(mask_file,wa))==NULL){
       printf("Couldn't open masks file %s\n",file);
@@ -5075,8 +5085,10 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
     }
   }
   // mask_mod: write mask file header
+  if(out_mask==1) printf("mask_mod: writting TSV header\n");
+  fflush(stdout);
   if(out_mask==1) fprintf(fp2,"cellID\tt.frame\tflag\tx\ty\tpixtype\n");
-
+  
   // the "blob" struct is declared at the top of this file (segment.c) as:
     // struct blob {
     //   int index;      //A unique number to label this cell list
@@ -5221,8 +5233,10 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
       fprintf(fp,"\n");
 
       // mask_mod: Get the bounday and mask for this cell
-      mask_mod_boundary=b->boundary;
-      mask_mod_interior=b->interior;
+      if(out_mask==1) printf("mask_mod: getting b->boundary and b->interior\n");
+      fflush(stdout);
+      if(out_mask==1) mask_mod_boundary=b->boundary;
+      if(out_mask==1) mask_mod_interior=b->interior;
 
       // // mask_mod: Go to first boundary/interior pixels
       // while(mask_mod_boundary->prev!=NULL) mask_mod_boundary=mask_mod_boundary->prev;
@@ -5238,68 +5252,82 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
       //   mask_mod_boundary=mask_mod_boundary->next;
       // }
       //Loop over all boundary points until reaching the end (full circuit)
-      for(mask_mod_p1=mask_mod_boundary; mask_mod_p1!=NULL; mask_mod_p1=mask_mod_p1->next){
-        mask_mod_p2=mask_mod_p1->next;
-        if(mask_mod_p2==NULL) mask_mod_p2=mask_mod_boundary; //So make full circuit
-        // Calculate x-shift and y-shift between current and next point
-        mask_mod_mx=(float)( (mask_mod_p2->i)-(mask_mod_p1->i) );
-        mask_mod_my=(float)( (mask_mod_p2->j)-(mask_mod_p1->j) );
-        // Get xpos and ypos of current point (integers)
-        mask_mod_a=mask_mod_p1->i;
-        mask_mod_b=mask_mod_p1->j;
-        // Convert xpos and ypos to float
-        mask_mod_x0=(float) mask_mod_a;
-        mask_mod_y0=(float) mask_mod_b;
-        //Loop from 0.01 to 1.0 in steps of 0.01 (not clear why)
-        for(mask_mod_s=mask_mod_step; mask_mod_s<=1.0; mask_mod_s+=mask_mod_step){
-          // Calculate xval and yval by summing:
-          // 1) xpos of current point
-          // 2) x-shift multiplied by current step
-          // 3) 0.5
-          mask_mod_x=mask_mod_x0 + mask_mod_mx * mask_mod_s + 0.5; //0.5 to round off (place integers in middle of bins)
-          mask_mod_y=mask_mod_y0 + mask_mod_my * mask_mod_s + 0.5;
-          //Convert to integers
-          mask_mod_a2=(int) mask_mod_x;
-          mask_mod_b2=(int) mask_mod_y;
-          // if
-          // a!=a2 or b!=b2 (xpos!=xval or ypos!=yval)
-          // AND
-          // a2 and b2 are within image boundaries
-          if(((mask_mod_a!=mask_mod_a2)||(mask_mod_b!=mask_mod_b2))
-          	 && (mask_mod_a2>=0)
-          	 && (mask_mod_a2<xmax)&&(mask_mod_b2>=0)
-          	 && (mask_mod_b2<ymax)){
-            //New point
-            mask_mod_a=mask_mod_a2;  // x value
-            mask_mod_b=mask_mod_b2;  // y value
-            // The following used to be "d[(b*xmax+a)]=border" in "add_boundary_points_to_data"
-            if(out_mask==1){
-              fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
-                                         time_index[b->i_time]);     // t.frame
-              fprintf(fp2, "%4i\t",      b->flag);                   // flag
-              fprintf(fp2, "%4i\t",      mask_mod_a);                // xpos
-              fprintf(fp2, "%4i\t",      mask_mod_b);                // ypos
-              fprintf(fp2, "b\n");                                   // pixtype is "b" for "boundary"
+      if(out_mask==1) printf("mask_mod: iterating over mask_mod_boundary\n");
+      fflush(stdout);
+      if(out_mask==1){
+        for(mask_mod_p1=mask_mod_boundary; mask_mod_p1!=NULL; mask_mod_p1=mask_mod_p1->next){
+          mask_mod_p2=mask_mod_p1->next;
+          if(mask_mod_p2==NULL) mask_mod_p2=mask_mod_boundary; //So make full circuit
+          // Calculate x-shift and y-shift between current and next point
+          mask_mod_mx=(float)( (mask_mod_p2->i)-(mask_mod_p1->i) );
+          mask_mod_my=(float)( (mask_mod_p2->j)-(mask_mod_p1->j) );
+          // Get xpos and ypos of current point (integers)
+          mask_mod_a=mask_mod_p1->i;
+          mask_mod_b=mask_mod_p1->j;
+          // Convert xpos and ypos to float
+          mask_mod_x0=(float) mask_mod_a;
+          mask_mod_y0=(float) mask_mod_b;
+          //Loop from 0.01 to 1.0 in steps of 0.01 (not clear why)
+          for(mask_mod_s=mask_mod_step; mask_mod_s<=1.0; mask_mod_s+=mask_mod_step){
+            // Calculate xval and yval by summing:
+            // 1) xpos of current point
+            // 2) x-shift multiplied by current step
+            // 3) 0.5
+            mask_mod_x=mask_mod_x0 + mask_mod_mx * mask_mod_s + 0.5; //0.5 to round off (place integers in middle of bins)
+            mask_mod_y=mask_mod_y0 + mask_mod_my * mask_mod_s + 0.5;
+            //Convert to integers
+            mask_mod_a2=(int) mask_mod_x;
+            mask_mod_b2=(int) mask_mod_y;
+            // if
+            // a!=a2 or b!=b2 (xpos!=xval or ypos!=yval)
+            // AND
+            // a2 and b2 are within image boundaries
+            if(((mask_mod_a!=mask_mod_a2)||(mask_mod_b!=mask_mod_b2))
+            	 && (mask_mod_a2>=0)
+            	 && (mask_mod_a2<xmax)&&(mask_mod_b2>=0)
+            	 && (mask_mod_b2<ymax)){
+              //New point
+              mask_mod_a=mask_mod_a2;  // x value
+              mask_mod_b=mask_mod_b2;  // y value
+              // The following used to be "d[(b*xmax+a)]=border" in "add_boundary_points_to_data"
+              if(out_mask==1){
+                fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
+                                           time_index[b->i_time]);     // t.frame
+                fprintf(fp2, "%4i\t",      b->flag);                   // flag
+                fprintf(fp2, "%4i\t",      mask_mod_a);                // xpos
+                fprintf(fp2, "%4i\t",      mask_mod_b);                // ypos
+                fprintf(fp2, "b\n");                                   // pixtype is "b" for "boundary"
+              }
             }
           }
         }
       }
       // mask_mod: Go to first boundary/interior pixels
-      while(mask_mod_interior->prev!=NULL) mask_mod_interior=mask_mod_interior->prev;
-      while(mask_mod_interior->next!=NULL && out_mask==1){
-        fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
-                                   time_index[b->i_time]);     // t.frame
-        fprintf(fp2, "%4i\t",      b->flag);                   // flag
-        fprintf(fp2, "%4i\t",      mask_mod_interior->i);      // xpos
-        fprintf(fp2, "%4i\t",      mask_mod_interior->j);      // ypos
-        fprintf(fp2, "i\n");                                   // pixtype is "b" for "interior"
-        mask_mod_interior=mask_mod_interior->next;
+      if(out_mask==1) printf("mask_mod: iterating over mask_mod_interior->prev untill NULL\n");
+      fflush(stdout);
+      if(out_mask==1) while(mask_mod_interior->prev!=NULL) mask_mod_interior=mask_mod_interior->prev;
+      if(out_mask==1) printf("mask_mod: iterating over mask_mod_interior\n");
+      fflush(stdout);
+      if(out_mask==1){
+        while(mask_mod_interior->next!=NULL){
+         fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
+                                    time_index[b->i_time]);     // t.frame
+         fprintf(fp2, "%4i\t",      b->flag);                   // flag
+         fprintf(fp2, "%4i\t",      mask_mod_interior->i);      // xpos
+         fprintf(fp2, "%4i\t",      mask_mod_interior->j);      // ypos
+         fprintf(fp2, "i\n");                                   // pixtype is "b" for "interior"
+         mask_mod_interior=mask_mod_interior->next;
+        }
       }
-
+      if(out_mask==1) printf("mask_mod: done with blob\n");
+      fflush(stdout);
       b=b->next;
     }
   }
   if (fp!=NULL)fclose(fp);
+
+  if(out_mask==1) printf("mask_mod: done writing, closing fp2\n");
+  fflush(stdout);
   if (fp2!=NULL && out_mask==1)fclose(fp2);  // mask_mod: cose the mask file if it was open by option before
 
   return 1;
