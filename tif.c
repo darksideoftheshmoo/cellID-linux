@@ -306,8 +306,8 @@ int output_data_to_tif_file(char *file,
   }
 
   if(type==0){
-    array_max=65535.0;  // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
-    array_min=0.0;  // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
+    array_max=65535.0;         // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
+    array_min=0.0;             // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
     scale=array_max-array_min; // mask_mod, originally: scale=1.0/(array_max-array_min);
     onetmp=1.0;
   }
@@ -348,10 +348,10 @@ int output_data_to_tif_file(char *file,
       if (labels!=NULL){
         //type determines what set of labels to write out
         k=labels[u];
-        if (type==0){                              // The default value for BF type and flat_cors is 0.
-          if(k>=20){                               // As modified in segment.c, values of "k=labels[u]" >= 20 should be cell boundaries (a different "int" per cell starting at 20).
+        if (type==0){                      // The default value for BF type and flat_cors is 0.
+          if(k>=20){                       // As modified in segment.c, values of "k=labels[u]" >= 20 should be cell boundaries (a different "int" per cell starting at 20).
             tmp=array_max-(k-20)*onetmp;   // In that case, set the intensity value of the boundary pixel to something related to the cellid
-                                                   // Note that since in segment.c "d[(b*xmax+a)]=i+1+19" starts at 20, then labels[u]==19 can mean something else.
+                                           // Note that since in segment.c "d[(b*xmax+a)]=i+1+19" starts at 20, then labels[u]==19 can mean something else.
           }else if(k==found_border){
  				    tmp=array_max;
  				  }else if(k==found_border_a){
@@ -368,20 +368,20 @@ int output_data_to_tif_file(char *file,
  				    tmp=array_max-(6.0*onetmp);
  				  }else if(k==found_border_g){
  				    tmp=array_max-(7.0*onetmp);
-          }else if(k==cell_label){                 // tif_routines.h says: #define cell_label 6, the default for cell labels if present.
+          }else if(k==cell_label){         // tif_routines.h says: #define cell_label 6, the default for cell labels if present.
               tmp=array_max;  // tmp=array_max-(15.0*onetmp);
           } else {
             tmp=array_min;
           }
 
-        }else if (type==1){                        // The default value for FL type is 1
+        }else if (type==1){                // The default value for FL type is 1
           if(labels[u]==found_border){
             tmp=array_max;
           } else if(k>=20){
             tmp=array_max-(k-20)*onetmp;
           }
 
-        }else if (type==2){                        // The default value for third_image type is 2
+        }else if (type==2){                // The default value for third_image type is 2
           if(labels[u]==found_border){
             tmp=array_max;
           }else if (labels[u]==cell_nucleus){

@@ -134,6 +134,7 @@ int main(int argc, char *argv[]){
   printf("** 2019 redistribution, glib_removal branch with awesome identified masks. **\n\n");
 
   int label_cells=0;  // mask_mod: label cells optionally
+  int out_mask=0;     // mask_mod: output interior/boundary coords optionally
 
   FILE *fp_in;
   FILE *fp;
@@ -221,7 +222,7 @@ int main(int argc, char *argv[]){
   double max_split_d_over_minor_t0,max_split_d_over_minor_save;
 
 
-#define n_recomb_cuts_max 100
+  #define n_recomb_cuts_max 100
   float recombination_cuts[n_recomb_cuts_max];
   int recombination_cuts_type[n_recomb_cuts_max];
   int recombination_cuts_flag[n_recomb_cuts_max];
@@ -308,7 +309,7 @@ int main(int argc, char *argv[]){
   opterr = 0;  // https://stackoverflow.com/a/24331449/11524079
   optind = 1;  // https://stackoverflow.com/a/25937743/11524079
 
-  while((opt = getopt(argc, argv, "p:b:f:o:l")) != -1) {
+  while((opt = getopt(argc, argv, "p:b:f:o:lm")) != -1) {
     printf("Parsing getopt options\n");
     switch(opt) {
     case 'p':
@@ -338,6 +339,11 @@ int main(int argc, char *argv[]){
     case 'l':
        printf(" - Label cells in BF.\n");
        label_cells=1;
+      break;
+
+    case 'm':
+       printf(" - Output cell boundary and interior coords to file.\n");
+       out_mask=1;
       break;
 
     case ':':
@@ -1411,8 +1417,10 @@ int main(int argc, char *argv[]){
 
           memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));     // llenar bf_fl_labels con ceros, esto quizas haga que "d" tenga ceros también
 
-          //add_cell_number_to_the_data(i-1);
-          add_boundary_points_to_data(NULL);
+          if(label_cells==1){                  // mask_mod
+            add_cell_number_to_the_data(i-1);  // its argument is "int i_t", maybe its the "time"
+          }
+          add_boundary_points_to_data(NULL);   // only executed for enabled do_recombination (default disabled)
 
           //Write out the files
           strcpy(line,"COMBINE_");
@@ -1630,10 +1638,17 @@ int main(int argc, char *argv[]){
       // BF.out when BF_as_FL is activated. However, since this functionality
       // has a more serious bug, I've commented out this part.
       //if(flag[i]!=4){
-        if(output_data_to_tif_file(line,fl,xmax,ymax,bf_fl_labels,1,8,0)==0){
-            printf("Couldn't output data to tif file %s.\n",line);
+      if(output_data_to_tif_file(line,
+                                 fl,
+                                 xmax,
+                                 ymax,
+                                 bf_fl_labels,
+                                 1,
+                                 8,
+                                 0)==0){
+          printf("Couldn't output data to tif file %s.\n",line);
         }
-      //}
+      //}  // Andy: cosing bracket for the proposed if clause above
   }
 
   if (output_third_image==1){
@@ -1643,7 +1658,8 @@ int main(int argc, char *argv[]){
         if(output_individual_cells_to_file(i,
                                            line,
                                            third_image,
-                                           xmax,ymax,
+                                           xmax,
+                                           ymax,
                                            0,
                                            8,
                                            0)==0){
@@ -1683,8 +1699,10 @@ int main(int argc, char *argv[]){
 
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
 
-    //add_cell_number_to_the_data(i); //mask_mod: commented to as numbers are not compatible with filled masks
-    add_boundary_and_interior_points_to_data(NULL, i);
+    if(label_cells==1){                // mask_mod: optional labeling through "-l" command line option
+      add_cell_number_to_the_data(i);  // its argument is "int i_t"
+    }
+    add_boundary_and_interior_points_to_data(NULL, i, label_cells);
 
     if (output_individual_cells==1){
       //Write out the files
@@ -1701,12 +1719,13 @@ int main(int argc, char *argv[]){
     //strcat(line,".out_cfp.tif");
     printf("Writing found cells and data to output file %s.\n",line);
     if(output_data_to_tif_file(line,
-               bf,
-               xmax,ymax,
-               bf_fl_labels,
-               0,
-               8,
-               0)==0){
+                               bf,
+                               xmax,
+                               ymax,
+                               bf_fl_labels,
+                               0,
+                               8,
+                               0)==0){
 
       printf("Couldn't output data to tif file %s.\n",line);
     }
@@ -1732,8 +1751,10 @@ int main(int argc, char *argv[]){
                                                         // con type==3, bf_fl_labels se _asocia_ con el array "d"
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
 
-    //add_cell_number_to_the_data(i-1);
-    add_boundary_points_to_data(NULL);
+    if(label_cells==1){                  // mask_mod: optional labeling through "-l" command line option
+      add_cell_number_to_the_data(i-1);  // mask_mod: its argument is "int i_t"
+    }
+    add_boundary_points_to_data(NULL);   // mask_mod: this chunk is only executed for enabled do_recombination (default disabled)
 
     //Write out the files
     strcpy(line,"COMBINE_");
@@ -1771,7 +1792,7 @@ int main(int argc, char *argv[]){
     }
   } else {
     printf("Output file in R format.\n");
-    if(output_cells_single_file(output_basename,append,time_index)==0){
+    if(output_cells_single_file(output_basename,append,time_index, out_mask)==0){
       printf("Couldn't open X output files: %s.\n",line2);
     }
   }

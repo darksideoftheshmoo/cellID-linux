@@ -17,7 +17,7 @@ void update_list_of_found_cells(int,int,int);
 int output_cells(char *,char *,int *);
 
 //V1.2a
-int output_cells_single_file(char *,char *,int *);
+int output_cells_single_file(char *,char *,int *, int);
 
 float integrate_data_along_cell_boundary(struct point *);
 int do_segments_intersect(float, float,
@@ -30,7 +30,7 @@ void internal_structure(int,int);
 void next_prev_fl_comparison(void);
 void load_global_arrays(int, float *, int *, int, int);
 void add_boundary_points_to_data(struct point *);
-void add_boundary_and_interior_points_to_data(struct point *, int);
+void add_boundary_and_interior_points_to_data(struct point *, int, int);
 void add_points_to_data(struct point *, int);
 void align_found_cells_to_fl(int);
 int recombination_check(int,int,int *,int *,float *);

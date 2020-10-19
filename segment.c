@@ -313,14 +313,18 @@ int nucleus_offset_x[max_offsets];
 int nucleus_offset_y[max_offsets];
 int nucleus_n_offset=0;
 
+// mask_mod: declare point linked lists for boundary output
+struct point *mask_mod_boundary;
+struct point *mask_mod_interior;
 
+// Declare the cell "blob"
 struct blob {
-  int index; //A unique number to label this cell list
-  int flag; //for whatever use
-  float x,y; //mean of interior points to cell
-  float a; //Area of interior of cell
-  int n; //Number of interior pixels to cell
-  float fluor; //Sum of fluorescence from fluorescence picture
+  int index;      //A unique number to label this cell list
+  int flag;       //for whatever use
+  float x,y;      //mean of interior points to cell
+  float a;        //Area of interior of cell
+  int n;          //Number of interior pixels to cell
+  float fluor;    //Sum of fluorescence from fluorescence picture
   float fluor_p1; //Sum of fluorescence from fluorescene picture
   float fluor_m1; //Sum of fluorescence from fluorescence picture
   float fluor_m2; //Sum of fluorescence from fluorescence picture
@@ -4970,7 +4974,7 @@ void add_cell_number_to_the_data(int i_t){
 
 /**********************************************************/
 //V1.2a All output goes to a single file (no parts)
-int output_cells_single_file(char *basename, char *append, int *time_index){
+int output_cells_single_file(char *basename, char *append, int *time_index, int out_mask){
   //basename is where file goes+beginning of output name
   //append is "" for overwrite or "a" for append
 
@@ -4978,6 +4982,8 @@ int output_cells_single_file(char *basename, char *append, int *time_index){
   struct blob *b;
   FILE *fp=NULL;
   char file[500];
+  FILE *fp2=NULL;
+  char mask_file[500];
 
   //char sys_cmd[500];
   int time1,time2;
@@ -5049,6 +5055,48 @@ int output_cells_single_file(char *basename, char *append, int *time_index){
 
   fprintf(fp,"\n");
 
+  // mask_mod: Put all cell boundaries into a mask file
+  strcpy(mask_file,basename);
+  strcat(mask_file,"_all_masks.tsv");
+  // mask_mod: open the mask file (closed at the end)
+  if(out_mask==1){
+    if((fp2=fopen(mask_file,wa))==NULL){
+      printf("Couldn't open masks file %s\n",file);
+      fflush(stdout);
+      return 0;
+    }
+  }
+  // mask_mod: write mask file header
+  if(out_mask==1) fprintf(fp2,"cellID\tt.frame\tflag\tx\ty\tpixtype\n");
+
+  // the "blob" struct is declared at the top of this file (segment.c) as:
+    // struct blob {
+    //   int index;      //A unique number to label this cell list
+    //   int flag;       //for whatever use
+    //   ...
+    //   struct point *boundary;
+    //   struct point *interior;
+    //   struct blob *next;
+    //   struct blob *prev;
+    // };
+  // Note that the interior/boundary point structs are "single" (not as arrays, as global "boundary" is).
+
+  // The "blob" struct is defined at "update_list_of_found_cells" as:
+    // bnew=(struct blob *)malloc(sizeof(struct blob));
+    // bnew->next=NULL; //Will be last in the linked list one way or other
+    // ...
+    // bnew->interior=interior[i];
+    // bnew->boundary=boundary[i];
+
+  // Global interior/boudnary structs are declared at the top of this file (segment.c)
+  // as *arrays* of point structs:
+    // struct point *boundary[max_cells];
+    // struct point *interior[max_cells];
+
+  // Useful info from "update_list_of_found_cells" function, where interior and boundary are assigned to a new cell "blob":
+    //  bnew->interior=interior[i];
+    //  bnew->boundary=boundary[i];
+
 
   for(i=0;i<n_known;i++){
     b=cs[i];
@@ -5061,8 +5109,8 @@ int output_cells_single_file(char *basename, char *append, int *time_index){
 
     while(b!=NULL){
       fprintf(fp,"%4i\t%4i\t%4i\t%4i\t%4i\t%10.6e\t%10.6e\t%4i\t",
-        b->index,
-	      time_index[b->i_time],
+        b->index,                                    // cellID
+        time_index[b->i_time],                       // t.frame
 	      b->secs,
 	      ((int)((b->x)+0.5)),
 	      ((int)((b->y)+0.5)),
@@ -5078,20 +5126,21 @@ int output_cells_single_file(char *basename, char *append, int *time_index){
       fprintf(fp,"%10.6e\t",b->fl_nucleus3);
       fprintf(fp,"%10.6e\t",b->area_nucleus3);
 
-      fprintf(fp,"%4i\t",b->flag);
+      fprintf(fp,"%4i\t",b->flag);                   // flag
       fprintf(fp,"%10.6e\t",b->vol_rotation);
       fprintf(fp,"%10.6e\t",b->vol_cone);
 
       fprintf(fp,"%10.6e\t",b->vacuole_area);
       fprintf(fp,"%10.6e\t",b->vacuole_fl);
-      if (have_fret_image!=1){ //Don't have fret image
-	back=back_pixels[b->i_time];
+
+      if(have_fret_image!=1){ //Don't have fret image
+        back=back_pixels[b->i_time];
       }else{
-	if ((b->index)<fret_offset){ //high y-cells (lower in image)
-	  back=back_pixels_1[b->i_time];
-	}else{
-	  back=back_pixels_2[b->i_time];
-	}
+        if((b->index)<fret_offset){ //high y-cells (lower in image)
+          back=back_pixels_1[b->i_time];
+        }else{
+          back=back_pixels_2[b->i_time];
+        }
       }
       fprintf(fp,"%10.6e\t",back);
       //fprintf(fp,"\n");
@@ -5163,11 +5212,38 @@ int output_cells_single_file(char *basename, char *append, int *time_index){
 
       fprintf(fp,"\n");
 
+      // mask_mod: Get the bounday and mask for this cell
+      mask_mod_boundary=b->boundary;
+      mask_mod_interior=b->interior;
+      // mask_mod: Go to first boundary/interior pixels
+      while(mask_mod_boundary->prev!=NULL) mask_mod_boundary=mask_mod_boundary->prev;
+      while(mask_mod_interior->prev!=NULL) mask_mod_interior=mask_mod_interior->prev;
+      // mask_mod: Write pixels to file
+      // mask_mod: for reference: fprintf(fp2,"cellID \tt.frame\t xpos \t ypos\t flag\t pixtype\n");
+      while(mask_mod_boundary->next!=NULL && out_mask==1){
+        fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
+                                   time_index[b->i_time]);     // t.frame
+        fprintf(fp2, "%4i\t",      b->flag);                   // flag
+        fprintf(fp2, "%4i\t",      mask_mod_boundary->i);      // xpos
+        fprintf(fp2, "%4i\t",      mask_mod_boundary->j);      // ypos
+        fprintf(fp2, "b\n");                                   // pixtype is "b" for "boundary"
+        mask_mod_boundary=mask_mod_boundary->next;
+      }
+      while(mask_mod_interior->next!=NULL && out_mask==1){
+        fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
+                                   time_index[b->i_time]);     // t.frame
+        fprintf(fp2, "%4i\t",      b->flag);                   // flag
+        fprintf(fp2, "%4i\t",      mask_mod_interior->i);      // xpos
+        fprintf(fp2, "%4i\t",      mask_mod_interior->j);      // ypos
+        fprintf(fp2, "i\n");                                   // pixtype is "b" for "interior"
+        mask_mod_interior=mask_mod_interior->next;
+      }
 
       b=b->next;
     }
   }
   if (fp!=NULL)fclose(fp);
+  if (fp2!=NULL && out_mask==1)fclose(fp2);  // mask_mod: cose the mask file if it was open by option before
 
   return 1;
 }
@@ -6219,7 +6295,7 @@ void add_points_to_data(struct point *p_start, int border){
 	}
 }
 
-void add_boundary_and_interior_points_to_data(struct point *p_in, int i_t){
+void add_boundary_and_interior_points_to_data(struct point *p_in, int i_t, int label_cells){
   struct blob *cellblob; // mask_mod: my addition (Andy)
 
   struct point *p1;
@@ -6258,8 +6334,10 @@ void add_boundary_and_interior_points_to_data(struct point *p_in, int i_t){
     if (p_in==NULL){															// mask_mod: cellblob is cs[i] which in turn is one "blob", so we'll use its boundary element
 				p_start_boundary=cellblob->boundary;			// mask_mod: TODO we could use the "interior" element to fill the cells
 				add_points_to_data(p_start_boundary,border);
-				p_start_interior=cellblob->interior;
-				add_points_to_data(p_start_interior,border);
+				if(label_cells!=1){
+					p_start_interior=cellblob->interior;
+					add_points_to_data(p_start_interior,border);
+				}
 			}
     }
   }
