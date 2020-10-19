@@ -6276,11 +6276,11 @@ void add_boundary_points_to_data(struct point *p_in){
 				//if(count%5!=3&&count%5!=4){ //mask_mod: uncomment for dashed boundaries
 					if(((a!=a2)||(b!=b2))&&(a2>=0)&&(a2<xmax)&&(b2>=0)&&(b2<ymax)){
 						//New point
-						a=a2;			//mask_mod: commented for smoother visualizaton
+						a=a2;
 						b=b2;
-						d[(b*xmax+a)]=border;  // border=found_border;  // tif_routines.h says: #define found_border 5
+						d[(b*xmax+a)]=border;  // border=found_border; tif_routines.h: #define found_border 5
 					}
-				//}
+				//} //mask_mod: uncomment for dashed boundaries
       }
 			//count++; //mask_mod: uncomment for dashed boundaries
     }
@@ -6292,9 +6292,11 @@ void add_boundary_points_to_data(struct point *p_in){
 }
 
 /****************************************************/
-// Andy's add_boundary_points_to_data
-/****************************************************/
 void add_points_to_data(struct point *p_start, int border){
+	// mask_mod: this is a helper function for "add_boundary_and_interior_points_to_data".
+	// It is called with a p_start pointer as argument, which points to the first
+	// point (pixel) in a linked list of either boundary or interior points.
+
 	struct point *p1;
 	struct point *p2;
 	int i;
@@ -6303,7 +6305,7 @@ void add_points_to_data(struct point *p_start, int border){
 	float x0,y0,x,y;
 	int a,b,a2,b2;
 
-	//Loop over all boundary points until reaching the end (full circuit)
+	//Loop over boundary/interior points until reaching the end
 	for(p1=p_start;p1!=NULL;p1=p1->next){
 		p2=p1->next;
 		if(p2==NULL) p2=p_start; //So make full circuit
@@ -6312,20 +6314,15 @@ void add_points_to_data(struct point *p_start, int border){
 		mx=(float)( (p2->i)-(p1->i) );
 		my=(float)( (p2->j)-(p1->j) );
 
-		// Get xpos and ypos of current point (integers)
+		// Get xpos and ypos of current point
 		a=p1->i;
 		b=p1->j;
 
-		// Convert xpos and ypos to float
 		x0=(float) a;
 		y0=(float) b;
 
-		//Loop from 0.01 to 1.0 in steps of 0.01 (not clear why)
+		// mask_mod: Not sure what this loop achieves
 		for(s=step;s<=1.0;s+=step){
-			// Calculate xval and yval by summing:
-			// 1) xpos of current point
-			// 2) x-shift multiplied by current step
-			// 3) 0.5
 			x=x0+mx*s+0.5; //0.5 to round off (place integers in middle of bins)
 			y=y0+my*s+0.5;
 
@@ -6333,24 +6330,24 @@ void add_points_to_data(struct point *p_start, int border){
 			a2=(int) x;
 			b2=(int) y;
 
-			// if
-			// a!=a2 or b!=b2 (xpos!=xval or ypos!=yval)
-			// AND
-			// a2 and b2 are within image boundaries
 			if(((a!=a2)||(b!=b2))&&(a2>=0)&&(a2<xmax)&&(b2>=0)&&(b2<ymax)){
 				//New point
 				a=a2;
 				b=b2;
 				//Add to image array (b*xmax since it's a 1-dim array)
-				//border is defined elsewhere to border=5
-				d[(b*xmax+a)]=border+20;  // d>=20 is the offset to trigger the tif.c write border with cell-identifying intensity
+				// mask_mod: d>=20 is the offset to trigger the tif.c write border with cell-identifying intensity
+				d[(b*xmax+a)]=border+20;
 			}
 		}
 	}
 }
-
+/****************************************************/
 void add_boundary_and_interior_points_to_data(struct point *p_in, int i_t, int fill_interior){
-  struct blob *cellblob; // mask_mod: my addition (Andy)
+	// mask_mod: this is a modification of the "add_boundary_points_to_data" function.
+	// Instead of simply adding the boundaries with a flat intensity value, this
+	// function adds both boundaries and (optionall) interior points, with
+	// intensity values corresponding to the object's cellID.
+  struct blob *cellblob;
 
   struct point *p1;
   struct point *p2;
@@ -6364,19 +6361,18 @@ void add_boundary_and_interior_points_to_data(struct point *p_in, int i_t, int f
   struct point *p_start_boundary;
 	struct point *p_start_interior;
   //Add boundary points for border list p_in.
-  //if p_in==NULL then do all n_found borders.
+  //if p_in==NULL then do all n_known borders.
   //add found_border to d[] array in appropriate place.
 
-  //border=found_border; //found_border=5 defined in tif_routines.h
   p_start_boundary=p_in;
 	p_start_interior=p_in;
-  //for(i=0;i<xmax_ymax;i++)d[i]=0;
-  for(i=0;i<n_known;i++){ //for(i=0;i<n_found;i++){ //Loop over all cells
-    cellblob=cs[i]; // cs is defined above as "struct blob *cs[max_cells];"
-                    // therefore cs is a list of "blob" objects, each representing a cell's data
-                    // defined below as cs[n_known]=bnew;
+
+  for(i=0;i<n_known;i++){ //Loop over all cells
+    cellblob=cs[i]; 			// cs is defined above as "struct blob *cs[max_cells];"
+                    			// therefore cs is a list of "blob" objects, each representing a cell's data
+                    			// defined below as cs[n_known]=bnew;
     if(cellblob->i_time==i_t){
-      border=cellblob->index;
+      border=cellblob->index; // mask_mod: get cellID for pixel intensity value
 
       //Write number i at position (b->x,b->y)
       //     printf("Adding number %i at (%e,%e).\n",b->index,b->x,b->y);
@@ -6386,8 +6382,11 @@ void add_boundary_and_interior_points_to_data(struct point *p_in, int i_t, int f
       //treated. Therefore, put p_start=boundary[i] to point to get first cell
       //if (p_in==NULL)p_start=boundary[i];         // mask_mod: replace p_start=boundary[i]; by p_start=cellblob->boundary;
       if (p_in==NULL){															// mask_mod: cellblob is cs[i] which in turn is one "blob", so we'll use its boundary element
-		  	p_start_boundary=cellblob->boundary;		  	// mask_mod: TODO we could use the "interior" element to fill the cells
+				// mask_mod: add boundary
+		  	p_start_boundary=cellblob->boundary;
 		  	add_points_to_data(p_start_boundary,border);
+
+				// mask_mod: fill interior
 		  	if(fill_interior!=1){
 		  		p_start_interior=cellblob->interior;
 		  		add_points_to_data(p_start_interior,border);
