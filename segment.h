@@ -30,7 +30,8 @@ void internal_structure(int,int);
 void next_prev_fl_comparison(void);
 void load_global_arrays(int, float *, int *, int, int);
 void add_boundary_points_to_data(struct point *);
-void add_boundary_points_to_data2(struct point *, int);
+void add_boundary_and_interior_points_to_data(struct point *, int, int);
+void add_points_to_data(struct point *, int);
 void align_found_cells_to_fl(int);
 int recombination_check(int,int,int *,int *,float *);
 int  output_individual_cells_to_file(int,char *,

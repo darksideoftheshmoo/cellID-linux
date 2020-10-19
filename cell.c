@@ -1702,7 +1702,7 @@ int main(int argc, char *argv[]){
     if(label_cells==1){                // mask_mod: optional labeling through "-l" command line option
       add_cell_number_to_the_data(i);  // its argument is "int i_t"
     }
-    add_boundary_points_to_data2(NULL, i);
+    add_boundary_and_interior_points_to_data(NULL, i, label_cells);
 
     if (output_individual_cells==1){
       //Write out the files
