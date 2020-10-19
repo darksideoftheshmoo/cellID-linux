@@ -313,6 +313,10 @@ int nucleus_offset_x[max_offsets];
 int nucleus_offset_y[max_offsets];
 int nucleus_n_offset=0;
 
+// mask_mod: declare point linked lists for boundary output
+struct point *mask_mod_boundary;
+struct point *mask_mod_interior;
+
 // Declare the cell "blob"
 struct blob {
   int index;      //A unique number to label this cell list
@@ -5061,7 +5065,7 @@ int output_cells_single_file(char *basename, char *append, int *time_index){
     return 0;
   }
   // mask_mod: write mask file header
-  fprintf(fp2,"cellID \tt.frame\t xpos \t ypos\t flag\n");
+  fprintf(fp2,"cellID \tt.frame\t flag\t xpos \t ypos\t pixtype\n");
 
   // the "blob" struct is declared at the top of this file (segment.c) as:
     // struct blob {
@@ -5126,14 +5130,15 @@ int output_cells_single_file(char *basename, char *append, int *time_index){
 
       fprintf(fp,"%10.6e\t",b->vacuole_area);
       fprintf(fp,"%10.6e\t",b->vacuole_fl);
-      if (have_fret_image!=1){ //Don't have fret image
-	back=back_pixels[b->i_time];
+
+      if(have_fret_image!=1){ //Don't have fret image
+        back=back_pixels[b->i_time];
       }else{
-	if ((b->index)<fret_offset){ //high y-cells (lower in image)
-	  back=back_pixels_1[b->i_time];
-	}else{
-	  back=back_pixels_2[b->i_time];
-	}
+        if((b->index)<fret_offset){ //high y-cells (lower in image)
+          back=back_pixels_1[b->i_time];
+        }else{
+          back=back_pixels_2[b->i_time];
+        }
       }
       fprintf(fp,"%10.6e\t",back);
       //fprintf(fp,"\n");
@@ -5205,6 +5210,32 @@ int output_cells_single_file(char *basename, char *append, int *time_index){
 
       fprintf(fp,"\n");
 
+      // mask_mod: Get the bounday and mask for this cell
+      mask_mod_boundary=b->boundary;
+      mask_mod_interior=b->interior;
+      // mask_mod: Go to first boundary/interior pixels
+      while(mask_mod_boundary->prev!=NULL) mask_mod_boundary=mask_mod_boundary->prev;
+      while(mask_mod_interior->prev!=NULL) mask_mod_interior=mask_mod_interior->prev;
+      // mask_mod: Write pixels to file
+      // mask_mod: for reference: fprintf(fp2,"cellID \tt.frame\t xpos \t ypos\t flag\t pixtype\n");
+      while(mask_mod_boundary->next!=NULL){
+        fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
+                                   time_index[b->i_time]);     // t.frame
+        fprintf(fp2, "%4i\t",      b->flag);                   // flag
+        fprintf(fp2, "%4i\t",      mask_mod_boundary->i);      // xpos
+        fprintf(fp2, "%4i\t",      mask_mod_boundary->j);      // ypos
+        fprintf(fp2, "b\n");                                   // pixtype is "b" for "boundary"
+        mask_mod_boundary=mask_mod_boundary->next;
+      }
+      while(mask_mod_interior->next!=NULL){
+        fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
+                                   time_index[b->i_time]);     // t.frame
+        fprintf(fp2, "%4i\t",      b->flag);                   // flag
+        fprintf(fp2, "%4i\t",      mask_mod_interior->i);      // xpos
+        fprintf(fp2, "%4i\t",      mask_mod_interior->j);      // ypos
+        fprintf(fp2, "i\n");                                   // pixtype is "b" for "interior"
+        mask_mod_interior=mask_mod_interior->next;
+      }
 
       b=b->next;
     }
