@@ -6,4 +6,4 @@
  tracking_comparison 0.20
  align_individual_cells
  image_type brightfield
- bf_fl_mapping time
+ bf_fl_mapping list
