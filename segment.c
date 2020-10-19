@@ -5067,7 +5067,7 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
     }
   }
   // mask_mod: write mask file header
-  if(out_mask==1) fprintf(fp2,"cellID\tt.frame\tflag\txpos\typos\tpixtype\n");
+  if(out_mask==1) fprintf(fp2,"cellID\tt.frame\tflag\tx\ty\tpixtype\n");
 
   // the "blob" struct is declared at the top of this file (segment.c) as:
     // struct blob {
