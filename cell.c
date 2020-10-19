@@ -1683,8 +1683,8 @@ int main(int argc, char *argv[]){
 
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
 
-    add_cell_number_to_the_data(i);
-    add_boundary_points_to_data2(NULL, i);
+    //add_cell_number_to_the_data(i); //mask_mod: commented to as numbers are not compatible with filled masks
+    add_boundary_and_interior_points_to_data(NULL, i);
 
     if (output_individual_cells==1){
       //Write out the files
