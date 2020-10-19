@@ -133,8 +133,9 @@ int main(int argc, char *argv[]){
   printf("\n\n*** Cell_ID Version 1.4.6 ***");
   printf("** 2019 redistribution, glib_removal branch with awesome identified masks. **\n\n");
 
-  int label_cells=0;  // mask_mod: label cells optionally
-  int out_mask=0;     // mask_mod: output interior/boundary coords optionally
+  int label_cells=0;    // mask_mod: label cells optionally
+  int out_mask=0;       // mask_mod: output interior/boundary coords optionally
+  int fill_interior=1;  // mask_mod: fill cells in .out, defult disabled
 
   FILE *fp_in;
   FILE *fp;
@@ -309,7 +310,7 @@ int main(int argc, char *argv[]){
   opterr = 0;  // https://stackoverflow.com/a/24331449/11524079
   optind = 1;  // https://stackoverflow.com/a/25937743/11524079
 
-  while((opt = getopt(argc, argv, "p:b:f:o:lm")) != -1) {
+  while((opt = getopt(argc, argv, "p:b:f:o:lim")) != -1) {
     printf("Parsing getopt options\n");
     switch(opt) {
     case 'p':
@@ -339,6 +340,11 @@ int main(int argc, char *argv[]){
     case 'l':
        printf(" - Label cells in BF.\n");
        label_cells=1;
+      break;
+
+    case 'i':
+       printf(" - Label cells in BF.\n");
+       fill_interior=0;
       break;
 
     case 'm':
@@ -1702,7 +1708,7 @@ int main(int argc, char *argv[]){
     if(label_cells==1){                // mask_mod: optional labeling through "-l" command line option
       add_cell_number_to_the_data(i);  // its argument is "int i_t"
     }
-    add_boundary_and_interior_points_to_data(NULL, i, label_cells);
+    add_boundary_and_interior_points_to_data(NULL, i, fill_interior);
 
     if (output_individual_cells==1){
       //Write out the files

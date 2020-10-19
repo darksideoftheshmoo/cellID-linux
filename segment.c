@@ -6295,7 +6295,7 @@ void add_points_to_data(struct point *p_start, int border){
 	}
 }
 
-void add_boundary_and_interior_points_to_data(struct point *p_in, int i_t, int label_cells){
+void add_boundary_and_interior_points_to_data(struct point *p_in, int i_t, int fill_interior){
   struct blob *cellblob; // mask_mod: my addition (Andy)
 
   struct point *p1;
@@ -6334,7 +6334,7 @@ void add_boundary_and_interior_points_to_data(struct point *p_in, int i_t, int l
     if (p_in==NULL){															// mask_mod: cellblob is cs[i] which in turn is one "blob", so we'll use its boundary element
 				p_start_boundary=cellblob->boundary;			// mask_mod: TODO we could use the "interior" element to fill the cells
 				add_points_to_data(p_start_boundary,border);
-				if(label_cells!=1){
+				if(fill_interior!=1){
 					p_start_interior=cellblob->interior;
 					add_points_to_data(p_start_interior,border);
 				}

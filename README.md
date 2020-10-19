@@ -20,6 +20,8 @@ This branch has removed the glib dependency, **it has not been thoroughly tested
 
 This branch outputs BF tiff files with blank background and cell boundary pixel intensities corresponding to CellID. **It has not been thoroughly tested**.
 
+This branch outputs BF tiff files with blank background and cell interior pixel intensities corresponding to CellID. **It has not been thoroughly tested**.
+
 The cell boundary pixel *should* correspond to the cellid according to this formula: `CellID = 65535 - pixel_intensity`.
 
 Labeling of cells is disabled by default, enable by including the `-l` in your command options.
