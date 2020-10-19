@@ -17,7 +17,7 @@ void update_list_of_found_cells(int,int,int);
 int output_cells(char *,char *,int *);
 
 //V1.2a
-int output_cells_single_file(char *,char *,int *);
+int output_cells_single_file(char *,char *,int *, int);
 
 float integrate_data_along_cell_boundary(struct point *);
 int do_segments_intersect(float, float,

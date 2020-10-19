@@ -4974,7 +4974,7 @@ void add_cell_number_to_the_data(int i_t){
 
 /**********************************************************/
 //V1.2a All output goes to a single file (no parts)
-int output_cells_single_file(char *basename, char *append, int *time_index){
+int output_cells_single_file(char *basename, char *append, int *time_index, int out_mask){
   //basename is where file goes+beginning of output name
   //append is "" for overwrite or "a" for append
 
@@ -5057,15 +5057,17 @@ int output_cells_single_file(char *basename, char *append, int *time_index){
 
   // mask_mod: Put all cell boundaries into a mask file
   strcpy(mask_file,basename);
-  strcat(mask_file,"_all_masks");
+  strcat(mask_file,"_all_masks.tsv");
   // mask_mod: open the mask file (closed at the end)
-  if((fp2=fopen(mask_file,wa))==NULL){
-    printf("Couldn't open masks file %s\n",file);
-    fflush(stdout);
-    return 0;
+  if(out_mask==1){
+    if((fp2=fopen(mask_file,wa))==NULL){
+      printf("Couldn't open masks file %s\n",file);
+      fflush(stdout);
+      return 0;
+    }
   }
   // mask_mod: write mask file header
-  fprintf(fp2,"cellID \tt.frame\t flag\t xpos \t ypos\t pixtype\n");
+  if(out_mask==1) fprintf(fp2,"cellID\tt.frame\tflag\txpos\typos\tpixtype\n");
 
   // the "blob" struct is declared at the top of this file (segment.c) as:
     // struct blob {
@@ -5218,7 +5220,7 @@ int output_cells_single_file(char *basename, char *append, int *time_index){
       while(mask_mod_interior->prev!=NULL) mask_mod_interior=mask_mod_interior->prev;
       // mask_mod: Write pixels to file
       // mask_mod: for reference: fprintf(fp2,"cellID \tt.frame\t xpos \t ypos\t flag\t pixtype\n");
-      while(mask_mod_boundary->next!=NULL){
+      while(mask_mod_boundary->next!=NULL && out_mask==1){
         fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
                                    time_index[b->i_time]);     // t.frame
         fprintf(fp2, "%4i\t",      b->flag);                   // flag
@@ -5227,7 +5229,7 @@ int output_cells_single_file(char *basename, char *append, int *time_index){
         fprintf(fp2, "b\n");                                   // pixtype is "b" for "boundary"
         mask_mod_boundary=mask_mod_boundary->next;
       }
-      while(mask_mod_interior->next!=NULL){
+      while(mask_mod_interior->next!=NULL && out_mask==1){
         fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
                                    time_index[b->i_time]);     // t.frame
         fprintf(fp2, "%4i\t",      b->flag);                   // flag
@@ -5241,7 +5243,7 @@ int output_cells_single_file(char *basename, char *append, int *time_index){
     }
   }
   if (fp!=NULL)fclose(fp);
-  if (fp2!=NULL)fclose(fp2);  // mask_mod: cose the mask file
+  if (fp2!=NULL && out_mask==1)fclose(fp2);  // mask_mod: cose the mask file if it was open by option before
 
   return 1;
 }

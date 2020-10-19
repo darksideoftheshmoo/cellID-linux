@@ -134,6 +134,7 @@ int main(int argc, char *argv[]){
   printf("** 2019 redistribution, glib_removal branch with awesome identified masks. **\n\n");
 
   int label_cells=0;  // mask_mod: label cells optionally
+  int out_mask=0;     // mask_mod: output interior/boundary coords optionally
 
   FILE *fp_in;
   FILE *fp;
@@ -221,7 +222,7 @@ int main(int argc, char *argv[]){
   double max_split_d_over_minor_t0,max_split_d_over_minor_save;
 
 
-#define n_recomb_cuts_max 100
+  #define n_recomb_cuts_max 100
   float recombination_cuts[n_recomb_cuts_max];
   int recombination_cuts_type[n_recomb_cuts_max];
   int recombination_cuts_flag[n_recomb_cuts_max];
@@ -308,7 +309,7 @@ int main(int argc, char *argv[]){
   opterr = 0;  // https://stackoverflow.com/a/24331449/11524079
   optind = 1;  // https://stackoverflow.com/a/25937743/11524079
 
-  while((opt = getopt(argc, argv, "p:b:f:o:l")) != -1) {
+  while((opt = getopt(argc, argv, "p:b:f:o:lm")) != -1) {
     printf("Parsing getopt options\n");
     switch(opt) {
     case 'p':
@@ -338,6 +339,11 @@ int main(int argc, char *argv[]){
     case 'l':
        printf(" - Label cells in BF.\n");
        label_cells=1;
+      break;
+
+    case 'm':
+       printf(" - Output cell boundary and interior coords to file.\n");
+       out_mask=1;
       break;
 
     case ':':
@@ -1786,7 +1792,7 @@ int main(int argc, char *argv[]){
     }
   } else {
     printf("Output file in R format.\n");
-    if(output_cells_single_file(output_basename,append,time_index)==0){
+    if(output_cells_single_file(output_basename,append,time_index, out_mask)==0){
       printf("Couldn't open X output files: %s.\n",line2);
     }
   }
