@@ -6221,7 +6221,7 @@ void add_boundary_points_to_data(struct point *p_in){
 						//New point
 						a=a2;			//mask_mod: commented for smoother visualizaton
 						b=b2;
-						d[(b*xmax+a)]=border;
+						d[(b*xmax+a)]=border;  // border=found_border;  // tif_routines.h says: #define found_border 5
 					}
 				//}
       }
@@ -6286,10 +6286,7 @@ void add_points_to_data(struct point *p_start, int border){
 				b=b2;
 				//Add to image array (b*xmax since it's a 1-dim array)
 				//border is defined elsewhere to border=5
-				d[(b*xmax+a)]=border+1+19+1; // mask_mod, originally: d[(b*xmax+a)]=border;
-																		 // mask_mod: boundary points have values related to which type of boundary they are
-																		 // mask_mod: lower integers are already in use, see tif_routines.h for reference
-																		 // mask_mod: integers greater than 15 should be unused. Just in case, we add 20.
+				d[(b*xmax+a)]=border+20;  // d>=20 is the offset to trigger the tif.c write border with cell-identifying intensity
 			}
 		}
 	}

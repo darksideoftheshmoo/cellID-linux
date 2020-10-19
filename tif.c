@@ -347,13 +347,14 @@ int output_data_to_tif_file(char *file,
       }
       if (labels!=NULL){
         //type determines what set of labels to write out
-        k=labels[u];
+        k=labels[u];                       // "labels" cooresponds to the "d" array in "add_boundary_points_to_data" (segment.c)
         if (type==0){                      // The default value for BF type and flat_cors is 0.
           if(k>=20){                       // As modified in segment.c, values of "k=labels[u]" >= 20 should be cell boundaries (a different "int" per cell starting at 20).
-            tmp=array_max-(k-20)*onetmp;   // In that case, set the intensity value of the boundary pixel to something related to the cellid
-                                           // Note that since in segment.c "d[(b*xmax+a)]=i+1+19" starts at 20, then labels[u]==19 can mean something else.
-          }else if(k==found_border){
- 				    tmp=array_max;
+            tmp=array_max-(1+k-20)*onetmp; // In "add_boundary_points_to_data" CellIDs are offset by 20, so subtract that here.
+                                           // Also add "1" since CellIDs are zero-indexed, and we want to reserve max_intensity for cell numbers.
+                                           // Note that since in segment.c "d[(b*xmax+a)]=i+20" starts at 20, then labels[u]==19 can mean something else.
+          }else if(k==found_border){       // tif_routines.h says: #define found_border 5, the default for cell boundaries if present.
+ 				    tmp=array_max;                 // this should not actually trigger, but wouldnt hurt, since boundary pixels intensity goes down from array_max-1
  				  }else if(k==found_border_a){
  				    tmp=array_max-onetmp;
  				  }else if(k==found_border_b){
@@ -368,8 +369,8 @@ int output_data_to_tif_file(char *file,
  				    tmp=array_max-(6.0*onetmp);
  				  }else if(k==found_border_g){
  				    tmp=array_max-(7.0*onetmp);
-          }else if(k==cell_label){         // tif_routines.h says: #define cell_label 6, the default for cell labels if present.
-              tmp=array_max;  // tmp=array_max-(15.0*onetmp);
+          }else if(k==cell_label){         // tif_routines.h says: #define cell_label 6, the default for cell number labels if present.
+              tmp=array_max;               // tmp=array_max-(15.0*onetmp);
           } else {
             tmp=array_min;
           }
