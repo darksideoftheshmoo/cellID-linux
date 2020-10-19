@@ -4982,8 +4982,16 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
   struct blob *b;
   FILE *fp=NULL;
   char file[500];
-  FILE *fp2=NULL;
-  char mask_file[500];
+  FILE *fp2=NULL;       // mask_mod
+  char mask_file[500];  // mask_mod
+
+  struct point *mask_mod_p1;                             // mask_mod
+  struct point *mask_mod_p2;                             // mask_mod
+  int mask_mod_i;                                        // mask_mod
+  float mask_mod_step=.01;                               // mask_mod
+  float mask_mod_mx,mask_mod_my,mask_mod_s;              // mask_mod
+  float mask_mod_x0,mask_mod_y0,mask_mod_x,mask_mod_y;   // mask_mod
+  int mask_mod_a,mask_mod_b,mask_mod_a2,mask_mod_b2;     // mask_mod
 
   //char sys_cmd[500];
   int time1,time2;
@@ -5011,14 +5019,14 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
       b=cs[j];
       time2=0;
       while((b->prev)!=NULL){
-	b=b->prev;
-	time2++;
+	      b=b->prev;
+	      time2++;
       }
       if(time2>time1){
-	b=cs[i];
-	cs[i]=cs[j];
-	cs[j]=b;
-	time1=time2;
+	      b=cs[i];
+	      cs[i]=cs[j];
+	      cs[j]=b;
+	      time1=time2;
       }
     }
   }
@@ -5042,7 +5050,7 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
   fprintf(fp,"f.tot.p1 \t a.tot.p1 \t f.tot.m1 \t a.tot.m1 \t f.tot.m2 \t");
   fprintf(fp,"a.tot.m2 \t f.tot.m3 \t a.tot.m3 \t");
 
-	fprintf(fp,"xpos.nucl\typos.nucl\t ");
+  fprintf(fp,"xpos.nucl\typos.nucl\t ");
   fprintf(fp,"f.nucl1 \t f.nucl.tag1 \t a.nucl1 \t f.nucl2 \t f.nucl.tag2 \t ");
   fprintf(fp,"a.nucl2 \t f.nucl3 \t f.nucl.tag3 \t a.nucl3 \t f.nucl4 \t ");
   fprintf(fp,"f.nucl.tag4 \t a.nucl4 \t f.nucl5 \t f.nucl.tag5 \t a.nucl5 \t ");
@@ -5103,8 +5111,8 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
     time1=1;
 
     while(b->prev!=NULL){
-      b=b->prev; //Go to first time point and count how many points
-      time1++;
+      b=b->prev; // Go to first time point and count how many time points this cell appears in
+      time1++;   // This does not appear to be used for something
     }
 
     while(b!=NULL){
@@ -5215,20 +5223,69 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
       // mask_mod: Get the bounday and mask for this cell
       mask_mod_boundary=b->boundary;
       mask_mod_interior=b->interior;
-      // mask_mod: Go to first boundary/interior pixels
-      while(mask_mod_boundary->prev!=NULL) mask_mod_boundary=mask_mod_boundary->prev;
-      while(mask_mod_interior->prev!=NULL) mask_mod_interior=mask_mod_interior->prev;
-      // mask_mod: Write pixels to file
-      // mask_mod: for reference: fprintf(fp2,"cellID \tt.frame\t xpos \t ypos\t flag\t pixtype\n");
-      while(mask_mod_boundary->next!=NULL && out_mask==1){
-        fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
-                                   time_index[b->i_time]);     // t.frame
-        fprintf(fp2, "%4i\t",      b->flag);                   // flag
-        fprintf(fp2, "%4i\t",      mask_mod_boundary->i);      // xpos
-        fprintf(fp2, "%4i\t",      mask_mod_boundary->j);      // ypos
-        fprintf(fp2, "b\n");                                   // pixtype is "b" for "boundary"
-        mask_mod_boundary=mask_mod_boundary->next;
+
+      // // mask_mod: Go to first boundary/interior pixels
+      // while(mask_mod_boundary->prev!=NULL) mask_mod_boundary=mask_mod_boundary->prev;
+      // // mask_mod: Write pixels to file
+      // // mask_mod: for reference: fprintf(fp2,"cellID \tt.frame\t xpos \t ypos\t flag\t pixtype\n");
+      // while(mask_mod_boundary->next!=NULL && out_mask==1){
+      //   fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
+      //                              time_index[b->i_time]);     // t.frame
+      //   fprintf(fp2, "%4i\t",      b->flag);                   // flag
+      //   fprintf(fp2, "%4i\t",      mask_mod_boundary->i);      // xpos
+      //   fprintf(fp2, "%4i\t",      mask_mod_boundary->j);      // ypos
+      //   fprintf(fp2, "b\n");                                   // pixtype is "b" for "boundary"
+      //   mask_mod_boundary=mask_mod_boundary->next;
+      // }
+      //Loop over all boundary points until reaching the end (full circuit)
+      for(mask_mod_p1=mask_mod_boundary; mask_mod_p1!=NULL; mask_mod_p1=mask_mod_p1->next){
+        mask_mod_p2=mask_mod_p1->next;
+        if(mask_mod_p2==NULL) mask_mod_p2=mask_mod_boundary; //So make full circuit
+        // Calculate x-shift and y-shift between current and next point
+        mask_mod_mx=(float)( (mask_mod_p2->i)-(mask_mod_p1->i) );
+        mask_mod_my=(float)( (mask_mod_p2->j)-(mask_mod_p1->j) );
+        // Get xpos and ypos of current point (integers)
+        mask_mod_a=mask_mod_p1->i;
+        mask_mod_b=mask_mod_p1->j;
+        // Convert xpos and ypos to float
+        mask_mod_x0=(float) mask_mod_a;
+        mask_mod_y0=(float) mask_mod_b;
+        //Loop from 0.01 to 1.0 in steps of 0.01 (not clear why)
+        for(mask_mod_s=mask_mod_step; mask_mod_s<=1.0; mask_mod_s+=mask_mod_step){
+          // Calculate xval and yval by summing:
+          // 1) xpos of current point
+          // 2) x-shift multiplied by current step
+          // 3) 0.5
+          mask_mod_x=mask_mod_x0 + mask_mod_mx * mask_mod_s + 0.5; //0.5 to round off (place integers in middle of bins)
+          mask_mod_y=mask_mod_y0 + mask_mod_my * mask_mod_s + 0.5;
+          //Convert to integers
+          mask_mod_a2=(int) mask_mod_x;
+          mask_mod_b2=(int) mask_mod_y;
+          // if
+          // a!=a2 or b!=b2 (xpos!=xval or ypos!=yval)
+          // AND
+          // a2 and b2 are within image boundaries
+          if(((mask_mod_a!=mask_mod_a2)||(mask_mod_b!=mask_mod_b2))
+          	 && (mask_mod_a2>=0)
+          	 && (mask_mod_a2<xmax)&&(mask_mod_b2>=0)
+          	 && (mask_mod_b2<ymax)){
+            //New point
+            mask_mod_a=mask_mod_a2;  // x value
+            mask_mod_b=mask_mod_b2;  // y value
+            // The following used to be "d[(b*xmax+a)]=border" in "add_boundary_points_to_data"
+            if(out_mask==1){
+              fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
+                                         time_index[b->i_time]);     // t.frame
+              fprintf(fp2, "%4i\t",      b->flag);                   // flag
+              fprintf(fp2, "%4i\t",      mask_mod_a);                // xpos
+              fprintf(fp2, "%4i\t",      mask_mod_b);                // ypos
+              fprintf(fp2, "b\n");                                   // pixtype is "b" for "boundary"
+            }
+          }
+        }
       }
+      // mask_mod: Go to first boundary/interior pixels
+      while(mask_mod_interior->prev!=NULL) mask_mod_interior=mask_mod_interior->prev;
       while(mask_mod_interior->next!=NULL && out_mask==1){
         fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
                                    time_index[b->i_time]);     // t.frame
@@ -6327,15 +6384,15 @@ void add_boundary_and_interior_points_to_data(struct point *p_in, int i_t, int f
 
       //p_in==NULL when function is called, meaning that no objects have yet been
       //treated. Therefore, put p_start=boundary[i] to point to get first cell
-    //if (p_in==NULL)p_start=boundary[i];         // mask_mod: replace p_start=boundary[i]; by p_start=cellblob->boundary;
-    if (p_in==NULL){															// mask_mod: cellblob is cs[i] which in turn is one "blob", so we'll use its boundary element
-				p_start_boundary=cellblob->boundary;			// mask_mod: TODO we could use the "interior" element to fill the cells
-				add_points_to_data(p_start_boundary,border);
-				if(fill_interior!=1){
-					p_start_interior=cellblob->interior;
-					add_points_to_data(p_start_interior,border);
-				}
-			}
+      //if (p_in==NULL)p_start=boundary[i];         // mask_mod: replace p_start=boundary[i]; by p_start=cellblob->boundary;
+      if (p_in==NULL){															// mask_mod: cellblob is cs[i] which in turn is one "blob", so we'll use its boundary element
+		  	p_start_boundary=cellblob->boundary;		  	// mask_mod: TODO we could use the "interior" element to fill the cells
+		  	add_points_to_data(p_start_boundary,border);
+		  	if(fill_interior!=1){
+		  		p_start_interior=cellblob->interior;
+		  		add_points_to_data(p_start_interior,border);
+		  	}
+		  }
     }
   }
 
