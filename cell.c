@@ -689,28 +689,29 @@ int main(int argc, char *argv[]){
   }
 
   //Printing final values
+  printf("\nConfiguration for this run:\n");
   if(align_fl==1){
-    printf("Will align all FL files to first FL file.\n");
+    printf("    Will align all FL files to first FL file.\n");
   }else if (align_fl==2){
-    printf("Will align first FL files to brightfield.\n");
+    printf("    Will align first FL files to brightfield.\n");
   }
 
 
   if(treat_brightfield_as_fluorescence==1){
-      printf("Adding BF image as additional fluorescence image.\n");
+      printf("    Adding BF image as additional fluorescence image.\n");
   }
 
   //Cheking for third image type, note that the same string has been read in
   //parametes.txt and steped on with GOptions
   if((strstr(pnt_third_img_label,"nuclear")!=NULL)){
       third_image_type=nuclear_label;
-      printf("Third image will be used to label nucleus.\n");
+      printf("    Third image will be used to label nucleus.\n");
     }else if(strstr(pnt_third_img_label,"vacuole")!=NULL){
       third_image_type=vacuole_label;
-      printf("Third image will be used to correct for vacuole.\n");
+      printf("    Third image will be used to correct for vacuole.\n");
     }else{
       if(third_list_file!=NULL){
-      printf("Unknown third image type, ignoring third images.");
+      printf("    Unknown third image type, ignoring third images.");
     }
       third_image_type=no_third_image;
     }
@@ -718,10 +719,9 @@ int main(int argc, char *argv[]){
   //printing values
   if(align_individual_cells_boundary==1){
     align_individual_cells=1;
-      printf("Will wiggle each cell around to re-align with BF");
-      printf(" using boundary.\n");
+      printf("    Will wiggle each cell around to re-align with BF using boundary.\n");
     }else if(align_individual_cells==1){
-    printf("Will wiggle each cell around to re-align with BF.\n");
+    printf("    Will wiggle each cell around to re-align with BF.\n");
   }
 
 
@@ -745,8 +745,8 @@ int main(int argc, char *argv[]){
   }else if (overall_id_offset==-1){
     overall_id_offset=0;
   }else{
-      printf("Append_output was requested with ID offset of %i.\n",overall_id_offset);
-      printf("Minimum offset is 0.\n");
+      printf("    Append_output was requested with ID offset of %i.\n",overall_id_offset);
+      printf("    Minimum offset is 0.\n");
       exit(0);
     }
 
@@ -775,12 +775,12 @@ int main(int argc, char *argv[]){
   }
 
   printf("Using parameters:\n");
-  printf("   max_dist_over_minor_axis=%le\n",max_split_d_over_minor);
-  printf("   max_dist_over_waist=%le\n",max_d_over_s_cut);
-  printf("   back_reject=%le\n",background_reject_factor);
-  printf("   max_pixels_per_cell=%i\n",max_pixels_per_cell);
-  printf("   min_pixels_per_cell=%i\n",min_pixels_per_cell);
-  printf("   I_over_U_for_match (tracking parameter)=%le\n",I_over_U_for_match);
+  printf("    max_dist_over_minor_axis=%le\n",max_split_d_over_minor);
+  printf("    max_dist_over_waist=%le\n",max_d_over_s_cut);
+  printf("    background_reject_factor=%le\n",background_reject_factor);
+  printf("    max_pixels_per_cell=%i\n",max_pixels_per_cell);
+  printf("    min_pixels_per_cell=%i\n",min_pixels_per_cell);
+  printf("    I_over_U_for_match (tracking_comparison parameter)=%le\n",I_over_U_for_match);
   max_d_over_s_cut_save=max_d_over_s_cut;
   max_split_d_over_minor_save=max_split_d_over_minor;
   if (max_d_over_s_cut_t0>-10.0){
@@ -792,8 +792,11 @@ int main(int argc, char *argv[]){
        max_split_d_over_minor_t0);
   }
 
+  printf("\nEnd checking of arguments.\n");
   //End checking of arguments
+
   //Read in the names of the phase and fluorescence files.
+  printf("\nRead in the names of the phase and fluorescence files.\n");
 
   //loading brightfield file names into array phase_files
   if( (fp_in=fopen(bright_list_file,"r"))==NULL ){
