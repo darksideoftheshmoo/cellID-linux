@@ -234,7 +234,8 @@ int output_data_to_tif_file(char *file,
                             int *labels,
                             int type,
                             int bit_size,
-                            int invert){
+                            int invert,
+                            int mask_output){
 
 
   //Output array output_data to a file.
@@ -372,7 +373,12 @@ int output_data_to_tif_file(char *file,
           }else if(k==cell_label){         // tif_routines.h says: #define cell_label 6, the default for cell number labels if present.
               tmp=array_max;               // tmp=array_max-(15.0*onetmp);
           } else {
-            tmp=array_min;
+            if(mask_output==0){
+              tmp=array_min; 
+            } else {
+              tmp=tmp;
+            }
+            
           }
 
         }else if (type==1){                // The default value for FL type is 1

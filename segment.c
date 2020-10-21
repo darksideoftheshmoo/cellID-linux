@@ -3746,7 +3746,8 @@ int output_individual_cells_to_file(int i_t,
 				    int ymax_data,
 				    int type,
 				    int bit_size,
-				    int invert){
+				    int invert,
+            int mask_output){
 
 
   int xmax_out=50;
@@ -3841,7 +3842,8 @@ int output_individual_cells_to_file(int i_t,
 	      			                     output_labels,
 	      			                     type,
 	      			                     bit_size,
-	      			                     invert)==0){
+	      			                     invert,
+                                   mask_output)==0){
 	        printf("Couldn't output cell %i to %s.\n",b->index,file);
 	      }
       }

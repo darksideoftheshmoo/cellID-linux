@@ -134,6 +134,7 @@ int main(int argc, char *argv[]){
   printf("** 2019 redistribution, glib_removal branch with awesome identified masks. **\n\n");
 
   int label_cells=0;    // mask_mod: label cells optionally
+  int mask_output=1;    // mask_mod: mask output option in BF.out TIFF, default disabled
   int out_mask=0;       // mask_mod: output interior/boundary coords optionally
   int fill_interior=1;  // mask_mod: fill cells in .out, defult disabled
 
@@ -310,7 +311,7 @@ int main(int argc, char *argv[]){
   opterr = 0;  // https://stackoverflow.com/a/24331449/11524079
   optind = 1;  // https://stackoverflow.com/a/25937743/11524079
 
-  while((opt = getopt(argc, argv, "p:b:f:o:lim")) != -1) {
+  while((opt = getopt(argc, argv, "p:b:f:o:lims")) != -1) {
     printf("Parsing getopt options\n");
     switch(opt) {
     case 'p':
@@ -343,13 +344,18 @@ int main(int argc, char *argv[]){
       break;
 
     case 'i':
-       printf(" - Label cells in BF.\n");
+       printf(" - Fill interior pixels in BF.out\n");
        fill_interior=0;
       break;
 
     case 'm':
        printf(" - Output cell boundary and interior coords to file.\n");
        out_mask=1;
+      break;
+
+    case 's':
+       printf(" - Replace BF.out with segmentation masks only, removing image data.\n");
+       mask_output=0;
       break;
 
     case ':':
@@ -1257,7 +1263,8 @@ int main(int argc, char *argv[]){
                                        NULL,  // do not write cell labels for "flat_cors"
                                        0,
                                        16,
-                                       0)==0){
+                                       0,
+                                       mask_output)==0){
               printf("Couldn't output data to tif file %s.\n",line);
             }
           }
@@ -1443,7 +1450,8 @@ int main(int argc, char *argv[]){
                                      bf_fl_labels,
                                      0,
                                      8,
-                                     0)==0){
+                                     0,
+                                     mask_output)==0){
             printf("Couldn't output data to tif file %s.\n",line);
           }
         }
@@ -1634,7 +1642,7 @@ int main(int argc, char *argv[]){
       if (output_individual_cells==1){
           strcpy(line,"cells/");
           strcat(line,fluor_files[i]);
-          if(output_individual_cells_to_file(i,line,fl,xmax,ymax,0,8,0)==0){
+          if(output_individual_cells_to_file(i,line,fl,xmax,ymax,0,8,0,mask_output)==0){
             printf("Couldn't output individual to tif file %s.\n",line);
           }
       }
@@ -1654,7 +1662,8 @@ int main(int argc, char *argv[]){
                                  bf_fl_labels,
                                  1,
                                  8,
-                                 0)==0){
+                                 0,
+                                 mask_output)==0){
           printf("Couldn't output data to tif file %s.\n",line);
         }
       //}  // Andy: cosing bracket for the proposed if clause above
@@ -1671,7 +1680,8 @@ int main(int argc, char *argv[]){
                                            ymax,
                                            0,
                                            8,
-                                           0)==0){
+                                           0,
+                                           mask_output)==0){
 
         printf("Couldn't output individual to tif file %s.\n",line);
         }
@@ -1686,7 +1696,8 @@ int main(int argc, char *argv[]){
                                third_labels,
                                2,
                                8,
-                               0)==0){
+                               0,
+                               mask_output)==0){
 
       printf("Couldn't output data to tif file %s.\n",line);
     }
@@ -1717,7 +1728,7 @@ int main(int argc, char *argv[]){
       //Write out the files
       strcpy(line,"cells/");
       strcat(line,phase_files[j_cur]);
-      if(output_individual_cells_to_file(i,line,bf,xmax,ymax,0,8,0)==0){
+      if(output_individual_cells_to_file(i,line,bf,xmax,ymax,0,8,0,mask_output)==0){
         printf("Couldn't output individual to tif file %s.\n",line);
       }
     }
@@ -1734,7 +1745,8 @@ int main(int argc, char *argv[]){
                                bf_fl_labels,
                                0,
                                8,
-                               0)==0){
+                               0,
+                               mask_output)==0){
 
       printf("Couldn't output data to tif file %s.\n",line);
     }
@@ -1778,7 +1790,8 @@ int main(int argc, char *argv[]){
                                bf_fl_labels,
                                0,
                                8,
-                               0)==0){
+                               0,
+                               mask_output)==0){
       printf("Couldn't output data to tif file %s.\n",line);
     }
   }

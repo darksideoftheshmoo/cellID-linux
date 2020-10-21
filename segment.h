@@ -37,7 +37,7 @@ int recombination_check(int,int,int *,int *,float *);
 int  output_individual_cells_to_file(int,char *,
 				     float *,
 				     int,int,
-				     int,int,int);
+				     int,int,int,int);
 void debug_test(int);
 
 extern int new_phase;
