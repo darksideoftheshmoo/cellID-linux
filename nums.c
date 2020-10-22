@@ -69,6 +69,10 @@ End-copyright-notice-for-Libtiff
 
 #define xdim 4
 #define ydim 6
+
+// mask_mod: if we ever want to label cells' xpos/ypos with a single pixel
+// encoding CellID in it's intensity, this would be the place to hack it
+
 char zero[]={
   "    "
   " ###"
