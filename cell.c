@@ -351,7 +351,7 @@ int main(int argc, char *argv[]){
 
     case 'm':
        printf(" - Output cell boundary and interior coords to file.\n");
-       out_mask=1;
+       out_mask=1; // enable
       break;
 
     case 's':
@@ -1536,7 +1536,10 @@ int main(int argc, char *argv[]){
       //Free pixels, keeping only the latest that were recently put
       //in the cell lists (the cells just found in find_cells() haven't
       //been added to the list yet).
-      free_pixels_from_earlier_time_points();
+      
+      if(out_mask==1){                           // mask_mod: this must be messing up the TSV output
+      	free_pixels_from_earlier_time_points();  // mask_mod: disabled on mask output option
+      }
     }
 
     //Check if we want to align to BF image (or also to previous
