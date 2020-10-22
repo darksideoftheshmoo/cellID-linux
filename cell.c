@@ -133,10 +133,10 @@ int main(int argc, char *argv[]){
   printf("\n\n*** Cell_ID Version 1.4.6 ***");
   printf("** 2019 redistribution, glib_removal branch with awesome identified masks. **\n\n");
 
-  int label_cells=0;    // mask_mod: label cells optionally
-  int mask_output=1;    // mask_mod: mask output option in BF.out TIFF, default disabled
-  int out_mask=0;       // mask_mod: output interior/boundary coords optionally
-  int fill_interior=1;  // mask_mod: fill cells in .out, defult disabled
+  int out_mask=0;       // mask_mod: output interior/boundary coords optionally, default disabled
+  int label_cells=0;    // mask_mod: label cells in BF.out optionally, default disabled
+  int mask_output=0;    // mask_mod: cellID-adjusted mask output option in BF.out TIFF, default disabled
+  int fill_interior=0;  // mask_mod: fill cells in BF.out. overrides label_cells. default disabled
 
   FILE *fp_in;
   FILE *fp;
@@ -340,12 +340,13 @@ int main(int argc, char *argv[]){
 
     case 'l':
        printf(" - Label cells in BF.\n");
-       label_cells=1;
+       if(fill_interior==0) label_cells=1;
       break;
 
     case 'i':
        printf(" - Fill interior pixels in BF.out\n");
-       fill_interior=0;
+       fill_interior=1;
+       label_cells=0;
       break;
 
     case 'm':
@@ -355,7 +356,7 @@ int main(int argc, char *argv[]){
 
     case 's':
        printf(" - Replace BF.out with segmentation masks only, removing image data.\n");
-       mask_output=0;
+       mask_output=1;
       break;
 
     case ':':
@@ -1719,10 +1720,19 @@ int main(int argc, char *argv[]){
 
     memset(bf_fl_labels,0,(xmax*ymax*sizeof(int)));
 
-    if(label_cells==1){                // mask_mod: optional labeling through "-l" command line option
+
+    // mask_mod: optional labeling through "-l" command line option
+    if(label_cells==1){
       add_cell_number_to_the_data(i);  // its argument is "int i_t"
     }
-    add_boundary_and_interior_points_to_data(NULL, i, fill_interior);
+
+    // mask_mod:
+    if(mask_output==1){
+      add_boundary_and_interior_points_to_data(NULL, i, fill_interior);
+    }
+    else{
+      add_boundary_points_to_data(NULL);
+    }
 
     if (output_individual_cells==1){
       //Write out the files

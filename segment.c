@@ -4998,7 +4998,7 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
   float mask_mod_mx,mask_mod_my,mask_mod_s;              // mask_mod
   float mask_mod_x0,mask_mod_y0,mask_mod_x,mask_mod_y;   // mask_mod
   int mask_mod_a,mask_mod_b,mask_mod_a2,mask_mod_b2;     // mask_mod
-  
+
   printf("output_cells_single_file: initialization done!\n");
   fflush(stdout);
 
@@ -5090,7 +5090,7 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
   if(out_mask==1) printf("mask_mod: writting TSV header\n");
   fflush(stdout);
   if(out_mask==1) fprintf(fp2,"cellID\tt.frame\tflag\tx\ty\tpixtype\n");
-  
+
   // the "blob" struct is declared at the top of this file (segment.c) as:
     // struct blob {
     //   int index;      //A unique number to label this cell list
@@ -6419,7 +6419,7 @@ void add_boundary_and_interior_points_to_data(struct point *p_in, int i_t, int f
 		  	add_points_to_data(p_start_boundary,border);
 
 				// mask_mod: fill interior
-		  	if(fill_interior!=1){
+		  	if(fill_interior==1){
 		  		p_start_interior=cellblob->interior;
 		  		add_points_to_data(p_start_interior,border);
 		  	}
