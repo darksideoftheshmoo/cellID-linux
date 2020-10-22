@@ -133,7 +133,7 @@ int main(int argc, char *argv[]){
   printf("\n\n*** Cell_ID Version 1.4.6 ***");
   printf("** 2019 redistribution, glib_removal branch with awesome identified masks. **\n\n");
 
-  int out_mask=0;       // mask_mod: output interior/boundary coords optionally, default disabled
+  int out_mask=0;       // mask_mod: optionally output interior/boundary coords to TSV, default disabled
   int label_cells=0;    // mask_mod: label cells in BF.out optionally, default disabled
   int mask_output=0;    // mask_mod: cellID-adjusted mask output option in BF.out TIFF, default disabled
   int fill_interior=0;  // mask_mod: fill cells in BF.out. overrides label_cells. default disabled
@@ -350,7 +350,7 @@ int main(int argc, char *argv[]){
       break;
 
     case 'm':
-       printf(" - Output cell boundary and interior coords to file.\n");
+       printf(" - Output cell boundary and interior coords to TSV file.\n");
        out_mask=1; // enable
       break;
 
@@ -1537,7 +1537,7 @@ int main(int argc, char *argv[]){
       //in the cell lists (the cells just found in find_cells() haven't
       //been added to the list yet).
       
-      if(out_mask==1){                           // mask_mod: this must be messing up the TSV output
+      if(out_mask!=1){                           // mask_mod: this must be messing up the TSV output
       	free_pixels_from_earlier_time_points();  // mask_mod: disabled on mask output option
       }
     }
