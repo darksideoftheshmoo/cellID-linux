@@ -6374,7 +6374,7 @@ void add_points_to_data(struct point *p_start, int border){
 	}
 }
 /****************************************************/
-void add_boundary_and_interior_points_to_data(struct point *p_in, int i_t, int fill_interior){
+void add_cell_mask_data(struct point *p_in, int i_t, int fill_interior, int label_cells){
 	// mask_mod: this is a modification of the "add_boundary_points_to_data" function.
 	// Instead of simply adding the boundaries with a flat intensity value, this
 	// function adds both boundaries and (optionall) interior points, with
@@ -6395,6 +6395,8 @@ void add_boundary_and_interior_points_to_data(struct point *p_in, int i_t, int f
   //Add boundary points for border list p_in.
   //if p_in==NULL then do all n_known borders.
   //add found_border to d[] array in appropriate place.
+
+	if(label_cells==1) add_cell_number_to_the_data(i_t);
 
   p_start_boundary=p_in;
 	p_start_interior=p_in;
