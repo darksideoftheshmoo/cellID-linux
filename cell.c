@@ -311,7 +311,7 @@ int main(int argc, char *argv[]){
   opterr = 0;  // https://stackoverflow.com/a/24331449/11524079
   optind = 1;  // https://stackoverflow.com/a/25937743/11524079
 
-  while((opt = getopt(argc, argv, "p:b:f:o:lims")) != -1) {
+  while((opt = getopt(argc, argv, "p:b:f:o:limt")) != -1) {
     printf("Parsing getopt options\n");
     switch(opt) {
     case 'p':
@@ -349,14 +349,14 @@ int main(int argc, char *argv[]){
        label_cells=0;
       break;
 
-    case 't':
-       printf(" - Output cell boundary and interior coords to TSV file.\n");
-       out_mask=1; // enable
-      break;
-
     case 'm':
        printf(" - Replace BF.out with segmentation masks only, removing image data.\n");
        mask_output=1;
+      break;
+
+    case 't':
+       printf(" - Output cell boundary and interior coords to TSV file.\n");
+       out_mask=1; // enable
       break;
 
     case ':':
