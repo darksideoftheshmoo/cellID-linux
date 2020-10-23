@@ -349,12 +349,12 @@ int main(int argc, char *argv[]){
        label_cells=0;
       break;
 
-    case 'm':
+    case 't':
        printf(" - Output cell boundary and interior coords to TSV file.\n");
        out_mask=1; // enable
       break;
 
-    case 's':
+    case 'm':
        printf(" - Replace BF.out with segmentation masks only, removing image data.\n");
        mask_output=1;
       break;
@@ -1536,7 +1536,7 @@ int main(int argc, char *argv[]){
       //Free pixels, keeping only the latest that were recently put
       //in the cell lists (the cells just found in find_cells() haven't
       //been added to the list yet).
-      
+
       if(out_mask!=1){                           // mask_mod: this must be messing up the TSV output
       	free_pixels_from_earlier_time_points();  // mask_mod: disabled on mask output option
       }
