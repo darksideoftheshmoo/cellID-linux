@@ -6367,8 +6367,9 @@ void add_points_to_data(struct point *p_start, int border){
 				a=a2;
 				b=b2;
 				//Add to image array (b*xmax since it's a 1-dim array)
-				// mask_mod: d>=20 is the offset to trigger the tif.c write border with cell-identifying intensity
-				d[(b*xmax+a)]=border+20;
+				// mask_mod: d>=cellid_offset is the offset to trigger the tif.c write
+				// border with cell-identifying intensity
+				d[(b*xmax+a)]=border+cellid_offset;
 			}
 		}
 	}

@@ -270,29 +270,51 @@ int output_data_to_tif_file(char *file,
 
   int u;
 
-  // mask_mod: unique cell boundaries value will surely need enough bits, 8 bits (for 255 CellIDs) may not be enough.
+  //mask_mod
+  float intensity_max=xmax16;
+  float labels_max;
+  float intensity_offset=5000.0;
+
+  //Get max and min image pixel values
+  array_max=0.0;
+  array_min=1.0e15;
+  for(j=0;j<ymax_data;j++){
+    for(i=0;i<xmax_data;i++){
+      u=j*xmax_data+i;
+      if(output_data[u]>array_max)array_max=output_data[u];
+      if(output_data[u]<array_min)array_min=output_data[u];
+    }
+  }
+
+  // mask_mod: unique cell boundaries value will surely need enough bits.
+  // 8 bits (for 255 CellIDs) may not be enough.
   if (mask_output==1 && type==0) {
     bit_size=16;
-    array_max=65535.0;
-    array_min=0.0;
-    scale=array_max-array_min; // mask_mod, originally: scale=1.0/(array_max-array_min);
-  }
-  else {
-    //Get max and min
-    array_max=0.0;
-    array_min=1.0e15;
-    for(j=0;j<ymax_data;j++){
-      for(i=0;i<xmax_data;i++){
-        u=j*xmax_data+i;
-        if(output_data[u]>array_max)array_max=output_data[u];
-        if(output_data[u]<array_min)array_min=output_data[u];
+    labels_max=0.0;
+    // Get max labels value
+    if (labels!=NULL){
+      for(j=0;j<ymax_data;j++){
+        for(i=0;i<xmax_data;i++){
+          u=j*xmax_data+i;
+          if(labels[u]-cellid_offset>labels_max) labels_max=labels[u]-cellid_offset;
+        }
       }
     }
-    if (array_max>array_min){
-      scale=1.0/(array_max-array_min);
-    }else{
-      scale=0.0;
-    }
+
+    //array_max=65535.0;
+    //array_min=0.0;
+
+    // Calculate max allowed intensity value
+    // This ensures that image instensities are at least "intensity_offset"
+    // points from mask intensities.
+    intensity_max=intensity_max-(intensity_offset+labels_max);
+  }
+
+  //Calculate scale factor for pixel intensity normalization
+  if (array_max>array_min){
+    scale=1.0/(array_max-array_min);
+  }else{
+    scale=0.0;
   }
 
   bitspersample=(uint16)bit_size;
@@ -300,8 +322,7 @@ int output_data_to_tif_file(char *file,
   //Value of one degree of grayness:
   if (bitspersample==8){
     onetmp=1.0/(scale*xmax8);
-  }
-  else{
+  } else{
     onetmp=1.0;
   }
 
@@ -335,25 +356,38 @@ int output_data_to_tif_file(char *file,
     return 0;
   }
 
+  //Loop over all pixels in image
   for(j=0;j<ymax_data;j++){
     for(i=0;i<xmax_data;i++){
-      //in bounds
+      //in bounds (get position in 1D-array corresponding to XY coordinate)
       u=j*xmax_data+i;
-      //Convert data to 8 bit or 16 bit
+      //Get pixel value
       tmp=output_data[u];
+      //Convert data to 8 bit or 16 bit
       if(invert==1){ //Flip values back from array_max-c[][]
         if(tmp>0.0)tmp=array_max-tmp;
       }
+
       if (labels!=NULL){
         //type determines what set of labels to write out
-        k=labels[u];                       // "labels" corresponds to the "d" array in "add_boundary_points_to_data" (segment.c)
-        if (type==0){                      // The default value for BF type and flat_cors is 0.
-          if(k>=20){                       // As modified in segment.c, values of "k=labels[u]" >= 20 should be cell boundaries (a different "int" per cell starting at 20).
-            tmp=array_max-(1+k-20)*onetmp; // In "add_boundary_points_to_data" CellIDs are offset by 20, so subtract that here.
-                                           // Also add "1" since CellIDs are zero-indexed, and we want to reserve max_intensity for cell numbers.
-                                           // Note that since in segment.c "d[(b*xmax+a)]=i+20" starts at 20, then labels[u]==19 can mean something else.
-          }else if(k==found_border){       // tif_routines.h says: #define found_border 5, the default for cell boundaries if present.
- 				    tmp=array_max;                 // this should not actually trigger, but wouldnt hurt, since boundary pixels intensity goes down from array_max-1
+        // "labels" corresponds to the "d" array in "add_boundary_points_to_data" (segment.c)
+        k=labels[u];
+        if (type==0){   // The default value for BF type and flat_cors is 0.
+          // As modified in segment.c, values of "k=labels[u]" >= cellid_offset
+          // should be cell boundary or interior points (a different value per
+          // cellID starting at cellid_offset).
+          if(k>=cellid_offset){
+            // mask_mod: Subtract cellid_offset from k to adjust for the offset
+            // defined in "add_points_to_data" to recover true cellID. Also add
+            // "1" since CellIDs are zero-indexed, and we want to reserve
+            // max_intensity for cell numbers.
+
+            // (1+k-cellid_offset) is then subtracted from xmax16 to ensure that
+            // mask points have the maximal image intensity values
+            tmp=xmax16-(1+k-cellid_offset);
+          }else if(k==found_border){
+            // mask_mod: this triggers when mask_output==0
+ 				    tmp=array_max;
  				  }else if(k==found_border_a){
  				    tmp=array_max-onetmp;
  				  }else if(k==found_border_b){
@@ -368,23 +402,32 @@ int output_data_to_tif_file(char *file,
  				    tmp=array_max-(6.0*onetmp);
  				  }else if(k==found_border_g){
  				    tmp=array_max-(7.0*onetmp);
-          }else if(k==cell_label){         // tif_routines.h says: #define cell_label 6, the default for cell number labels if present.
-              tmp=array_max;               // tmp=array_max-(15.0*onetmp);
+          }else if(k==cell_label){
+            if(mask_output==1){
+              //mask_mod: set cell labels/numbers to max image value
+              tmp=xmax16;
+            } else{
+              //mask_mod: original output
+              tmp=array_max-(15.0*onetmp);
+            }
           }else if(k==delete_pixel){
 				    tmp=array_min;
           }else {
-            // mask_mod: what is this if clause for?
             if(mask_output==1){
-              tmp=array_min;
-            }else {
-              tmp=tmp;
+              // mask_mod: sets image pixels (i.e., non-label pixels) to zero.
+              // this makes background black
+              //tmp=0.0
+
+              // mask_mod: scales image pixels (i.e., non-label pixels) such
+              // that their intensities range from 0 to "intensity_max".
+              tmp=(tmp-array_min)*scale*intensity_max;
             }
           }
         }else if (type==1){                // The default value for FL type is 1
           if(labels[u]==found_border){
             tmp=array_max;
-          } else if(k>=20){
-            tmp=array_max-(k-20)*onetmp;
+          } else if(k>=cellid_offset){
+            tmp=array_max-(k-cellid_offset)*onetmp;
           }
 
         }else if (type==2){                // The default value for third_image type is 2

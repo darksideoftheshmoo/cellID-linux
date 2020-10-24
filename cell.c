@@ -1084,7 +1084,8 @@ int main(int argc, char *argv[]){
         c0=(file_basename)[0];
     c1=(file_basename)[1];
     c2=(file_basename)[2];
-      // free(file_basename);  // rcell2: g_free replacement, not necessary https://stackoverflow.com/a/20297598/11524079
+      // free(file_basename);  // rcell2: g_free replacement, not necessary
+                               // https://stackoverflow.com/a/20297598/11524079
         flag[i]=flag[i-1]+1; //Default to new flag
     for(j=0;j<i;j++){//Look for a match among previous files
             file_basename= basename(fluor_files[j]);
@@ -1096,7 +1097,8 @@ int main(int argc, char *argv[]){
            flag[i]=flag[j]; //Found a match
            break;
       }
-        // free(file_basename);  // rcell2: g_free replacement, not necessary https://stackoverflow.com/a/20297598/11524079
+        // free(file_basename);  // rcell2: g_free replacement, not necessary
+                                 // https://stackoverflow.com/a/20297598/11524079
         }
   }
   //Print out message if we have different flags set.
