@@ -4794,6 +4794,7 @@ void update_list_of_found_cells(int i_t, int secs, int flag){
 	        //if ((cs[j]->index)>=tmp_j){
 	        //  continue; //No need to compare to id's above fret_offset
 	        //}
+						
 	        if (cs[j]->x<0) continue; //A flag for removing cells
 	        for(b=cs[j];(b!=NULL)&&(b->i_time==i_t);b=b->prev);
 	        if(b==NULL){ //Should never happen
