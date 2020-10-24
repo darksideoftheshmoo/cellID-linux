@@ -3830,7 +3830,7 @@ int output_individual_cells_to_file(int i_t,
 
 	      strcpy(file,basefile);
 	      strcat(file,"_");
-	      digits_to_string(cellnum,bit_size,10);
+	      digits_to_string(cellnum,bit_size,16);
 	      strcat(file,cellnum);
 	      strcat(file,"b_id_");
 	      digits_to_string(cellnum,b->index,9999);
@@ -4783,14 +4783,17 @@ void update_list_of_found_cells(int i_t, int secs, int flag){
 	        }
 	      */
 	      j_max=-1;
-	      tmp_j=(fret_offset+overall_id_offset);
+	      //tmp_j=(fret_offset+overall_id_offset); //mask_mod: commented, see below
 	      for(j=0;j<loop_total;j++){
 	        //Look at previous time point.  Last time point is cs[j], however
 	        //it's possible that we just added a point, so go to previous
 	        //time.
-	        if ((cs[j]->index)>=tmp_j){
-	          continue; //No need to compare to id's above fret_offset
-	        }
+
+					// mask_mod: the following if statement was commented out as it
+					// causes cellIDs >999 to escape tracking over time frames.
+	        //if ((cs[j]->index)>=tmp_j){
+	        //  continue; //No need to compare to id's above fret_offset
+	        //}
 	        if (cs[j]->x<0) continue; //A flag for removing cells
 	        for(b=cs[j];(b!=NULL)&&(b->i_time==i_t);b=b->prev);
 	        if(b==NULL){ //Should never happen
