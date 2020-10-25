@@ -391,7 +391,7 @@ int main(int argc, char *argv[]){
         if(i+1<argc && argv[i+1][0]!='-'){
           param_file=argv[i+1];
         }else{
-          printf("Filename requiered after -p or --param option");
+          printf("Filename required after -p or --param option");
           return 0;
         }
       } else {
@@ -454,7 +454,7 @@ int main(int argc, char *argv[]){
             bf_fl_mapping=bf_fl_mapping_time;
           } else if(strstr(line3,"list")!=NULL){
             //printf("Mapping bright field and fluorescence images by list order.\n");
-            //printf("Same number of elemtes requiered in list files.\n");
+            //printf("Same number of elemtes required in list files.\n");
              bf_fl_mapping=bf_fl_mapping_list;
           } else {
             printf("-%s- is a invalid value for bf_fl_mapping in parameter.txt.\n",line3);
