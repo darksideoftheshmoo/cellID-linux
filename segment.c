@@ -4791,9 +4791,15 @@ void update_list_of_found_cells(int i_t, int secs, int flag){
 
 					// mask_mod: the following if statement was commented out as it
 					// causes cellIDs >999 to escape tracking over time frames.
-	        //if ((cs[j]->index)>=tmp_j){
-	        //  continue; //No need to compare to id's above fret_offset
-	        //}
+	        if ((cs[j]->index)>=tmp_j){
+	         //if(have_fret_image==1) continue; //No need to compare to id's above fret_offset if using FRET image type
+        	 if(have_fret_image==1){
+	           printf("ERROR: Cell with ID %i exceeds the max amount in FRET type images\n", cs[j]->index);
+	           printf("This soft limit can be increased by changing the source code at segment.c\n");
+	           printf("Specifically, the line: #define fret_offset 1000\n");
+	           exit(1);
+        	 }
+	        }
 						
 	        if (cs[j]->x<0) continue; //A flag for removing cells
 	        for(b=cs[j];(b!=NULL)&&(b->i_time==i_t);b=b->prev);
