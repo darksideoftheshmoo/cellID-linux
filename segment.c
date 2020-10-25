@@ -6401,16 +6401,14 @@ void add_cell_mask_data(struct point *p_in, int i_t, int fill_interior, int labe
   int a,b,a2,b2;
 
   int border;
-  struct point *p_start_boundary;
-	struct point *p_start_interior;
+	int interior_offset;
+	int offset_threshold=5000; // mask_mod: used in integer division to calculate
+														 // offset between interior and boundary points.
   //Add boundary points for border list p_in.
   //if p_in==NULL then do all n_known borders.
   //add found_border to d[] array in appropriate place.
 
 	if(label_cells==1) add_cell_number_to_the_data(i_t);
-
-  p_start_boundary=p_in;
-	p_start_interior=p_in;
 
   for(i=0;i<n_known;i++){ //Loop over all cells
     cellblob=cs[i]; 			// cs is defined above as "struct blob *cs[max_cells];"
@@ -6427,15 +6425,14 @@ void add_cell_mask_data(struct point *p_in, int i_t, int fill_interior, int labe
       //treated. Therefore, put p_start=boundary[i] to point to get first cell
       //if (p_in==NULL)p_start=boundary[i];         // mask_mod: replace p_start=boundary[i]; by p_start=cellblob->boundary;
       if (p_in==NULL){															// mask_mod: cellblob is cs[i] which in turn is one "blob", so we'll use its boundary element
-				// mask_mod: add boundary
-		  	p_start_boundary=cellblob->boundary;
-		  	add_points_to_data(p_start_boundary,border);
-
 				// mask_mod: fill interior
 		  	if(fill_interior==1){
-		  		p_start_interior=cellblob->interior;
-		  		add_points_to_data(p_start_interior,border);
+					// calculate offset between interior and boundary points.
+					interior_offset=(n_known/offset_threshold+1)*offset_threshold;
+		  		add_points_to_data(cellblob->interior,border+interior_offset);
 		  	}
+				// mask_mod: add boundary
+				add_points_to_data(cellblob->boundary,border);
 		  }
     }
   }

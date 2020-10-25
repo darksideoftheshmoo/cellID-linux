@@ -273,7 +273,7 @@ int output_data_to_tif_file(char *file,
   //mask_mod
   float intensity_max=xmax16;
   float labels_max;
-  float intensity_offset=5000.0;
+  float intensity_offset=1000.0;
 
   //Get max and min image pixel values
   array_max=0.0;
