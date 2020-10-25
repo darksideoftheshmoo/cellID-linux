@@ -4783,7 +4783,7 @@ void update_list_of_found_cells(int i_t, int secs, int flag){
 	        }
 	      */
 	      j_max=-1;
-	      //tmp_j=(fret_offset+overall_id_offset); //mask_mod: commented, see below
+	      tmp_j=(fret_offset+overall_id_offset);
 	      for(j=0;j<loop_total;j++){
 	        //Look at previous time point.  Last time point is cs[j], however
 	        //it's possible that we just added a point, so go to previous
@@ -4800,7 +4800,7 @@ void update_list_of_found_cells(int i_t, int secs, int flag){
 	           exit(1);
         	 }
 	        }
-						
+
 	        if (cs[j]->x<0) continue; //A flag for removing cells
 	        for(b=cs[j];(b!=NULL)&&(b->i_time==i_t);b=b->prev);
 	        if(b==NULL){ //Should never happen
