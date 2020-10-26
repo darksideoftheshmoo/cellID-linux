@@ -26,9 +26,9 @@ This branch outputs BF tiff files with additional mask functionality for custom 
 
 * `-w`: offsets boundary and interior pixel intensities by `10000`, so that boundary pixels follow the standard cellID relationship, and interior pixels the relationship `cellID = 65535 - boundary_intensity - 10000 - 1`.
 
-* `-m`: sets blank background. Default output is cell boundaries only, but this can be modified with `-l` (labels), `i` (interior), and `-w` (offset) parameters.
+* `-m`: sets blank background. Default output is cell boundaries only, but can be modified with `-l` (labels), `-i` (interior), and `-w` (offset).
 
-Another way of getting the boundary and interior points is with the `-t` option. This makes `cell` create a new output file with a table of x/y coorinates for all cell boundary and interior pixels (each identified with `cellID`, `t.frame`, `flag`, and `pixtype`).
+Another way of getting the boundary and interior points is with the `-t` option. This makes `cell` create a new output file with a table of x/y coordinates for all cell boundary and interior pixels (each identified with `cellID`, `t.frame`, `flag`, and `pixtype`).
 
 ## Credits
 
@@ -133,7 +133,7 @@ Cheers!
 
 ### Parameters
 
-Example parameters are in the `parameters_example.txt` file, and a full description is available in `parameters_description.txt` (copied from Gordon et. al. 2007).
+Example parameters are in the `parameters_example.txt` file, and a full description is available in `parameters_description.txt` (copied from Gordon et al 2007).
 
 The `-o` option refers to the output directory.
 
@@ -145,8 +145,8 @@ For convenience, I have copied the `out_all` columns' description to `output_des
 
 # Appendix
 
-## Image 1
+### Image 1
 
-Notice that the value for the boundary of this cell with `id = 0` is `65534`, which is consistent: `boundary_intensity = 65535 - cellID - 1`.
+Note that the value for the boundary of this cell with `id = 0` is `65534`, which is consistent: `boundary_intensity = 65535 - cellID - 1`.
 
 ![cellid_intensity_relationship](doc/cellid_intensity_relationship.png)
