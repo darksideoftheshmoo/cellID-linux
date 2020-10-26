@@ -6385,7 +6385,7 @@ void add_points_to_data(struct point *p_start, int border){
 	}
 }
 /****************************************************/
-void add_cell_mask_data(struct point *p_in, int i_t, int fill_interior, int label_cells){
+void add_cell_mask_data(struct point *p_in, int i_t, int fill_interior, int label_cells, int interior_offset){
 	// mask_mod: this is a modification of the "add_boundary_points_to_data" function.
 	// Instead of simply adding the boundaries with a flat intensity value, this
 	// function adds both boundaries and (optionall) interior points, with
@@ -6401,10 +6401,12 @@ void add_cell_mask_data(struct point *p_in, int i_t, int fill_interior, int labe
   int a,b,a2,b2;
 
   int border;
-	int interior_offset;
-	int offset_threshold=5000; // mask_mod: used in integer division to calculate
+	int offset_threshold=10000; // mask_mod: used in integer division to calculate
 														 // offset between interior and boundary points.
-  //Add boundary points for border list p_in.
+	// calculate offset between interior and boundary points.
+	interior_offset=((n_known/offset_threshold+1)*offset_threshold)*interior_offset;
+
+	//Add boundary points for border list p_in.
   //if p_in==NULL then do all n_known borders.
   //add found_border to d[] array in appropriate place.
 
@@ -6427,8 +6429,6 @@ void add_cell_mask_data(struct point *p_in, int i_t, int fill_interior, int labe
       if (p_in==NULL){															// mask_mod: cellblob is cs[i] which in turn is one "blob", so we'll use its boundary element
 				// mask_mod: fill interior
 		  	if(fill_interior==1){
-					// calculate offset between interior and boundary points.
-					interior_offset=(n_known/offset_threshold+1)*offset_threshold;
 		  		add_points_to_data(cellblob->interior,border+interior_offset);
 		  	}
 				// mask_mod: add boundary

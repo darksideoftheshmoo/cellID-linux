@@ -273,7 +273,7 @@ int output_data_to_tif_file(char *file,
   //mask_mod
   float intensity_max=xmax16;
   float labels_max;
-  float intensity_offset=1000.0;
+  float intensity_offset=5000.0;
 
   //Get max and min image pixel values
   array_max=0.0;
@@ -288,26 +288,24 @@ int output_data_to_tif_file(char *file,
 
   // mask_mod: unique cell boundaries value will surely need enough bits.
   // 8 bits (for 255 CellIDs) may not be enough.
-  if (mask_output==1 && type==0) {
+  if (mask_output>0 && type==0) {
     bit_size=16;
-    labels_max=0.0;
-    // Get max labels value
-    if (labels!=NULL){
-      for(j=0;j<ymax_data;j++){
-        for(i=0;i<xmax_data;i++){
-          u=j*xmax_data+i;
-          if(labels[u]-cellid_offset>labels_max) labels_max=labels[u]-cellid_offset;
+    if(mask_output==2){
+      labels_max=0.0;
+      // Get max labels value
+      if (labels!=NULL){
+        for(j=0;j<ymax_data;j++){
+          for(i=0;i<xmax_data;i++){
+            u=j*xmax_data+i;
+            if(labels[u]-cellid_offset>labels_max) labels_max=labels[u]-cellid_offset;
+          }
         }
       }
+      // Calculate max allowed intensity value
+      // This ensures that image instensities are at least "intensity_offset"
+      // points from mask intensities.
+      intensity_max=intensity_max-(intensity_offset+labels_max);
     }
-
-    //array_max=65535.0;
-    //array_min=0.0;
-
-    // Calculate max allowed intensity value
-    // This ensures that image instensities are at least "intensity_offset"
-    // points from mask intensities.
-    intensity_max=intensity_max-(intensity_offset+labels_max);
   }
 
   //Calculate scale factor for pixel intensity normalization
@@ -403,7 +401,7 @@ int output_data_to_tif_file(char *file,
  				  }else if(k==found_border_g){
  				    tmp=array_max-(7.0*onetmp);
           }else if(k==cell_label){
-            if(mask_output==1){
+            if(mask_output>0){
               //mask_mod: set cell labels/numbers to max image value
               tmp=xmax16;
             } else{
@@ -416,8 +414,8 @@ int output_data_to_tif_file(char *file,
             if(mask_output==1){
               // mask_mod: sets image pixels (i.e., non-label pixels) to zero.
               // this makes background black
-              //tmp=0.0
-
+              tmp=0.0;
+            } else if(mask_output==2){
               // mask_mod: scales image pixels (i.e., non-label pixels) such
               // that their intensities range from 0 to "intensity_max".
               tmp=(tmp-array_min)*scale*intensity_max;

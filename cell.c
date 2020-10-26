@@ -137,6 +137,7 @@ int main(int argc, char *argv[]){
   int label_cells=0;    // mask_mod: label cells in BF.out optionally, default disabled
   int mask_output=0;    // mask_mod: cellID-adjusted mask output option in BF.out TIFF, default disabled
   int fill_interior=0;  // mask_mod: fill cells in BF.out. overrides label_cells. default disabled
+  int interior_offset=0; // mask_mod: offset interior and boundary pixel intensities
 
   FILE *fp_in;
   FILE *fp;
@@ -311,7 +312,7 @@ int main(int argc, char *argv[]){
   opterr = 0;  // https://stackoverflow.com/a/24331449/11524079
   optind = 1;  // https://stackoverflow.com/a/25937743/11524079
 
-  while((opt = getopt(argc, argv, "p:b:f:o:limt")) != -1) {
+  while((opt = getopt(argc, argv, "p:b:f:o:limtw")) != -1) {
     printf("Parsing getopt options\n");
     switch(opt) {
     case 'p':
@@ -359,6 +360,11 @@ int main(int argc, char *argv[]){
        out_mask=1; // enable
       break;
 
+    case 'w':
+       printf(" - Offset boundary and interior mask intensities.\n");
+       interior_offset = 1; // enable
+      break;
+
     case ':':
        printf(" - option needs a value\n");
       break;
@@ -369,6 +375,9 @@ int main(int argc, char *argv[]){
       break;
     }
   }
+
+  // Check and set mask_output type
+  if((fill_interior==1||label_cells==1)&&mask_output==0) mask_output=2;
 
   // Get all of the non-option arguments and print them
   //https://azrael.digipen.edu/~mmead/www/Courses/CS180/getopt.html
@@ -1727,8 +1736,8 @@ int main(int argc, char *argv[]){
 
 
     // mask_mod:
-    if(mask_output==1){
-      add_cell_mask_data(NULL, i, fill_interior, label_cells);
+    if(mask_output>0){
+      add_cell_mask_data(NULL, i, fill_interior, label_cells, interior_offset);
     }
     else{
       add_cell_number_to_the_data(i);  // its argument is "int i_t"
