@@ -5245,7 +5245,7 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
       fprintf(fp,"\n");
 
       // mask_mod: Get the bounday and mask for this cell
-      if(out_mask==1) printf("mask_mod: getting b->boundary and b->interior\n");
+      //if(out_mask==1) printf("mask_mod: getting b->boundary and b->interior\n");
       fflush(stdout);
       if(out_mask==1) mask_mod_boundary=b->boundary;
       if(out_mask==1) mask_mod_interior=b->interior;
@@ -5263,8 +5263,9 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
       //   fprintf(fp2, "b\n");                                   // pixtype is "b" for "boundary"
       //   mask_mod_boundary=mask_mod_boundary->next;
       // }
+
       //Loop over all boundary points until reaching the end (full circuit)
-      if(out_mask==1) printf("mask_mod: iterating over mask_mod_boundary\n");
+      //if(out_mask==1) printf("mask_mod: iterating over mask_mod_boundary\n");
       fflush(stdout);
       if(out_mask==1){
         for(mask_mod_p1=mask_mod_boundary; mask_mod_p1!=NULL; mask_mod_p1=mask_mod_p1->next){
@@ -5315,10 +5316,10 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
         }
       }
       // mask_mod: Go to first boundary/interior pixels
-      if(out_mask==1) printf("mask_mod: iterating over mask_mod_interior->prev untill NULL\n");
+      //if(out_mask==1) printf("mask_mod: iterating over mask_mod_interior->prev untill NULL\n");
       fflush(stdout);
       if(out_mask==1) while(mask_mod_interior->prev!=NULL) mask_mod_interior=mask_mod_interior->prev;
-      if(out_mask==1) printf("mask_mod: iterating over mask_mod_interior\n");
+      //if(out_mask==1) printf("mask_mod: iterating over mask_mod_interior\n");
       fflush(stdout);
       if(out_mask==1){
         while(mask_mod_interior->next!=NULL){
@@ -5331,7 +5332,7 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
          mask_mod_interior=mask_mod_interior->next;
         }
       }
-      if(out_mask==1) printf("mask_mod: done with blob\n");
+      //if(out_mask==1) printf("mask_mod: done with blob\n");
       fflush(stdout);
       b=b->next;
     }
