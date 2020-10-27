@@ -75,11 +75,11 @@ It may be necessary to install Apple's Command Line Tools for Cell-ID to compile
 
 Use `brew` (Homebrew) to install the following:
 
-* `autoconf automake libtool` are the compilation tools:
-    brew install autoconf automake libtool
+* `autoconf`, `automake`, and `libtool` are the compilation tools:
+    `brew install autoconf automake libtool`
 
-* `libtiff` and `openlibm` are CellID dependencies.
-    brew install libtiff openlibm
+* `libtiff` and `openlibm` are CellID dependencies:
+    `brew install libtiff openlibm`
 
 Note: `openlibm` is apparently bundled with the OS, but I was unable to make to compiler find this installation. 
 
