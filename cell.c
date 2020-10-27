@@ -1666,10 +1666,6 @@ int main(int argc, char *argv[]){
       strcat(line,".out.tif");
       printf("Writing found cells and data to output file %s.\n",line);
 
-      // Andy: This 'if' statement can be included to avoid overwriting the
-      // original BF.out when BF_as_FL is activated. However, since this
-      // functionality has a more serious bug, I've commented out this part.
-      //if(flag[i]!=4){
       if(output_data_to_tif_file(line,
                                  fl,
                                  xmax,
@@ -1681,7 +1677,6 @@ int main(int argc, char *argv[]){
                                  mask_output)==0){
           printf("Couldn't output data to tif file %s.\n",line);
         }
-      //}  // Andy: closing bracket for the proposed if statement above
   }
 
   if (output_third_image==1){
