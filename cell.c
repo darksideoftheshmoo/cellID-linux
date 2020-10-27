@@ -376,7 +376,7 @@ int main(int argc, char *argv[]){
     }
   }
 
-  // Check and set mask_output type
+  // mask_mod: Check and set mask_output type
   if((fill_interior==1||label_cells==1)&&mask_output==0) mask_output=2;
 
   // Get all of the non-option arguments and print them
