@@ -5077,7 +5077,7 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
 
   fprintf(fp,"f.local.bg \t a.local.bg \t a.local \t f.local2.bg \t");
   fprintf(fp,"a.local2.bg \t a.local2 \t ");
-  fprintf(fp,"a.surf \t con.vol \t sphere.vol ");
+  fprintf(fp,"a.surf \t sphere.vol ");
 
   fprintf(fp,"\n");
 
@@ -5232,7 +5232,6 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
 	    //  b->flag);
       fprintf(fp,"%10.6e\t%10.6e\t%10.6e",
 	      b->surface_area,
-	      b->vol_cone, //V1.3 se puede sacar, esta repetido
 	      b->vol_sphere);
       //fprintf(fp,"%10.6e\t%10.6e\t%10.6e\t%10.6e\t%10.6e\t%10.6e\t",
 	    //  b->vol_eff_1,
