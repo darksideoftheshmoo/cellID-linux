@@ -5230,7 +5230,7 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
 	    //  b->index,
 	    //  time_index[b->i_time],
 	    //  b->flag);
-      fprintf(fp,"%10.6e\t%10.6e\t%10.6e",
+      fprintf(fp,"%10.6e\t%10.6e\t",
 	      b->surface_area,
 	      b->vol_sphere);
       //fprintf(fp,"%10.6e\t%10.6e\t%10.6e\t%10.6e\t%10.6e\t%10.6e\t",
