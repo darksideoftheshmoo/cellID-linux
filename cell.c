@@ -312,7 +312,7 @@ int main(int argc, char *argv[]){
   opterr = 0;  // https://stackoverflow.com/a/24331449/11524079
   optind = 1;  // https://stackoverflow.com/a/25937743/11524079
 
-  while((opt = getopt(argc, argv, "p:b:f:o:limtw")) != -1) {
+  while((opt = getopt(argc, argv, "p:b:f:o:limtwh")) != -1) {
     printf("Parsing getopt options\n");
     switch(opt) {
     case 'p':
@@ -363,6 +363,11 @@ int main(int argc, char *argv[]){
     case 'w':
        printf(" - Offset boundary and interior mask intensities.\n");
        interior_offset = 1; // enable
+      break;
+
+    case 'h':
+        printf(" - Help flag enabled.\n");
+        help_flag = 1;
       break;
 
     case ':':
@@ -613,8 +618,9 @@ int main(int argc, char *argv[]){
 
 
   if(help_flag==1){
-    printf("For help type 'cell --help'\n");
-    printf("Required options: --bright brightfile.txt --fluor fluorfile.txt");
+    printf("\nCellID help:\n");
+    printf("  -- Required options: -b -f\n");
+    printf("  -- For detailed usage, visit: https://github.com/darksideoftheshmoo/cellID-linux\n");
     return 0;
   }
 

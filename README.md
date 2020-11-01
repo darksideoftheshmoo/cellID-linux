@@ -12,6 +12,8 @@ Please read the `README.txt` file, which contains key information on:
 
 There is also _VCellID_, a friendlier and more automated graphical user interface for Cell-ID.
 
+Also under development are the functions in our `rcell2` R package, which streamline the single-cell segmentation and analysis workflow, entirely within R.
+
 I became tired of fighting with unincluded dependencies, and so tried autotools by following [this](https://robots.thoughtbot.com/the-magic-behind-configure-make-make-install) tutorial and using other web resources. It was useful to understand the code, and further resources can be found in the comments within the configure.ac and Makefile.am files, explaining each line.
 
 # Branch notes
@@ -131,17 +133,43 @@ Please refer to the cellID documentation to learn how to use this program.
 
 Cheers!
 
-### Parameters
+### Command-line arguments
 
-Example parameters are in the `parameters_example.txt` file, and a full description is available in `parameters_description.txt` (copied from Gordon et al 2007).
+Example parameters are in the `parameters_example.txt` file, and a full description is available in `parameters_description.txt` (copied from Gordon et al 2007) and in the `README.txt` file.
+
+In short:
 
 The `-o` option refers to the output directory.
 
-The `-b` and `-f` receive paths to text files containing BF and FL file paths (one per line, ordered by t.frame).
+The `-b` and `-f` receive paths to text files containing BF and FL file paths (one per line, ordered by t.frame first and channel second).
 
-## Output
+The `-p` option specifies the path to a "parameters" file, that is used to set CellID segmentation options.
 
-For convenience, I have copied the `out_all` columns' description to `output_descriptions.csv`.
+The `-h` flag tells the user to read this file, and the `README.txt` file.
+
+### CellID parameters
+
+The `parameters_description.txt` file contains valid parameters names and values, and description for each one.
+
+The `parameters_example.txt` contains a brief example of typical settings.
+
+The `README.txt` can also be helpful.
+
+For more extensive details, you may want to visit the original publications:
+
+* CellID: 10.1038/nmeth1008
+* V-CellID / Rcell: 10.1002/0471142727.mb1418s84 and 10.1002/0471142727.mb1418s100
+
+The ultimate source of parameters usage, is the C source code of the program; specifically the `cell.c` source file.
+
+## Output description
+
+The main CellID output is typically an "out_all" TSV file for each microscope position. A description for each column is available, please read:
+
+* `output_descriptions2.txt`
+* `output_descriptions.csv`
+* `README.txt`
+
 
 # Appendix
 
