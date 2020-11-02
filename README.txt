@@ -139,7 +139,7 @@ simply uses the defaults for each value. A sample parameters.txt file
 is included with the package, and each of the parameters is described
 there.
 
-One parameter that might be usefully tweaked is background_reject_factor. The
+One parameter that might be usefully tweaked is "background_reject_factor". The
 code makes an initial decision about the graylevels of the boundary pixels. To
 do this it takes the mean position of all the graylevels in the images and
 subtracts Z standard deviations. It then starts by considering all gray levels
