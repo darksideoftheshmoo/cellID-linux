@@ -6401,9 +6401,11 @@ void add_cell_mask_data(struct point *p_in, int i_t, int fill_interior, int labe
   int a,b,a2,b2;
 
   int border;
-	int offset_threshold=2500; // mask_mod: used in integer division to calculate
-														 // offset between interior and boundary points.
-	interior_offset=(n_known/offset_threshold+2)*offset_threshold*interior_offset;
+	int interior_offset_threshold=2500; // mask_mod: used in integer division to calculate
+														 					// offset between interior and boundary points.
+														 					// If changed here, also change the interior_offset_threshold
+														 					// definition in read_tiff_masks in Rcell2!
+	interior_offset=(n_known/interior_offset_threshold+2)*interior_offset_threshold*interior_offset;
 
 	//Add boundary points for border list p_in.
   //if p_in==NULL then do all n_known borders.

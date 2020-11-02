@@ -273,7 +273,7 @@ int output_data_to_tif_file(char *file,
   //mask_mod
   float intensity_max=xmax16;
   float labels_max;
-  float intensity_offset=5000.0;
+  float intensity_offset=5050.0;
 
   //Get max and min image pixel values
   array_max=0.0;
@@ -304,7 +304,7 @@ int output_data_to_tif_file(char *file,
       // Calculate max allowed intensity value
       // This ensures that image instensities are at least "intensity_offset"
       // points from mask intensities.
-      intensity_max=intensity_max-(intensity_offset+labels_max);
+      intensity_max=intensity_max-(intensity_offset+labels_max+1);
     }
   }
 
