@@ -26,7 +26,7 @@ This branch outputs BF tiff files with additional mask functionality for custom 
 
 * `-i`: sets mask boundary **and** interior pixel intensities proportional to each cellID. This overrides cell labeling.
 
-* `-w`: offsets boundary and interior pixel intensities by `10000`, so that boundary pixels follow the standard cellID relationship, and interior pixels the relationship `cellID = 65535 - boundary_intensity - 10000 - 1`.
+* `-w`: offsets boundary and interior pixel intensities by a calculated `interior_offset` threshold, so that boundary pixels follow the standard cellID relationship, and interior pixels the relationship `cellID = 65535 - boundary_intensity - interior_offset - 1`. `interior_offset` defaults to `5000`, but may have a larger value for images or time series with more than `2500` cells.
 
 * `-m`: sets blank background. Default output is cell boundaries only, but can be modified with `-l` (labels), `-i` (interior), and `-w` (offset).
 
