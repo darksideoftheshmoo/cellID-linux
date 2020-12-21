@@ -99,7 +99,10 @@ To build and install, please cd into the directory with the CellID files and run
 
     autoreconf -fvi
     ./configure
-    make -j8
+    make -j4
+
+You may run CellID from the build directory, or install it:
+
     sudo make install
 
 ### macOS
