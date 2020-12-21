@@ -1,0 +1,3 @@
+/home/nicomic/Software/cellID-linux/samples/YFP_Position03_time01.tif
+/home/nicomic/Software/cellID-linux/samples/YFP_Position03_time02.tif
+/home/nicomic/Software/cellID-linux/samples/YFP_Position03_time03.tif
