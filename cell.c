@@ -154,7 +154,7 @@ int main(int argc, char *argv[]){
   char *third_files[max_files];
   int flag[max_files];
   int flag_bf[max_files];
-  char c0,c1,c2;
+  char c0,c1,c2;  // for flag/channel identification from file names
 
   int time_flag[max_files];
   int time_index[max_files];
@@ -1173,9 +1173,9 @@ int main(int argc, char *argv[]){
   //value should be.
   flag[0]=0;
   for(i=1;i<n_fluor;i++){
-        //V1.4a file names can have paths
-         file_basename= basename(fluor_files[i]);
-        c0=(file_basename)[0];
+    //V1.4a file names can have paths
+    file_basename= basename(fluor_files[i]);
+    c0=(file_basename)[0];
     c1=(file_basename)[1];
     c2=(file_basename)[2];
     // free(file_basename);  // rcell2: g_free replacement, not necessary
