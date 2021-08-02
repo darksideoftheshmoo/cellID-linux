@@ -16,6 +16,14 @@ Also under development are the functions in our `rcell2` R package, which stream
 
 I became tired of fighting with unincluded dependencies, and so tried autotools by following [this](https://robots.thoughtbot.com/the-magic-behind-configure-make-make-install) tutorial and using other web resources. It was useful to understand the code, and further resources can be found in the comments within the configure.ac and Makefile.am files, explaining each line.
 
+# Analysis tools
+
+Our group wrote the `Rcell` and `rcell2` R packages to load and analyze Cell-ID's output:
+
+* rcell2: https://github.com/darksideoftheshmoo/rcell2
+* Rcell: https://cran.r-project.org/src/contrib/Archive/Rcell/ (CRAN archive).
+
+
 # Branch notes
 
 This branch has removed the glib dependency, **it has not been thoroughly tested**.
