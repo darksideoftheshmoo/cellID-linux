@@ -20,3 +20,4 @@
 
 test_data_rtcc/
 /samples/*.tif
+/samples/Position*/cellid_log*

@@ -1,3 +1,0 @@
-/home/nicomic/Software/cellID-linux/samples/BF_Position03_time01.tif
-/home/nicomic/Software/cellID-linux/samples/BF_Position03_time02.tif
-/home/nicomic/Software/cellID-linux/samples/BF_Position03_time03.tif
