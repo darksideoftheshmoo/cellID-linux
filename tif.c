@@ -116,10 +116,18 @@ float *get_data_from_tif_file(char *file,
   int xmax,ymax;
   int xmax_ymax;
 
+  // we turn off Warnings (maybe a bad idea) since many photoshop images
+  // have newfangled tags that confuse libtiff
+  // See: research.cs.wisc.edu/graphics/Courses/638-f1999/Examples/TIFF/TiffTest/tiffTest.cpp
+  TIFFErrorHandler warn = TIFFSetWarningHandler(0);
+
   if((tif=TIFFOpen(file,"r"))==NULL){
     printf("Can't open file %s.\n",file);
     return NULL;
   }
+
+  // turn warnings back on, just in case
+  TIFFSetWarningHandler(warn);
 
   //Get data from file (code lifted from
   //http://www.libtiff.org/libtiff.html#Version)
