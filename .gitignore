@@ -21,3 +21,7 @@
 test_data_rtcc/
 /samples/*.tif
 /samples/Position*/cellid_log*
+/bin/*
+/configure~
+/samples/Position*/bf_rcell2*
+/samples/Position*/fl_rcell2*
