@@ -22,7 +22,7 @@ General measurements
 
 	9	a.tot	Area of the cell in pixels
 
-	10	fft.stat	Statistic derived from the one-dimensional fast-Fourier-transform (FFT) of the function: radius vs. angle, where the radius is the distance from the cell centroid to the boundary at a given angle. Its value is the root of the squared sum of the ratio FFT(ω)/FFT(0) over all ω>0; for a perfect circle FFT_stat is 0, and we interpret this statistic as a measure of non-circularity.
+	10	fft.stat	Statistic derived from the one-dimensional fast-Fourier-transform (FFT) of the function: radius vs. angle, where the radius is the distance from the cell centroid to the boundary at a given angle. Its value is the root of the squared sum of the ratio FFT(ω)/FFT(0) over all ω>0; for a perfect circle FFT_stat is 0, and we interpret this statistic as a measure of non-circularity. From code in fft_stats.c: given a sequence of points making a polygon, calculate FFT of "r vs theta" (centered at polygon centroid), and return ratio of the energy in all frequencies above 0 to the energy in 0.
 
 	11	perim	Circumference of the cell in pixel units
 
