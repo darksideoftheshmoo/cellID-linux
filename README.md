@@ -38,7 +38,7 @@ This branch outputs BF tiff files with additional mask functionality for custom 
 
 * `-m`: sets blank background. Default output is cell boundaries only, but can be modified with `-l` (labels), `-i` (interior), and `-w` (offset).
 
-Another way of getting the boundary and interior points is with the `-t` option. This makes `cell` create a new output file with a table of x/y coordinates for all cell boundary and interior pixels (each identified with `cellID`, `t.frame`, `flag`, and `pixtype`).
+* `-t`: Another way of getting the boundary and interior points is with the `-t` option. This makes `cell` create a new output file with a table of x/y coordinates for all cell boundary and interior pixels (each identified with `cellID`, `t.frame`, `flag`, and `pixtype`).
 
 ## Credits
 
