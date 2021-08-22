@@ -107,19 +107,18 @@ Surprisingly for me, packages may be installed using one name (such as libtiff5)
 
 To build and install, please clone the repository and checkout this branch:
 
-    git clone https://github.com/darksideoftheshmoo/cellID-linux.git
-    cd cellID-linux
-    git checkout mask_mod
+    git clone --depth 1 --branch mask_mod https://github.com/darksideoftheshmoo/cellID-linux.git
 
-Still at the repository directory run:
+Then run:
 
-    autoreconf -fvi
-    ./configure
-    make -j4
+    cd cellID-linux  # change to the repository directory
+    autoreconf -fvi  # configure the build
+    ./configure      # configure the build
+    make -j4         # compile
 
 You may run CellID from the build directory, or install it:
 
-    sudo make install
+    sudo make install  # system-wide install
 
 ### macOS
 
