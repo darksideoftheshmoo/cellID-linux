@@ -108,9 +108,10 @@ Surprisingly for me, packages may be installed using one name (such as libtiff5)
 To build and install, please clone the repository and checkout this branch:
 
     git clone https://github.com/darksideoftheshmoo/cellID-linux.git
+    cd cellID-linux
     git checkout mask_mod
 
-Then `cd` into it's directory and run:
+Still at the repository directory run:
 
     autoreconf -fvi
     ./configure
