@@ -74,11 +74,13 @@ You may install these in Ubuntu systems by running:
 
 ### Arch Linux
 
-These dependencies can also be satisfied in Arch Linux, sorry for not providing detailed instructions. I got openlibm from AUR, the rest are provided by standard repos.
+These dependencies can also be satisfied in Arch Linux, sorry for not providing detailed instructions.
 
-`sudo pacman -S automake autoconf libtool glib2 libtiff`
+`sudo pacman -S automake autoconf libtool openlibm glib2 libtiff`
 
-`aurman -S openlibm` OR `yay -S openlibm`
+Once upon a time openlibm was in the AUR, and the rest were provided by standard repos.
+
+If this comes to pass once again, try: `aurman -S openlibm` OR `yay -S openlibm`
 
 ### macOS
 It may be necessary to install Apple's Command Line Tools for Cell-ID to compile successfully. Try the instructions below, and if you are unable to compile, install Command Line Tools and try again.
