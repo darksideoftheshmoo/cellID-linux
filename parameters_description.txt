@@ -101,3 +101,13 @@ bf_fl_mapping list
 # new ones.
 # the argument is the offset to add to the id numbers
 # append_output 1000
+
+# Check whether to align the fluorescence images to the brightfield image
+# Will align first FL files to brightfield.
+# Overrides by "align_fl_to_first"
+ align_fl_to_bf
+
+# Check whether we want to use the first fluorescence image to
+# align all the others. Will align all FL files to first FL file.
+# Overriden by "align_fl_to_bf"
+ align_fl_to_first
