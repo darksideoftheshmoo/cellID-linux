@@ -285,6 +285,7 @@ int main(int argc, char *argv[]){
 
   char *equal_sign = NULL;
   int help_flag = 0;
+  int time_of_t0_flag = 0;  // Default disabled
 
   char *param_file = "parameters.txt";
   char *dark_list_file = "dark.txt";
@@ -363,6 +364,11 @@ int main(int argc, char *argv[]){
     case 'w':
        printf(" - Offset boundary and interior mask intensities.\n");
        interior_offset = 1; // enable
+      break;
+
+    case 'z':
+      printf(" - Time of t0 flag enabled.\n");
+      time_of_t0_flag = 1;
       break;
 
     case 'h':
@@ -1216,12 +1222,15 @@ int main(int argc, char *argv[]){
 
   //Write out the absolute time of the first file.  This is so later
   //we can correct for the differences in t0 from position to position.
-  if( (fp=fopen("time_of_t0.txt","a"))==NULL ){
-    printf("Couldnt open file time_of_t0.txt.\n");
-  }else{
-    dt=((fl_d[0]-fl_dmin)*seconds_per_day)+(fl_t[0]);
-    fprintf(fp,"%i\n",dt);
-    fclose(fp);
+  //To enable this function, pass "-z" flag argument to the CellID command-line call.
+  if(time_of_t0_flag == 1){
+    if( (fp=fopen("time_of_t0.txt","a")) == NULL ){
+      printf("Couldnt open file time_of_t0.txt.\n");
+    }else{
+      dt=((fl_d[0]-fl_dmin)*seconds_per_day)+(fl_t[0]);
+      fprintf(fp,"%i\n",dt);
+      fclose(fp);
+    }
   }
 
   //Loop over each of the fluorescence files to calculate the
