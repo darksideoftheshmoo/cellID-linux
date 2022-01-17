@@ -1952,5 +1952,5 @@ int main(int argc, char *argv[]){
 
   printf("\n\n******** CellID is done! enjoy your single cell datasets :) ********\n");
   fflush(stdout);
-  return 1;
+  return 0;
 }

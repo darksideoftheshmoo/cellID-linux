@@ -116,7 +116,10 @@ Then run:
     cd cellID-linux  # change to the repository directory
     autoreconf -fvi  # configure the build
     ./configure      # configure the build
-    make -j4         # compile
+    make -j4         # compile using 4 cores (change number if appropriate)
+
+    # All-in-one command:
+    # autoreconf -fvi && ./configure && make -j4
 
 You may run CellID from the build directory, or install it:
 
