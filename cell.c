@@ -412,7 +412,7 @@ int main(int argc, char *argv[]){
           param_file=argv[i+1];
         }else{
           printf("Filename required after -p or --param option");
-          return 0;
+          return 3;  // Exit code for bad parameters argument.
         }
       } else {
         param_file=++equal_sign;
@@ -784,7 +784,7 @@ int main(int argc, char *argv[]){
   if (third_list_file!=NULL){//if there is a third image
     if( (fp_in=fopen(third_list_file,"r"))==NULL ){
         printf("Couldnt open file %s.\n",third_list_file);
-        return 0;
+        return 7;  // Exit code for problems opening a file.
     }
     //Read in names of the third-files to be read in
     i=0;
@@ -829,7 +829,7 @@ int main(int argc, char *argv[]){
   //loading brightfield file names into array phase_files
   if( (fp_in=fopen(bright_list_file,"r"))==NULL ){
     printf("Couldnt open file %s.\n",bright_list_file);
-    return 0;
+    return 7;  // Exit code for problems opening a file.
   }
   i=0;
   while(fscanf(fp_in,"%s",line)==1){ //the 1 means it filled the "%s" part
@@ -843,7 +843,7 @@ int main(int argc, char *argv[]){
   //loading fluorescence file names into array fluor_files
   if( (fp_in=fopen(fluor_list_file,"r"))==NULL ){
     printf("Couldnt open file %s.\n",fluor_list_file);
-    return 0;
+    return 7;  // Exit code for problems opening a file.
   }
   i=0;
   while(fscanf(fp_in,"%s",line)==1){ //the 1 means it filled the "%s" part
@@ -1077,7 +1077,7 @@ int main(int argc, char *argv[]){
     for(i=0;i<n_flat;i++){
       if(get_date_and_time(flat_files[i],&dtmp,&t,&xstage,&ystage)==0){
         printf("Couldn't get date and time for %s.\n",flat_files[i]);
-        return 0;
+        return 5;  // Exit code for problems getting time info from image.
       }else{
         t=t/1000; //Convert to seconds
         flat_t[i]=t;
@@ -1141,7 +1141,7 @@ int main(int argc, char *argv[]){
     if (n_phase!=n_fluor){
       printf("The number of elements in %s (%i) and %s (%i) \n",bright_list_file,n_phase,fluor_list_file,n_fluor);
       printf("must be equal. Make sure not lo leave any blank spaces at the end of the files");
-      return 0;
+      return 3;  // Exit code for bad parameters.
     }
 
     //Assining null time values
@@ -1258,19 +1258,19 @@ int main(int argc, char *argv[]){
     if((fl=get_data_from_tif_file(fluor_files[i],0,dark,
                               &xmax_new,&ymax_new))==NULL){
       printf("Couldn't open tif file %s.\n",fluor_files[i]);
-      return 0;
+      return 4;  // Exit code for problems opening an image file.
     }
     if (((xmax>0)&&(xmax!=xmax_new))||((ymax>0)&&(ymax!=ymax_new))){
       printf("New file has different dimensions that others\n");
       printf("that were already loaded. (%i,%i) is not (%i,%i)\n",
              xmax,ymax,xmax_new,ymax_new);
       free(fl);
-      return 0;
+      return 6;  // Exit code for problems with an image's dimensions.
     }
     if ((xmax_new<=0)||(ymax_new<=0)){
       printf("Couldn't get data from tif file %s\n",fluor_files[i]);
       free(fl);
-      return 0;
+      return 4;  // Exit code for problems opening an image file.
     }
     xmax=xmax_new; //xmax<0 means haven't done yet, so just redefine
     ymax=ymax_new;//here even though usually the same
@@ -1440,14 +1440,14 @@ int main(int argc, char *argv[]){
           if((third_image=get_data_from_tif_file(third_files[third_cur],0,dark,
                                                          &xmax_new,&ymax_new))==NULL){
             printf("Couldn't open tif file %s.\n",third_files[third_cur]);
-            return 0;
+            return 4;  // Exit code for problems opening an image file.
           }
           if ((xmax!=xmax_new)||(ymax!=ymax_new)){
             printf("Third file has different dimensions than others\n");
             printf("that were already loaded. (%i,%i) is not (%i,%i)\n",
                 xmax,ymax,xmax_new,ymax_new);
             free(third_image);
-            return 0;
+            return 6;  // Exit code for problems with an image's dimensions.
           }
           //Subtract fluorescence image as a test--for vacuole type
           if(third_image_type==vacuole_label){
@@ -1595,14 +1595,14 @@ int main(int argc, char *argv[]){
       if((bf=get_data_from_tif_file(phase_files[j_cur],0,NULL,&xmax_new,&ymax_new))==NULL){
         printf("Couldn't open tif file %s.\n",phase_files[j_cur]);
         free(bf);
-        return 0;
+        return 4;  // Exit code for problems opening an image file.
       }
       if ((xmax!=xmax_new)||(ymax!=ymax_new)){
               printf("BF file has different dimensions than others\n");
               printf("that were already loaded. (%i,%i) is not (%i,%i)\n",
                   xmax,ymax,xmax_new,ymax_new);
               free(bf);
-              return 0;
+              return 6;  // Exit code for problems with an image's dimensions.
       }
 
       //Make sure to add new array to global variables in segment.
@@ -1939,7 +1939,7 @@ int main(int argc, char *argv[]){
   if((bf_fl_file=fopen(bf_fl_file_name,"w"))==NULL){
     printf("Couldn't open file %s\n",bf_fl_file_name);
     fflush(stdout);
-    return 0;
+    return 7;  // Exit code for problems opening a file.
   }
 
   fprintf(bf_fl_file,"fluor\tflag\tt.frame\tbright\tbf.as.fl\n");

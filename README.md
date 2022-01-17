@@ -193,6 +193,18 @@ The main CellID output is typically an "out_all" TSV file for each microscope po
 * `output_descriptions.csv`
 * `README.txt`
 
+### Exit codes
+
+Used in `cell.c`:
+
+```
+return 0;  // Successful termination
+return 3;  // Exit code for bad parameters argument.
+return 4;  // Exit code for problems opening an image file.
+return 5;  // Exit code for problems getting time info from image.
+return 6;  // Exit code for problems with an image's dimensions.
+return 7;  // Exit code for problems opening a file.
+```
 
 # Appendix
 
