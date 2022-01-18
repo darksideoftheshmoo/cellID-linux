@@ -8,7 +8,7 @@
 
 # -Wall for all compiler warnings messages
 # CFLAGS = -Wall
-# CLIBS = -I../../inst/tiff410/libtiff/ -L../../inst/tiff410/r_build/libtiff/ -ltiff -lm
+# CLIBS = -I../../inst/tiff-4.1.0/libtiff/ -L../../inst/tiff-4.1.0/r_build/libtiff/ -ltiff -lm
 
 # gcc -Wall enables all compiler's warning messages.
 # gcc -g generates debugging information (https://stackoverflow.com/a/58779252/11524079)
@@ -23,8 +23,8 @@ CC = gcc $(CFLAGS)
 ## Para linking estático entonces necesito usar: "-ltiff -lzstd -llzma -ljbig -ljpeg -lz"
 ## Y parece que también necesitaba: "-lwebp"
 ## Para cellid hace falta: "-lm"
-## Para rcell2 usé: CLIBS = -I../../inst/tiff410/libtiff/ ../../inst/tiff410/r_build/libtiff/libtiff.a -lzstd -llzma -ljpeg -lz -lm -lwebp
-CLIBS = -ltiff -lzstd -llzma -ljpeg -lz -lm -lwebp
+## Para la library del sistema usé: CLIBS = -ltiff -lzstd -llzma -ljpeg -lz -lm -lwebp
+CLIBS = -Ilibtiff/tiff-4.1.0/libtiff/ libtiff/tiff-4.1.0/my_build/libtiff/libtiff.a -lzstd -llzma -ljpeg -lz -lm -lwebp
 
 # Una variable con los targets-requisitos de cell,
 # que también se pasa a "gcc" al compilar ese target ("cell"),
@@ -35,7 +35,7 @@ objects = cell.o segment.o tif.o nums.o date_and_time.o fit.o fft.o fft_stats.o 
 ## Las libs deben ir despues de los objetos .c/.o/... (o se descartan).
 ## Leer: https://stackoverflow.com/questions/2624238/c-undefined-references-with-static-library
 ## Leer: https://stackoverflow.com/a/1080019/11524079
-cell: $(objects)
+cell: tiflibs $(objects)
 	$(CC) -o $@ $(CFLAGS) $(objects) $(CLIBS)
 
 # Target original
@@ -68,6 +68,13 @@ align_image.o: align_image.h
 
 flatten.o: flatten.h
 
+# Note that each command is run independently, that's why all must have have a cd prepended.
+tiflibs:
+	unzip -u libtiff/tiff-4.1.0.zip -d libtiff/
+	mkdir -p libtiff/tiff-4.1.0/my_build
+	cd libtiff/tiff-4.1.0/my_build && cmake ../ -DBUILD_SHARED_LIBS=OFF && make all -j2 -B && cmake --build . # --target clean
+
 clean:
 	rm cell $(objects)
+	rm -rf libtiff/tiff-4.1.0
 
