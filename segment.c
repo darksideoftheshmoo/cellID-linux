@@ -786,16 +786,17 @@ int find_cells(struct point ***boundary_out,struct point ***interior_out){
     smallest_white_area=0;
     smallest_circumference=0.0;
     max_d_over_s_cut=6.0e30; //Remove cut basically
-    printf("Cut=%e\n",cut_high);
+    printf("Cut=%e\n",cut_high); fflush(stdout);
 
   }else if(image_type==membrane_tagged_fl){
     //Nothing yet....
     //TODO
   } //end of cut calculation for different image types
 
-  printf("BF-cut-low=%e, BF-cut-high=%e\n",cut_low,cut_high);fflush(stdout);
+  printf("BF-cut-low=%e, BF-cut-high=%e\n",cut_low,cut_high); fflush(stdout);
+  printf("Cut-max=%e, Cut-min=%e\n",max1,min1); fflush(stdout);
   //Now, the cells are surrounded by a dark region and inside the cells is
-  //higher than the background.  Divide the pixels into high pixels, low
+  //higher than the background. Divide the pixels into high pixels, low
   //pixels and middle pixels (background).
   for(i=0;i<xmax_ymax;i++){
     if(c[i]>cut_high){      //inside cells
@@ -4130,7 +4131,7 @@ void calculate_cut(){
   int i;
   //int k;
 
-  float mu,sig,scale;
+  double mu,sig,scale;
 
   double mean_other,rms_other;
   int n_other;
@@ -4200,132 +4201,27 @@ void calculate_cut(){
       if (tmp<cut_other) continue; //for FRET case only
     }
     if (tmp<=0.1) continue;
-    mu+=tmp;
-    sig+=(tmp*tmp);
+    mu+=(double)(tmp);
+    sig+=(double)(tmp*tmp);
     scale+=1.0;
     if(tmp<min_pixel_value) min_pixel_value=tmp;
     if(tmp>max_pixel_value) max_pixel_value=tmp;
   }
 
-  mu/=scale; //mu=sum(pix)/nPix
-  sig/=scale;//sig=sum(pix^2)/nPix
+  printf("mean, sig and scale (before scaling): %e, %e, %e\n",mu,sig,scale);
+
+  mu/=scale; // mu  = sum(pix)/nPix   = E²(X)
+  sig/=scale;// sig = sum(pix^2)/nPix = E(X²)
+  printf("mean, sig and scale (after scaling): %e, %e, %e\n",mu,sig,scale);
+
+  printf("variance and stdev: %e, %e\n", (double)(sig-mu*mu), sig);
   sig=(float)sqrt((double)(sig-mu*mu));
-  //sig=( sum(pix^2)/nPix - (sum(pix)/nPix)^2 )^1/2
-  printf("mean and sig: %e,%e\n",mu,sig);
-  //  for (i=0;i<xmax_ymax;i++){
-  // printf("%e\n",c[i]);
-  //}
-  //exit(0);
-  //Just use mean and sig and skip gaussian fit.--4/23/04
+  // sig = (E(X²) - E²(X))^(1/2)
+
+
+  //Just use this mean and sig (skip gaussian fit.--4/23/04).
   mu-=min_pixel_value;
   w=1.0;
-
- /*
-  goto skip;
-
-  //Most points are background, so make a histogram of all points, and
-  //the data should show up as a high end tail.  Find it by looking for
-  //first crossing of zero of the derivative from it's most negative point.
-  //(Ie, the data is peaked around the background value, the falling part
-  //of that is the most negative point for the derivative.  We're going to
-  //put the cut just where the derivative first crosses zero).
-
-
-  printf("Min and max=%e, %e.\n",min_pixel_value,max_pixel_value);
-  if (min_pixel_value<0.5){ //Don't allow a 0.0 min value in histogram.
-    //This is because if we're fitting a metamorph-"deconvolution"
-    //image then there's a big spike at 0 which we want to be our
-    //zero.
-    if((image_type!=bright_field) && (image_type!=confocal_transmission) ){
-      printf("!!!!! Found minimum pixel value of 0, but not doing\n");
-      printf("!!!!! metamorph deconvolution case.\n");
-    }
-  }
-
-
-  if(min_pixel_value==max_pixel_value){
-    printf("min=%e=%e=max, returning cut value of zero. \n",
-	   min_pixel_value,max_pixel_value);
-    return;
-  }
-
-  nbins=nbins_for_cut_calculation;
-
- gauss_fit_start:
-
-  w=((float) nbins)/(max_pixel_value-min_pixel_value);
-
-  for(i=0;i<nbins;i++){
-    h[i]=0.0;
-  }
-
-  for(i=0;i<xmax_ymax;i++){
-    if(have_fret_image==1){
-      if (fret_labels[i]!=fret_region_use) continue;
-    }
-    if (c[i]>=min_pixel_value){
-      k=(int)(  (c[i] - min_pixel_value)*w );
-      if((k>=0)&&(k<nbins)){
-	h[k]+=1.0;
-      }
-    }
-  }
-
-  //Find max bin and height (put in mu and scale)
-  mu=0.0;
-  tmp=0.0;
-  sig=0.0;
-  scale=0.0;
-  for(i=0;i<nbins;i++){
-    if(h[i]>scale){
-      scale=h[i];
-      mu=(float) i;
-    }
-  }
-  //
-  //if (scale<100.0){
-  //  nbins=nbins/10;
-  //  if (nbins>10){
-  //    goto gauss_fit_start;
-  //  }
-  //}
-
-
-  //Fit the peak to a gaussian.  Use mu=peak location and scale=size of
-  //peak for first guesses.  Guess sig to be something reasonable.
-  if((image_type==bright_field)||(image_type==confocal_transmission)
-                               ||(have_fret_image==1)){
-    sig=10.0;
-  }else if(image_type==metamorph_deconvolution){
-    sig=1.0;
-  }
-
-  printf("Starting values for gauss fit: mu=%e, sig=%e, scale=%e.\n",
-	 mu,sig,scale);fflush(stdout);
-  k=gauss_fit(h, nbins, &mu, &sig, &scale);
-  if(k==0){
-    printf("!!!!!!! A problem doing gaussian fit to get cut value.\n");
-    printf("!!!!!!! mu=%e, sig=%e, scale=%e\n",mu,sig,scale);
-    nbins=nbins/2;
-    if (nbins<10){
-      printf("Couldnt get good gaussian fit.\n");
-    }else{
-      goto gauss_fit_start;
-    }
-  }
-  if ((mu<0.0)||(sig<=0.0)){
-    printf("---------->(%e,%e,%e)\n",mu,sig,max_pixel_value);fflush(stdout);
-    max_pixel_value*=.8; //Maybe have an outlier so divide and do again
-    if ((max_pixel_value<min_pixel_value)||(max_pixel_value<1.0)){
-      printf("Couldnt get good gaussian fit in calculate_cut.\n");
-      mu=min_pixel_value*w;
-      sig=5.0*w;
-    }else{
-      goto gauss_fit_start;
-    }
-  }
- skip:
-  */
 
   printf("In Pixel units: mu=%e, sig=%e.\n",min_pixel_value+mu/w,sig/w);
 
