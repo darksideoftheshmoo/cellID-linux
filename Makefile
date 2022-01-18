@@ -12,7 +12,7 @@
 
 # gcc -Wall enables all compiler's warning messages.
 # gcc -g generates debugging information (https://stackoverflow.com/a/58779252/11524079)
-CFLAGS = -g -Wall -DDEBUG
+CFLAGS = -g -Wall
 
 # Ver: https://stackoverflow.com/a/1080019/11524079
 CC = gcc $(CFLAGS)
@@ -30,8 +30,6 @@ CLIBS = -ltiff -lzstd -llzma -ljpeg -lz -lm -lwebp
 # que también se pasa a "gcc" al compilar ese target ("cell"),
 # y aparece en el target "clean" para limpiar el output.
 objects = cell.o segment.o tif.o nums.o date_and_time.o fit.o fft.o fft_stats.o split_and_overlap.o contiguous.o fl_dist.o align_image.o flatten.o
-
-# tiflib = tiff # esto lo saqué porque no hace falta ya
 
 # El orden de los argumentos en gcc es importante.
 ## Las libs deben ir despues de los objetos .c/.o/... (o se descartan).
