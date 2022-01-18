@@ -12,7 +12,7 @@
 
 # gcc -Wall enables all compiler's warning messages.
 # gcc -g generates debugging information (https://stackoverflow.com/a/58779252/11524079)
-CFLAGS = -g -Wall
+CFLAGS = -Wall
 
 # Ver: https://stackoverflow.com/a/1080019/11524079
 CC = gcc $(CFLAGS)
