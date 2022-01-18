@@ -11,7 +11,11 @@
 # CLIBS = -I../../inst/tiff410/libtiff/ -L../../inst/tiff410/r_build/libtiff/ -ltiff -lm
 
 # gcc -Wall enables all compiler's warning messages.
-CFLAGS = -Wall
+# gcc -g generates debugging information (https://stackoverflow.com/a/58779252/11524079)
+CFLAGS = -g -Wall -DDEBUG
+
+# Ver: https://stackoverflow.com/a/1080019/11524079
+CC = gcc $(CFLAGS)
 
 # Para incluir libtiff "estatico" (el libtiff.a en vez del libtiff.so) tengo que saber que otras flags "-l" necesito
 # Eso se puede consultar con: $ pkg-config --static --libs libtiff-4
@@ -31,9 +35,10 @@ objects = cell.o segment.o tif.o nums.o date_and_time.o fit.o fft.o fft_stats.o 
 
 # El orden de los argumentos en gcc es importante.
 ## Las libs deben ir despues de los objetos .c/.o/... (o se descartan).
-## Leer:  https://stackoverflow.com/questions/2624238/c-undefined-references-with-static-library
+## Leer: https://stackoverflow.com/questions/2624238/c-undefined-references-with-static-library
+## Leer: https://stackoverflow.com/a/1080019/11524079
 cell: $(objects)
-	gcc -o cell $(CFLAGS) $(objects) $(CLIBS)
+	$(CC) -o $@ $(CFLAGS) $(objects) $(CLIBS)
 
 # Target original
 #cell : $(objects)
