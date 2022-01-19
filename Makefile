@@ -25,30 +25,27 @@ CC = gcc $(CFLAGS)
 preCLIBS = -lzstd -llzma -ljpeg -lz -lm -lwebp
 
 ldconftest := $(shell ldconfig -p | grep libtiff)
-ifeq (, ldconftest)
-	$(info "No libtiff in ldconfig")
-	maketiff := 1
-	CLIBS = -Ilibtiff/tiff-4.1.0/libtiff/ libtiff/tiff-4.1.0/my_build/libtiff/libtiff.a $(preCLIBS)
+ifeq (, $(ldconftest))
+# $(info "No libtiff in ldconfig")
+tiflibs = tiflibs
+CLIBS = -Ilibtiff/tiff-4.1.0/libtiff/ libtiff/tiff-4.1.0/my_build/libtiff/libtiff.a $(preCLIBS)
 else
-	$(info "libtiff found in ldconfig")
-	maketiff := 0
-	CLIBS = -ltiff $(preCLIBS)
+# $(info "libtiff found in ldconfig")
+# Leave 'tiflibs' as empty string: http://aggregate.org/rfisher/Tutorials/Make/make5.html
+tiflibs =
+CLIBS = -ltiff $(preCLIBS)
 endif
-
 
 # Una variable con los targets-requisitos de cell,
 # que también se pasa a "gcc" al compilar ese target ("cell"),
 # y aparece en el target "clean" para limpiar el output.
 objects = cell.o segment.o tif.o nums.o date_and_time.o fit.o fft.o fft_stats.o split_and_overlap.o contiguous.o fl_dist.o align_image.o flatten.o
-ifeq  (1, maketiff)
-	objects := tiflibs $(objects)
-endif
 
 # El orden de los argumentos en gcc es importante.
 ## Las libs deben ir despues de los objetos .c/.o/... (o se descartan).
 ## Leer: https://stackoverflow.com/questions/2624238/c-undefined-references-with-static-library
 ## Leer: https://stackoverflow.com/a/1080019/11524079
-cell: $(objects)
+cell: $(tiflibs) $(objects)
 	$(CC) -o $@ $(CFLAGS) $(objects) $(CLIBS)
 
 cell.o: segment.h tif_routines.h date_and_time.h nums.h point.h image_type.h align_image.h split_and_overlap.h parameters.h
