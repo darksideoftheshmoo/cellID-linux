@@ -6,10 +6,6 @@
 ## The library directory will be the location of the library (.a or .so)
 ## and the library name will be the name of the library file, without the leading 'lib' prefix or its extension (i.e. -lsal rather than -l libsal.a ).
 
-# -Wall for all compiler warnings messages
-# CFLAGS = -Wall
-# CLIBS = -I../../inst/tiff-4.1.0/libtiff/ -L../../inst/tiff-4.1.0/r_build/libtiff/ -ltiff -lm
-
 # gcc -Wall enables all compiler's warning messages.
 # gcc -g generates debugging information (https://stackoverflow.com/a/58779252/11524079)
 CFLAGS = -Wall
@@ -24,23 +20,36 @@ CC = gcc $(CFLAGS)
 ## Y parece que también necesitaba: "-lwebp"
 ## Para cellid hace falta: "-lm"
 ## Para la library del sistema usé: CLIBS = -ltiff -lzstd -llzma -ljpeg -lz -lm -lwebp
-CLIBS = -Ilibtiff/tiff-4.1.0/libtiff/ libtiff/tiff-4.1.0/my_build/libtiff/libtiff.a -lzstd -llzma -ljpeg -lz -lm -lwebp
+## Para incluir la budled: CLIBS = -Ilibtiff/tiff-4.1.0/libtiff/ libtiff/tiff-4.1.0/my_build/libtiff/libtiff.a -lzstd -llzma -ljpeg -lz -lm -lwebp
+## Para chequear que usar:
+preCLIBS = -lzstd -llzma -ljpeg -lz -lm -lwebp
+
+ldconftest := $(shell ldconfig -p | grep libtiff)
+ifeq (, ldconftest)
+	$(info "No libtiff in ldconfig")
+	maketiff := 1
+	CLIBS = -Ilibtiff/tiff-4.1.0/libtiff/ libtiff/tiff-4.1.0/my_build/libtiff/libtiff.a $(preCLIBS)
+else
+	$(info "libtiff found in ldconfig")
+	maketiff := 0
+	CLIBS = -ltiff $(preCLIBS)
+endif
+
 
 # Una variable con los targets-requisitos de cell,
 # que también se pasa a "gcc" al compilar ese target ("cell"),
 # y aparece en el target "clean" para limpiar el output.
 objects = cell.o segment.o tif.o nums.o date_and_time.o fit.o fft.o fft_stats.o split_and_overlap.o contiguous.o fl_dist.o align_image.o flatten.o
+ifeq  (1, maketiff)
+	objects := tiflibs $(objects)
+endif
 
 # El orden de los argumentos en gcc es importante.
 ## Las libs deben ir despues de los objetos .c/.o/... (o se descartan).
 ## Leer: https://stackoverflow.com/questions/2624238/c-undefined-references-with-static-library
 ## Leer: https://stackoverflow.com/a/1080019/11524079
-cell: tiflibs $(objects)
+cell: $(objects)
 	$(CC) -o $@ $(CFLAGS) $(objects) $(CLIBS)
-
-# Target original
-#cell : $(objects)
-#	gcc -o cell $(CFLAGS) -lm -l$(tiflib) $(objects)
 
 cell.o: segment.h tif_routines.h date_and_time.h nums.h point.h image_type.h align_image.h split_and_overlap.h parameters.h
 
