@@ -81,6 +81,6 @@ tiflibs:
 	cd libtiff/tiff-4.1.0/my_build && cmake ../ -DBUILD_SHARED_LIBS=OFF && make all -j2 -B && cmake --build . # --target clean
 
 clean:
-	rm cell $(objects)
+	rm -f cell $(objects)
 	rm -rf libtiff/tiff-4.1.0
 
