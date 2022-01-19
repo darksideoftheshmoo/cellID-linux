@@ -2,7 +2,7 @@
 ## -I <include directory>
 ## -L <library directory>
 ## -l <library name>
-## The include directory will be location of the header files. 
+## The include directory will be location of the header files.
 ## The library directory will be the location of the library (.a or .so)
 ## and the library name will be the name of the library file, without the leading 'lib' prefix or its extension (i.e. -lsal rather than -l libsal.a ).
 
@@ -46,7 +46,7 @@ objects = cell.o segment.o tif.o nums.o date_and_time.o fit.o fft.o fft_stats.o 
 ## Leer: https://stackoverflow.com/questions/2624238/c-undefined-references-with-static-library
 ## Leer: https://stackoverflow.com/a/1080019/11524079
 cell: $(tiflibs) $(objects)
-	$(CC) -o $@ $(CFLAGS) $(objects) $(CLIBS)
+	$(CC) -o $@ $(objects) $(CLIBS)
 
 cell.o: segment.h tif_routines.h date_and_time.h nums.h point.h image_type.h align_image.h split_and_overlap.h parameters.h
 
