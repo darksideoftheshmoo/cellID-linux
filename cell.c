@@ -615,10 +615,6 @@ int main(int argc, char *argv[]){
     printf("\n%s not found. Using default parameters. \n",param_file);
   }
 
-    //V1.4.5
-    printf("Using nucleus radii %i %i %i %i %i %i px.\n",nucleus_radii[0],nucleus_radii[1]
-                ,nucleus_radii[2],nucleus_radii[3],nucleus_radii[4],nucleus_radii[5]);
-
     if(pnt_third_img_label==NULL) pnt_third_img_label=&str_third_img_label[0];
     if(pnt_image_type==NULL) pnt_image_type=&str_image_type[0];
 
@@ -629,6 +625,11 @@ int main(int argc, char *argv[]){
     printf("  -- For detailed usage, visit: https://github.com/darksideoftheshmoo/cellID-linux\n");
     return 0;
   }
+
+  //V1.4.5
+  printf("Using nucleus radii %i %i %i %i %i %i px.\n",
+          nucleus_radii[0],nucleus_radii[1],nucleus_radii[2],
+          nucleus_radii[3],nucleus_radii[4],nucleus_radii[5]);
 
   if(output_individual_cells==1){
       system("mkdir -p cells");
