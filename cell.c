@@ -130,8 +130,8 @@ int main(int argc, char *argv[]){
   //name of the file ("myfile.oif") and the second argument is the output
 
   // Welcome message
-  printf("\n\n*** Cell_ID Version 1.4.6 ***");
-  printf("** 2019 redistribution, glib_removal branch with awesome identified masks. **\n\n");
+  printf("\n\n*** Cell_ID Version 1.5.0 ***");
+  printf("** 2019 redistribution. Now with awesome identified masks, and tailored to rcell2's workflow. **\n\n");
 
   int out_mask=0;       // mask_mod: optionally output interior/boundary coords to TSV, default disabled
   int label_cells=0;    // mask_mod: label cells in BF.out optionally, default disabled
