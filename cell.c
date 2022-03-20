@@ -131,7 +131,7 @@ int main(int argc, char *argv[]){
 
   // Welcome message
   printf("\n\n*** Cell_ID Version 1.5.0 ***");
-  printf("** 2019 redistribution. Now with awesome identified masks, and tailored to rcell2's workflow. **\n\n");
+  printf("** 2022 redistribution. Now with awesome identified masks, and tailored to rcell2's workflow. **\n\n");
 
   int out_mask=0;       // mask_mod: optionally output interior/boundary coords to TSV, default disabled
   int label_cells=0;    // mask_mod: label cells in BF.out optionally, default disabled
@@ -615,12 +615,8 @@ int main(int argc, char *argv[]){
     printf("\n%s not found. Using default parameters. \n",param_file);
   }
 
-    //V1.4.5
-    printf("Using nucleus radii %i %i %i %i %i %i px.\n",nucleus_radii[0],nucleus_radii[1]
-                ,nucleus_radii[2],nucleus_radii[3],nucleus_radii[4],nucleus_radii[5]);
-
-    if(pnt_third_img_label==NULL) pnt_third_img_label=&str_third_img_label[0];
-    if(pnt_image_type==NULL) pnt_image_type=&str_image_type[0];
+  if(pnt_third_img_label==NULL) pnt_third_img_label=&str_third_img_label[0];
+  if(pnt_image_type==NULL) pnt_image_type=&str_image_type[0];
 
 
   if(help_flag==1){
@@ -633,6 +629,10 @@ int main(int argc, char *argv[]){
   if(output_individual_cells==1){
       system("mkdir -p cells");
   }
+
+  //V1.4.5
+  printf("Using nucleus radii %i %i %i %i %i %i px.\n",nucleus_radii[0],nucleus_radii[1]
+              ,nucleus_radii[2],nucleus_radii[3],nucleus_radii[4],nucleus_radii[5]);
 
   //Reading fret parameters form command line and steping on parameters.txt
   //if required.
