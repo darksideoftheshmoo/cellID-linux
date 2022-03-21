@@ -28,6 +28,7 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 # PKG_CHECK_MODULES([glib], [glib-2.0 >= 2.24.1])
 PKG_CHECK_MODULES([libtiff], [libtiff-4])
 PKG_CHECK_MODULES([libm], [openlibm])
+PKG_CHECK_MODULES([libz], [zlib])
 
 # Check for C compiler
 AC_PROG_CC

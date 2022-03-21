@@ -66,6 +66,8 @@ End-copyright-notice-for-Libtiff
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <zlib.h>
+
 #include "fit.h"
 #include "tif_routines.h"
 #include "segment.h"
@@ -4890,16 +4892,24 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
 
   int i,j;
   struct blob *b;
+
   FILE *fp=NULL;
   char file[500];
-  if(out_mask==1) printf("mask_mod: defining FILE for output");
-  FILE *fp2=NULL;       // mask_mod
-  if(out_mask==1) printf("mask_mod: defining char mask_file for output");
-  char mask_file[500];  // mask_mod
-  if(out_mask==1) printf("mask_mod: defining variables for TSV output");
+
+  // if(out_mask==1) printf("mask_mod: defining FILE for output\n");
+  // FILE *fp2=NULL;       // mask_mod
+  // if(out_mask==1) printf("mask_mod: defining char mask_file for output\n");
+  // char mask_file[500];  // mask_mod
+
+  if(out_mask==1) printf("mask_mod: defining char gzFile for compressed output\n");
+  gzFile fpz;             // mask_mod
+  if(out_mask==1) printf("mask_mod: defining char mask_file_z for compressed output\n");
+  char mask_file_z[500];  // mask_mod
+
+  if(out_mask==1) printf("mask_mod: defining variables for TSV output\n");
   struct point *mask_mod_p1;                             // mask_mod
   struct point *mask_mod_p2;                             // mask_mod
-  int mask_mod_i;                                        // mask_mod
+  //int mask_mod_i;                                        // mask_mod
   float mask_mod_step=.01;                               // mask_mod
   float mask_mod_mx,mask_mod_my,mask_mod_s;              // mask_mod
   float mask_mod_x0,mask_mod_y0,mask_mod_x,mask_mod_y;   // mask_mod
@@ -4978,24 +4988,44 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
   fprintf(fp,"\n");
 
   // mask_mod: Put all cell boundaries into a mask file
-  if(out_mask==1) printf("mask_mod: setting up TSV file name\n");
-  fflush(stdout);
-  strcpy(mask_file,basename);
-  strcat(mask_file,"_all_masks.tsv");
-  // mask_mod: open the mask file (closed at the end)
-  if(out_mask==1) printf("mask_mod: opening up TSV file\n");
-  fflush(stdout);
+  // if(out_mask==1){
+  //   printf("mask_mod: setting up TSV file name\n");
+  //   fflush(stdout);
+  //   strcpy(mask_file,basename);
+  //   strcat(mask_file,"_all_masks.tsv");
+  // }
+  // // mask_mod: open the mask file (closed at the end)
+  // if(out_mask==1){
+  //   printf("mask_mod: opening up TSV file\n");
+  //   fflush(stdout);
+  //   if((fp2=fopen(mask_file,wa))==NULL){
+  //     printf("Couldn't open masks file %s\n",file);
+  //     fflush(stdout);
+  //     return 0;
+  //   }
+  // }
+  // // mask_mod: write mask file header
+  // if(out_mask==1){
+  //   printf("mask_mod: writting TSV header\n");
+  //   fflush(stdout);
+  //   if(out_mask==1) fprintf(fp2,"cellID\tt.frame\tflag\tx\ty\tpixtype\n");
+  // }
+
+  // mask_mod: Put all cell boundaries into a compressed TSV mask file
+  // https://stackoverflow.com/a/9156471/11524079
   if(out_mask==1){
-    if((fp2=fopen(mask_file,wa))==NULL){
-      printf("Couldn't open masks file %s\n",file);
-      fflush(stdout);
-      return 0;
-    }
+    printf("mask_mod: setting up compressed TSV file name\n");
+    fflush(stdout);
+    strcpy(mask_file_z,basename);
+    strcat(mask_file_z,"_all_masks.tsv.gz");
+
+    printf("mask_mod: opening compressed TSV file and writing header\n");
+    fflush(stdout);
+    fpz = gzopen(mask_file_z, "wb");
+    gzprintf(fpz,"cellID\tt.frame\tflag\tx\ty\tpixtype\n");  // mask_mod: write mask file header
+    // gzprintf(fpz, "Hello, %s!\n", "world");
+    // gzclose(fpz);
   }
-  // mask_mod: write mask file header
-  if(out_mask==1) printf("mask_mod: writting TSV header\n");
-  fflush(stdout);
-  if(out_mask==1) fprintf(fp2,"cellID\tt.frame\tflag\tx\ty\tpixtype\n");
 
   // the "blob" struct is declared at the top of this file (segment.c) as:
     // struct blob {
@@ -5199,12 +5229,20 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
               mask_mod_b=mask_mod_b2;  // y value
               // The following used to be "d[(b*xmax+a)]=border" in "add_boundary_points_to_data"
               if(out_mask==1){
-                fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
-                                           time_index[b->i_time]);     // t.frame
-                fprintf(fp2, "%4i\t",      b->flag);                   // flag
-                fprintf(fp2, "%4i\t",      mask_mod_a);                // xpos
-                fprintf(fp2, "%4i\t",      mask_mod_b);                // ypos
-                fprintf(fp2, "b\n");                                   // pixtype is "b" for "boundary"
+                // fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
+                //                            time_index[b->i_time]);     // t.frame
+                // fprintf(fp2, "%4i\t",      b->flag);                   // flag
+                // fprintf(fp2, "%4i\t",      mask_mod_a);                // xpos
+                // fprintf(fp2, "%4i\t",      mask_mod_b);                // ypos
+                // fprintf(fp2, "b\n");                                   // pixtype is "b" for "boundary"
+
+                // Compressed output
+                gzprintf(fpz, "%4i\t%4i\t", b->index,                   // cellID
+                                            time_index[b->i_time]);     // t.frame
+                gzprintf(fpz, "%4i\t",      b->flag);                   // flag
+                gzprintf(fpz, "%4i\t",      mask_mod_a);                // xpos
+                gzprintf(fpz, "%4i\t",      mask_mod_b);                // ypos
+                gzprintf(fpz, "b\n");                                   // pixtype is "b" for "boundary"
               }
             }
           }
@@ -5218,12 +5256,21 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
       fflush(stdout);
       if(out_mask==1){
         while(mask_mod_interior->next!=NULL){
-         fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
-                                    time_index[b->i_time]);     // t.frame
-         fprintf(fp2, "%4i\t",      b->flag);                   // flag
-         fprintf(fp2, "%4i\t",      mask_mod_interior->i);      // xpos
-         fprintf(fp2, "%4i\t",      mask_mod_interior->j);      // ypos
-         fprintf(fp2, "i\n");                                   // pixtype is "b" for "interior"
+         // fprintf(fp2, "%4i\t%4i\t", b->index,                   // cellID
+         //                            time_index[b->i_time]);     // t.frame
+         // fprintf(fp2, "%4i\t",      b->flag);                   // flag
+         // fprintf(fp2, "%4i\t",      mask_mod_interior->i);      // xpos
+         // fprintf(fp2, "%4i\t",      mask_mod_interior->j);      // ypos
+         // fprintf(fp2, "i\n");                                   // pixtype is "b" for "interior"
+
+         // Compressed output
+         gzprintf(fpz, "%4i\t%4i\t", b->index,                   // cellID
+                                     time_index[b->i_time]);     // t.frame
+         gzprintf(fpz, "%4i\t",      b->flag);                   // flag
+         gzprintf(fpz, "%4i\t",      mask_mod_interior->i);      // xpos
+         gzprintf(fpz, "%4i\t",      mask_mod_interior->j);      // ypos
+         gzprintf(fpz, "i\n");                                   // pixtype is "b" for "interior"
+
          mask_mod_interior=mask_mod_interior->next;
         }
       }
@@ -5234,11 +5281,20 @@ int output_cells_single_file(char *basename, char *append, int *time_index, int 
   }
   printf("output_cells_single_file: done writing! closing file...\n");
   fflush(stdout);
-  if (fp!=NULL)fclose(fp);
+  if (fp!=NULL) fclose(fp);
 
-  if(out_mask==1) printf("mask_mod: done writing, closing fp2\n");
-  fflush(stdout);
-  if (fp2!=NULL && out_mask==1)fclose(fp2);  // mask_mod: cose the mask file if it was open by option before
+  // // Close mask files
+  // if (fp2!=NULL && out_mask==1){
+  //   printf("mask_mod: done writing, closing fp2\n");
+  //   fflush(stdout);
+  //   fclose(fp2);  // mask_mod: cose the mask file if it was open by option before
+  // }
+  // Close mask files
+  if (out_mask==1){
+    printf("mask_mod: done writing compressed TSV, closing fpz\n");
+    fflush(stdout);
+    gzclose(fpz);  // mask_mod: cose the compressed mask file if it was open by option before
+  }
 
   return 1;
 }
