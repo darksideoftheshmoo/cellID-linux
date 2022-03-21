@@ -62,21 +62,21 @@ You may install these in Ubuntu systems by running:
 
 `sudo apt-get install automake autoconf libtool`
 
-The `configure.ac` and `Makefile.am` files have been set to require `libtiff5-dev`, `libopenlibm-dev`, and `libglib2.0-dev` (this last dependency was removed from this branch).
+The `configure.ac` and `Makefile.am` files have been set to require `libtiff5-dev`, `libopenlibm-dev`, and `libz-dev`.
 
-* libglib2.0-dev: 2.48.2-0ubuntu1
 * libtiff5-dev: 4.0.6-1ubuntu0.4
 * libopenlibm-dev: 0.5.0+dfsg-2
+* libz-dev
 
 You may install these in Ubuntu systems by running:
 
-`sudo apt-get install libglib2.0 libglib2.0-dev libtiff5 libtiff5-dev libopenlibm-dev`
+`sudo apt-get install libglib2.0 libglib2.0-dev libtiff5 libtiff5-dev libopenlibm-dev libz-dev`
 
 ### Arch Linux
 
 These dependencies can also be satisfied in Arch Linux, sorry for not providing detailed instructions.
 
-Build tools: `sudo pacman -S automake autoconf libtool`
+Build tools: `sudo pacman -S automake autoconf libtool zlib`
 
 Library dependencies: `sudo pacman -S openlibm glib2 libtiff`
 
@@ -85,6 +85,7 @@ Once upon a time openlibm was in the AUR, and the rest were provided by standard
 If this comes to pass once again, try: `aurman -S openlibm` OR `yay -S openlibm`.
 
 ### macOS
+
 It may be necessary to install Apple's Command Line Tools for Cell-ID to compile successfully. Try the instructions below, and if you are unable to compile, install Command Line Tools and try again.
 
 Use `brew` (Homebrew) to install the following:
@@ -93,7 +94,7 @@ Use `brew` (Homebrew) to install the following:
     `brew install autoconf automake libtool`
 
 * `libtiff` and `openlibm` are CellID dependencies:
-    `brew install libtiff openlibm`
+    `brew install libtiff openlibm libz`
 
 Note: `openlibm` is apparently bundled with the OS, but I was unable to make to compiler find this installation. 
 
@@ -169,6 +170,8 @@ The `-b` and `-f` receive paths to text files containing BF and FL file paths (o
 The `-p` option specifies the path to a "parameters" file, that is used to set CellID segmentation options.
 
 The `-h` flag tells the user to read this file, and the `README.txt` file.
+
+See the main `Branch notes` section above to learn about new features and their CLI options.
 
 ### CellID parameters
 
