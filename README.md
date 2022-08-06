@@ -1,6 +1,20 @@
 # cellID-linux
 
-This is meant to aid compilation of CellID v1.4 in GNU/linux systems.
+This is meant to aid compilation of CellID v1.4 in GNU/linux systems, a program for segmentation of yeast cells in brightfield images.
+
+Credit to the original Cell-ID developers ([1](https://www.nature.com/articles/nmeth1008))([2](http://dx.doi.org/10.1002/0471142727.mb1418s100)). The previous source can be found at sourceforge ([link](https://sourceforge.net/projects/cell-id/)) and in the original publication ([link](https://www.nature.com/articles/nmeth1008#supplementary-information)).
+
+## Preview
+
+Provide a _defocused_ brightfield image to CellID, and _voila_:
+
+<img src="doc/TFP.png" width="350"> <img src="doc/TFP.out.png" width="350">
+
+> Segmentation of yeast cells in a single position.
+
+The image is segmented, cells are identified and tracked over time, and features are computed from morphology and fluorescent signal distribution.
+
+## Foreword
 
 Please read the `README.txt` file, which contains key information on:
 
@@ -16,35 +30,25 @@ Also under development are the functions in our `rcell2` R package, which stream
 
 I became tired of fighting with unincluded dependencies, and so tried autotools by following [this](https://robots.thoughtbot.com/the-magic-behind-configure-make-make-install) tutorial and using other web resources. It was useful to understand the code, and further resources can be found in the comments within the configure.ac and Makefile.am files, explaining each line.
 
-# Analysis tools
+## Analysis tools
 
 Our group wrote the `Rcell` and `rcell2` R packages to load and analyze Cell-ID's output:
 
-* rcell2: https://github.com/darksideoftheshmoo/rcell2
-* Rcell: https://cran.r-project.org/src/contrib/Archive/Rcell/ (CRAN archive).
-
+* rcell2 (new packages): https://github.com/darksideoftheshmoo/rcell2
+* Rcell (old package): https://cran.r-project.org/src/contrib/Archive/Rcell/ (CRAN archive).
 
 # Branch notes
 
 This branch has removed the glib dependency, **it has not been thoroughly tested**.
 
-This branch outputs BF tiff files with additional mask functionality for custom mask outputs. **it has not been thoroughly tested**. These options are disabled by default, but can be enabled by including the following parameters when calling `cell` from the command line:
+Cell-ID from this branch has been modified to optionally output segmented BF tiff files with masks and/or boundaries. These options are disabled by default, but can be enabled by including the following parameters when calling `cell` from the command line:
 
 * `-l`: sets mask boundary pixel intensities proportional to each cellID, following the relationship `cellID = 65535 - boundary_intensity - 1` (see image 1 at the end of the readme), and also adds cellID numbers to the cells, with maximum pixel intensity (`65535`). 
-
 * `-i`: sets mask boundary **and** interior pixel intensities proportional to each cellID. This overrides cell labeling.
-
 * `-w`: offsets boundary and interior pixel intensities by a calculated `interior_offset` threshold, so that boundary pixels follow the standard cellID relationship, and interior pixels the relationship `cellID = 65535 - boundary_intensity - interior_offset - 1`. `interior_offset` defaults to `5000`, but may have a larger value for images or time series with more than `2500` cells.
-
 * `-m`: sets blank background. Default output is cell boundaries only, but can be modified with `-l` (labels), `-i` (interior), and `-w` (offset).
-
 * `-t`: Another way of getting the boundary and interior points is with the `-t` option. This makes `cell` create a new output file with a table of x/y coordinates for all cell boundary and interior pixels (each identified with `cellID`, `t.frame`, `flag`, and `pixtype`).
-
-## Credits
-
-The cellID developers ([1](https://www.nature.com/articles/nmeth1008))([2](http://dx.doi.org/10.1002/0471142727.mb1418s100)).
-
-The original source can be found at sourceforge ([link](https://sourceforge.net/projects/cell-id/)) and in the original publication ([link](https://www.nature.com/articles/nmeth1008#supplementary-information)).
+* Read on for more details.
 
 ## Dependencies
 
